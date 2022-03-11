@@ -1,6 +1,6 @@
 # autoCLI
 
-## Configuration file .json
+## Configuration file
 
 ### 1 Packages
 
