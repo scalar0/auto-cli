@@ -63,7 +63,7 @@
 ### 4 Arguments
 
 ```json
-    "arguments": [
+  "arguments": [
     {
       "name": "arg",
       "parent": "cmd",
@@ -106,4 +106,3 @@
     }
   ]
   ```
-  
