@@ -4,7 +4,7 @@
 
 ### 1 Packages
 
-```yaml
+```json
   "packages": [
     {
       "name": "System.CommandLine",
@@ -21,7 +21,7 @@
 
 ### 2 Commands
 
-```yaml
+```json
 "commands": [
     {
       "name": "cmd",
@@ -35,9 +35,9 @@
   ]
   ```
 
-  ### 3 Subcommands
+### 3 Subcommands
 
-```yaml
+```json
   "subcommands": [
     {
       "name": "subcmd",
@@ -62,7 +62,7 @@
 
 ### 4 Arguments
 
-```yaml
+```json
     "arguments": [
     {
       "name": "arg",
@@ -83,7 +83,7 @@
 
 ### 5 Options
 
-```yaml
+```json
   "options": [
     {
       "name": "option",
@@ -106,3 +106,4 @@
     }
   ]
   ```
+  
