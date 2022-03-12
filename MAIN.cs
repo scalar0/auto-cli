@@ -17,7 +17,9 @@ namespace autocli
             sb.Append("[autocli] aims to automate .NET 6.0.* CLI applications development based on an input architecture stored in a .json file.\n").Append("The configuration file stores the architecture for the project's commands, subcommands, options and arguments.\n").Append("\n========================================================================================================================================");
             rcom.Description += sb.ToString();
 
-            //COMMAND creation
+            // ===========================================creation COMMAND===========================================
+
+            //COMMAND
             // Creates a template of a new .json configuration file with specified name.
             Command? creation = new("create");
             creation.Description = "Creates a template of a new .json configuration file with specified name.";
@@ -28,7 +30,9 @@ namespace autocli
             file_name.Description = "Name of .json configuration file.";
             creation.AddArgument(file_name);
 
-            //COMMAND generation
+            // ===========================================generation COMMAND===========================================
+
+            //COMMAND
             // Generate the CLI project based on the input .json configuration file.
             Command? generation = new("generate");
             generation.Description = "Generate the CLI project based on the input .json configuration file.";
@@ -49,12 +53,12 @@ namespace autocli
             pushing.IsRequired = false;
             generation.AddOption(pushing);
 
-            //HANDLERS
+            // ===========================================HANDLERS===========================================
 
             creation.Handler = CommandHandler.Create<string>(Func.Create);
             generation.Handler = CommandHandler.Create<string>(Func.Generation);
 
-            //INVOKE
+            // ===========================================INVOKE===========================================
 
             rcom.SetHandler((string file_path) =>
             {

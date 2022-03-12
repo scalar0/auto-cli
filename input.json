@@ -1,6 +1,7 @@
 {
   "outfolder": "path",
   "cli": "cd {PATH} ; dotnet new console -f net6.0 -n {NAME} -o .",
+  "repo": "repo-name",
   "packages": [
     {
       "name": "System.CommandLine",
