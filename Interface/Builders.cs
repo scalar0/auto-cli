@@ -1,8 +1,8 @@
 ﻿namespace autocli
 {
-    internal static class Builders
+    public static class Builders
     {
-        internal static Command? MakeCommand(
+        public static Command? MakeCommand(
             Command? command,
             string symbol,
             string description)
@@ -27,7 +27,7 @@
             return null;
         }
 
-        internal static Argument? MakeArgument(
+        public static Argument? MakeArgument(
             Command? command,
             string symbol,
             string defaultvalue,
@@ -54,7 +54,7 @@
             return null;
         }
 
-        internal static Option? MakeOption(
+        public static Option? MakeOption(
             Command? command,
             bool required,
             string symbol,
