@@ -21,25 +21,29 @@ namespace autocli
 
             //COMMAND
             // Creates a template of a new .json configuration file with specified name.
-            Command? creation = new("create");
-            creation.Description = "Creates a template of a new .json configuration file with specified name.";
-            ROOTCOMMAND.AddCommand(creation);
+            Command? creation = Builders.MakeCommand(
+                command: ROOTCOMMAND,
+                symbol: "create",
+                description: "Creates a template of a new .json configuration file with specified name.");
 
             //ARG file_name (COMMAND creation)
-            Argument? file_name = new("name");
-            file_name.Description = "Name of .json configuration file.";
-            file_name.SetDefaultValue(Path.GetDirectoryName(Environment.CurrentDirectory));
-            creation.AddArgument(file_name);
+#pragma warning disable CS8604 // Possible null reference argument.
+            Argument<string>? file_name = Builders.MakeArgument(
+                command: creation,
+                symbol: "name",
+                defaultvalue: Path.GetDirectoryName(Environment.CurrentDirectory),
+                description: "Name of .json configuration file.") as Argument<string>;
 
-            creation.SetHandler<string>((string file_name) => Utils.Create(file_name), file_name);
+            creation?.SetHandler<string>((string file_name) => Utils.Create(file_name), file_name);
 
             // ===========================================generation COMMAND===========================================
 
             //COMMAND
             // Generate the CLI project based on the input .json configuration file.
-            Command? generation = new("generate");
-            generation.Description = "Generate the CLI project based on the input .json configuration file.";
-            ROOTCOMMAND.AddCommand(generation);
+            Command? generation = Builders.MakeCommand(
+                command: ROOTCOMMAND,
+                symbol: "generate",
+                description: "Generate the CLI project based on the input .json configuration file.");
 
             //ARG file_path (COMMAND generation)
             Argument<string>? file_path = Builders.MakeArgument(
@@ -57,13 +61,15 @@ namespace autocli
                 defaultvalue: "n",
                 description: "Push to GitHub with project name ? (y/n)") as Option<string>;
 
-            generation.SetHandler<string>((string file_path) => Utils.Generation(file_path), file_path);
+            generation?.SetHandler<string>((string file_path) => Utils.Generation(file_path), file_path);
+#pragma warning restore CS8604 // Possible null reference argument.
 
             // ===========================================HANDLERS===========================================
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             creation.Handler = CommandHandler.Create<string>(Utils.Create);
-
             generation.Handler = CommandHandler.Create<string>(Utils.Generation);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             // ===========================================INVOKE===========================================
 

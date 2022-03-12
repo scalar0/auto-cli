@@ -1,6 +1,6 @@
 ﻿namespace autocli
 {
-    internal class Subcommands
+    internal static class Arguments
     {
     }
 }
