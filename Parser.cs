@@ -10,17 +10,15 @@ namespace autocli
         {
             // ===========================================ROOTCOMMAND===========================================
 
-            RootCommand ROOTCOMMAND = new();
-            ROOTCOMMAND.Description = Utils.Boxed("AUTOCLI : automation for CLI applications interface creation\n");
-
-            ROOTCOMMAND.Description += $"Author : scalar-tns.\nHost name : {Environment.MachineName}\nOS : {Environment.OSVersion}\nHost version : .NET {Environment.Version}\n\n";
-
-            ROOTCOMMAND.Description += "[autocli] aims to automate .NET 6.0.* CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.\n";
+            RootCommand ROOTCOMMAND = Builders.MakeRootCommand(
+                title: "AUTOCLI : automation for CLI applications interface creation\n",
+                description: "[autocli] aims to automate .NET 6.0.* CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.\n");
 
             // ===========================================COMMANDS===========================================
 
             Command? creation = Commands._creation(ROOTCOMMAND);
             Command? generation = Commands._generation(ROOTCOMMAND);
+            Command? testing = Commands._testing(ROOTCOMMAND);
 
             // ===========================================OPTIONS===========================================
 
@@ -30,11 +28,13 @@ namespace autocli
 
             Argument<string>? file_name = Arguments._file_name(creation);
             Argument<string>? file_path = Arguments._file_path(generation);
+            Argument<string>? test_path = Arguments._test_path(testing);
 
             // ===========================================HANDLERS===========================================
 
-            creation.Handler = CommandHandler.Create<string>(Building.Create);
-            generation.Handler = CommandHandler.Create<string>(Building.Generation);
+            creation.Handler = CommandHandler.Create<string>(Handlers.Create);
+            testing.Handler = CommandHandler.Create<string>(Handlers.Test);
+            generation.Handler = CommandHandler.Create<string>(Handlers.Generate);
 
             // ===========================================INVOKE===========================================
 

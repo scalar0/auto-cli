@@ -12,7 +12,7 @@
                 box += "_";
             }
             box += "\n\n";
-            return box + title + "\n" + box;
+            return box + title + "\n" + box + $"Author : scalar-tns.\nHost name : {Environment.MachineName}\nOS : {Environment.OSVersion}\nHost version : .NET {Environment.Version}\n\n";
         }
 
         // Method to automatically locate app.json input file

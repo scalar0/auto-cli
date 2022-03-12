@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace autocli
+﻿namespace autocli
 {
-    public static class Building
+    public static class Handlers
     {
         // Method to create a template configuration file
         public static void Create(string name)
@@ -16,8 +10,13 @@ namespace autocli
             Console.WriteLine($"Configuration file for {name} project created at :\n\n{configfile}\n");
         }
 
+        public static void Test(string name)
+        {
+            Console.WriteLine($"Configuration file for {name} project created");
+        }
+
         // Method to generate the project
-        public static void Generation(string file_path)
+        public static void Generate(string file_path)
         {
             // Retrieve project name
             string project_name = Path.GetFileNameWithoutExtension(file_path);
