@@ -8,14 +8,14 @@ namespace autocli
     {
         public static async Task Main(string[] args)
         {
-            // ===========================================autocli ROOTCOMMAND===========================================
-            RootCommand? ROOTCOMMAND = new();
-            ROOTCOMMAND.Description =
-                $"__________________________________________________\n\nAUTOCLI : automation for CLI applications creation\n__________________________________________________\n\nAuthor : scalar-tns.\nHost name : {Environment.MachineName}\nOS : {Environment.OSVersion}\nHost version : .NET {Environment.Version}\n\n";
+            // ===========================================ROOTCOMMAND===========================================
 
-            System.Text.StringBuilder? sb = new();
-            sb.Append("[autocli] aims to automate .NET 6.0.* CLI applications development based on an input architecture stored in a .json file.\n").Append("The configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.\n").Append("\n========================================================================================================================================");
-            ROOTCOMMAND.Description += sb.ToString();
+            RootCommand ROOTCOMMAND = new();
+            ROOTCOMMAND.Description = Utils.Boxed("AUTOCLI : automation for CLI applications interface creation\n");
+
+            ROOTCOMMAND.Description += $"Author : scalar-tns.\nHost name : {Environment.MachineName}\nOS : {Environment.OSVersion}\nHost version : .NET {Environment.Version}\n\n";
+
+            ROOTCOMMAND.Description += "[autocli] aims to automate .NET 6.0.* CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.\n";
 
             // ===========================================COMMANDS===========================================
 
@@ -33,8 +33,8 @@ namespace autocli
 
             // ===========================================HANDLERS===========================================
 
-            creation.Handler = CommandHandler.Create<string>(Utils.Create);
-            generation.Handler = CommandHandler.Create<string>(Utils.Generation);
+            creation.Handler = CommandHandler.Create<string>(Building.Create);
+            generation.Handler = CommandHandler.Create<string>(Building.Generation);
 
             // ===========================================INVOKE===========================================
 

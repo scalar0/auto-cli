@@ -2,26 +2,25 @@
 {
     public static class Utils
     {
+        // Method to Box the title of the application
+        public static string Boxed(string title)
+        {
+            int? l = title.Length;
+            string box = "";
+            for (int c = 1; c < l; c++)
+            {
+                box += "_";
+            }
+            box += "\n\n";
+            return box + title + "\n" + box;
+        }
+
         // Method to automatically locate app.json input file
         public static string Locate(string input, string keyword)
         {
             string crit = string.IsNullOrEmpty(input) ? keyword : input;
             string[] data_file = Directory.GetFiles(Directory.GetCurrentDirectory(), crit, SearchOption.AllDirectories);
             return data_file[^1];
-        }
-
-        public static void Create(string name)
-        {
-            string? configfile = Path.Combine(Environment.CurrentDirectory, name) + ".json";
-            File.Copy(sourceFileName: @"C:\Users\matte\source\repos\autoCLI\input.json", destFileName: configfile, overwrite: true);
-            Console.WriteLine($"Configuration file for {name} project created at :\n\n{configfile}\n");
-        }
-
-        public static void Generation(string file_path)
-        {
-            // Retrieve project name
-            string project_name = Path.GetFileNameWithoutExtension(file_path);
-            Console.WriteLine($"Starting {project_name} generation at :\n\n{file_path}\n");
         }
     }
 }

@@ -4,8 +4,6 @@
     {
         public static Command _generation(RootCommand ROOTCOMMAND)
         {
-            //COMMAND
-            // Generate the CLI project based on the input .json configuration file.
             var generation = Builders.MakeCommand(
                 command: ROOTCOMMAND,
                 symbol: "generate",
@@ -16,8 +14,6 @@
 
         public static Command _creation(RootCommand ROOTCOMMAND)
         {
-            //COMMAND
-            // Creates a template of a new .json configuration file with specified name.
             var creation = Builders.MakeCommand(
                     command: ROOTCOMMAND,
                     symbol: "create",
