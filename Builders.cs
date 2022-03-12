@@ -1,47 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace autocli
+﻿namespace autocli
 {
-    internal static class Definitions
+    internal static class Builders
     {
-        internal static Option? MakeOption<T>(
+        internal static Command? MakeCommand(
             Command? command,
-            bool required,
-            string name,
-            string defaultvalue,
-            string alias,
+            string symbol,
             string description)
         {
             try
             {
                 if (command != null)
                 {
-                    Option<T>? option = new(name);
-                    option.SetDefaultValue(defaultvalue);
-                    option.Description = description;
-                    option.AddAlias(alias);
-                    option.IsRequired = required;
-                    command.AddOption(option);
-                    return option;
+                    Command? cmd = new(symbol);
+                    cmd.Description = description;
+                    command.AddCommand(cmd);
+                    return cmd;
                 }
-
-                return null;
             }
             catch (Exception)
             {
 #pragma warning disable CA2208 // Instantiate argument exceptions correctly
-                throw new ArgumentNullException("Input Command is null");
+                throw new ArgumentNullException("Command is null here");
 #pragma warning restore CA2208 // Instantiate argument exceptions correctly
             }
+
+            return null;
         }
 
         internal static Argument? MakeArgument<T>(
             Command? command,
-            string name,
+            string symbol,
             string defaultvalue,
             string description)
         {
@@ -49,7 +37,7 @@ namespace autocli
             {
                 if (command != null)
                 {
-                    Argument<T>? argument = new(name);
+                    Argument<T>? argument = new(symbol);
                     argument.Description = description;
                     argument.SetDefaultValue(defaultvalue);
                     command.AddArgument(argument);
@@ -66,29 +54,35 @@ namespace autocli
             return null;
         }
 
-        internal static Command? MakeCommand(
-            RootCommand? rootcommand,
-            string name,
+        internal static Option? MakeOption<T>(
+            Command? command,
+            bool required,
+            string symbol,
+            string alias,
+            string defaultvalue,
             string description)
         {
-            Command? command = new(name);
             try
             {
-                if (rootcommand != null)
+                if (command != null)
                 {
-                    command.Description = description;
-                    rootcommand.AddCommand(command);
-                    return command;
+                    Option<T>? option = new(symbol);
+                    option.SetDefaultValue(defaultvalue);
+                    option.Description = description;
+                    if (alias != null) option.AddAlias(alias);
+                    option.IsRequired = required;
+                    command.AddOption(option);
+                    return option;
                 }
+
+                return null;
             }
             catch (Exception)
             {
 #pragma warning disable CA2208 // Instantiate argument exceptions correctly
-                throw new ArgumentNullException("RootCommand is null here");
+                throw new ArgumentNullException("Input Command is null");
 #pragma warning restore CA2208 // Instantiate argument exceptions correctly
             }
-
-            return null;
         }
     }
 }
