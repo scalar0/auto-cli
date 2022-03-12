@@ -2,11 +2,11 @@
 {
     public static class Options
     {
-        public static Option<string>? _pushing(RootCommand ROOTCOMMAND)
+        public static Option<string>? _pushing(Command command)
         {
             //OPTION push to github (COMMAND generation)
             return Builders.MakeOption(
-                command: Commands._generation(ROOTCOMMAND),
+                command: command,
                 required: false,
                 symbol: "--push",
                 alias: "-p",

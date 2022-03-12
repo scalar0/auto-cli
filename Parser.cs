@@ -24,12 +24,12 @@ namespace autocli
 
             // ===========================================OPTIONS===========================================
 
-            Option<string>? pushing = Options._pushing(ROOTCOMMAND);
+            Option<string>? pushing = Options._pushing(generation);
 
             // ===========================================ARGUMENTS===========================================
 
-            Argument<string>? file_name = Arguments._file_name(ROOTCOMMAND);
-            Argument<string>? file_path = Arguments._file_path(ROOTCOMMAND);
+            Argument<string>? file_name = Arguments._file_name(creation);
+            Argument<string>? file_path = Arguments._file_path(generation);
 
             // ===========================================HANDLERS===========================================
 

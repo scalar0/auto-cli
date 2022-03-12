@@ -3,20 +3,20 @@
     public static class Arguments
     {
         //ARG file_name (COMMAND creation)
-        public static Argument<string>? _file_name(RootCommand ROOTCOMMAND)
+        public static Argument<string>? _file_name(Command command)
         {
             return Builders.MakeArgument(
-                command: Commands._creation(ROOTCOMMAND),
+                command: command,
                 symbol: "name",
                 defaultvalue: Path.GetDirectoryName(Environment.CurrentDirectory),
                 description: "Name of .json configuration file.") as Argument<string>;
         }
 
         //ARG file_path (COMMAND generation)
-        public static Argument<string>? _file_path(RootCommand ROOTCOMMAND)
+        public static Argument<string>? _file_path(Command command)
         {
             return Builders.MakeArgument(
-                command: Commands._generation(ROOTCOMMAND),
+                command: command,
                 symbol: "file",
                 defaultvalue: Utils.Locate("", "*.json"),
                 description: "Path to .json configuration file.") as Argument<string>;
