@@ -1,6 +1,6 @@
 ﻿namespace autocli
 {
-    internal static class Func
+    internal static class Utils
     {
         // Method to automatically locate app.json input file
         internal static string Locate(string input, string keyword)
@@ -14,13 +14,14 @@
         {
             string? configfile = Path.Combine(Environment.CurrentDirectory, name) + ".json";
             File.Copy(sourceFileName: @"C:\Users\matte\source\repos\autoCLI\input.json", destFileName: configfile, overwrite: true);
-            Console.WriteLine($"Configuration file created at {configfile}");
+            Console.WriteLine($"Configuration file for {name} project created at :\n\n{configfile}\n");
         }
 
         internal static void Generation(string file_path)
         {
-            string project_name = Path.GetFileName(file_path);
-            Console.WriteLine($"Starting {file_path} : {project_name} generation...");
+            // Retrieve project name
+            string project_name = Path.GetFileNameWithoutExtension(file_path);
+            Console.WriteLine($"Starting {project_name} generation at :\n\n{file_path}\n");
         }
     }
 }
