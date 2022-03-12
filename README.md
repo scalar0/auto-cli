@@ -11,13 +11,15 @@ The configuration file stores the architecture for the project's commands, subco
   "packages": [
     {
       "name": "System.CommandLine",
-      "cli": "dotnet add package System.CommandLine --prerelease",
-      "replace": "PACKAGE"
+      "cli": "dotnet add package System.CommandLine --prerelease"
     },
     {
       "name": "System.CommandLine.Hosting",
-      "cli": "dotnet add package System.CommandLine.Hosting --prerelease",
-      "replace": "PACKAGE"
+      "cli": "dotnet add package System.CommandLine.Hosting --prerelease"
+    },
+    {
+      "name": "System.CommandLine.NamingConventionBinder",
+      "cli": "dotnet add package System.CommandLine.NamingConventionBinder --prerelease"
     }
   ]
 ```
@@ -25,87 +27,44 @@ The configuration file stores the architecture for the project's commands, subco
 ### 2 Commands
 
 ```json
-"commands": [
+  "commands": [
     {
-      "name": "cmd",
-      "type": "string",
-      "call": "cmdlet",
-      "decription": {
-        "object": "description",
-        "replace": "cmd.DESCSRIPTION"
-      }
+      "name": "subcommand",
+      "command": "upcommand",
+      "symbol": "cmdlet",
+      "decription": "description"
     }
   ]
   ```
 
-### 3 Subcommands
-
-```json
-  "subcommands": [
-    {
-      "name": "subcmd",
-      "parent": "cmd",
-      "type": "string",
-      "call": "subcmdlet",
-      "alias": {
-        "present": "true",
-        "value": "-c"
-      },
-      "default": {
-        "present": "true",
-        "value": "value"
-      },
-      "decription": {
-        "object": "description",
-        "replace": "subcmd.DESCSRIPTION"
-      }
-    }
-  ]
-  ```
-
-### 4 Arguments
+### 3 Arguments
 
 ```json
   "arguments": [
     {
-      "name": "arg",
-      "parent": "cmd",
+      "name": "argument",
       "type": "string",
-      "cmdlet": "arg",
-      "default": {
-        "present": "true",
-        "value": "value"
-      },
-      "decription": {
-        "object": "description",
-        "replace": "arg.DESCSRIPTION"
-      }
+      "command": "cmd",
+      "symbol": "<arg>",
+      "defaultvalue": "value",
+      "decription": "description"
     }
   ]
   ```
 
-### 5 Options
+### 4 Options
 
 ```json
   "options": [
     {
       "name": "option",
-      "parent": "cmd",
       "type": "string",
+      "command": "cmd",
       "required": "true",
-      "cmdlet": "--option",
-      "alias": {
-        "present": "true",
-        "value": "-o"
-      },
-      "default": {
-        "present": "true",
-        "value": "value"
-      },
-      "decription": {
-        "object": "description",
-        "replace": "option.DESCSRIPTION"
-      }
+      "symbol": "--option",
+      "alias": "-o",
+      "defaultvalue": "value",
+      "decription": "description"
     }
   ]
   ```
