@@ -19,7 +19,7 @@
         public static string Locate(string input, string keyword)
         {
             string crit = string.IsNullOrEmpty(input) ? keyword : input;
-            string[] data_file = Directory.GetFiles(Directory.GetCurrentDirectory(), crit, SearchOption.AllDirectories);
+            string[] data_file = Directory.GetFiles(Directory.GetCurrentDirectory(), crit);
             return data_file[^1];
         }
     }

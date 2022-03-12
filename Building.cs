@@ -12,7 +12,7 @@ namespace autocli
         public static void Create(string name)
         {
             string? configfile = Path.Combine(Environment.CurrentDirectory, name) + ".json";
-            File.Copy(sourceFileName: @"C:\Users\matte\source\repos\autoCLI\Interface\input.json", destFileName: configfile, overwrite: true);
+            File.Copy(sourceFileName: @"C:\Users\matte\source\repos\autoCLI\input.json", destFileName: configfile, overwrite: true);
             Console.WriteLine($"Configuration file for {name} project created at :\n\n{configfile}\n");
         }
 

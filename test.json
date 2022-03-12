@@ -1,0 +1,49 @@
+{
+  "outfolder": "path",
+  "cli": "cd {PATH} ; dotnet new console -f net6.0 -n {NAME} -o .",
+  "repo": "repo-name",
+  "packages": [
+    {
+      "name": "System.CommandLine",
+      "cli": "dotnet add package System.CommandLine --prerelease"
+    },
+    {
+      "name": "System.CommandLine.Hosting",
+      "cli": "dotnet add package System.CommandLine.Hosting --prerelease"
+    },
+    {
+      "name": "System.CommandLine.NamingConventionBinder",
+      "cli": "dotnet add package System.CommandLine.NamingConventionBinder --prerelease"
+    }
+  ],
+  "commands": [
+    {
+      "name": "subcommand",
+      "command": "upcommand",
+      "symbol": "cmdlet",
+      "decription": "description"
+    }
+  ],
+  "arguments": [
+    {
+      "name": "argument",
+      "type": "string",
+      "command": "cmd",
+      "symbol": "<arg>",
+      "defaultvalue": "value",
+      "decription": "description"
+    }
+  ],
+  "options": [
+    {
+      "name": "option",
+      "type": "string",
+      "command": "cmd",
+      "required": "true",
+      "symbol": "--option",
+      "alias": "-o",
+      "defaultvalue": "value",
+      "decription": "description"
+    }
+  ]
+}
