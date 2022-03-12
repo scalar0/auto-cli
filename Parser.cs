@@ -42,20 +42,20 @@ namespace autocli
             ROOTCOMMAND.AddCommand(generation);
 
             //ARG file_path (COMMAND generation)
-            // Path to .json configuration file.
-            Argument<string>? file_path = new("file");
-            file_path.Description = "Path to .json configuration file.";
-            file_path.SetDefaultValue(Utils.Locate("", "*.json"));
-            generation.AddArgument(file_path);
+            Argument<string>? file_path = Builders.MakeArgument(
+                command: generation,
+                symbol: "file",
+                defaultvalue: Utils.Locate("", "*.json"),
+                description: "Path to .json configuration file.") as Argument<string>;
 
             //OPTION push to github (COMMAND generation)
-            // Push to GitHub with project name ? (y/n)
-            Option<string>? pushing = new("--push");
-            pushing.SetDefaultValue("n");
-            pushing.Description = "Push to GitHub with project name ? (y/n)";
-            pushing.AddAlias("-p");
-            pushing.IsRequired = false;
-            generation.AddOption(pushing);
+            Option<string>? pushing = Builders.MakeOption(
+                command: generation,
+                required: false,
+                symbol: "--push",
+                alias: "-p",
+                defaultvalue: "n",
+                description: "Push to GitHub with project name ? (y/n)") as Option<string>;
 
             generation.SetHandler<string>((string file_path) => Utils.Generation(file_path), file_path);
 

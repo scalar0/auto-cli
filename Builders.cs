@@ -27,7 +27,7 @@
             return null;
         }
 
-        internal static Argument? MakeArgument<T>(
+        internal static Argument? MakeArgument(
             Command? command,
             string symbol,
             string defaultvalue,
@@ -37,7 +37,7 @@
             {
                 if (command != null)
                 {
-                    Argument<T>? argument = new(symbol);
+                    Argument? argument = new(symbol);
                     argument.Description = description;
                     argument.SetDefaultValue(defaultvalue);
                     command.AddArgument(argument);
@@ -54,7 +54,7 @@
             return null;
         }
 
-        internal static Option? MakeOption<T>(
+        internal static Option? MakeOption(
             Command? command,
             bool required,
             string symbol,
@@ -66,7 +66,7 @@
             {
                 if (command != null)
                 {
-                    Option<T>? option = new(symbol);
+                    Option? option = new(symbol);
                     option.SetDefaultValue(defaultvalue);
                     option.Description = description;
                     if (alias != null) option.AddAlias(alias);
