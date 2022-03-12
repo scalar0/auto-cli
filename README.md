@@ -1,7 +1,7 @@
 # autoCLI
 
 auto-CLI aims to automate .NET 6.0.* CLI applications development based on an input architecture stored in a .json file.
-The configuration file stores the architecture for the project's commands, subcommands, options and arguments.
+The configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.
 
 ## Configuration file
 
