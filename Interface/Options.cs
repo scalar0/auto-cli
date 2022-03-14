@@ -1,30 +1,41 @@
-﻿namespace autocli
+﻿// This file is supposed to be auto-generated
+
+namespace autocli
 {
     public static class Options
     {
-        public static Option<string>? _pushing(Command generation)
+        //TODO:    Implement verbosity option
+        public static Option _verbosity(Command generation)
         {
-            //OPTION push to github (COMMAND generation)
-            return Builders.MakeOption(
+            return Builders.MakeOption<string>(
+                command: generation,
+                required: false,
+                symbol: "--verbosity",
+                alias: "-v",
+                defaultvalue: "m",
+                description: "Choix de verbosité de sortie : q[uiet]; m[inimal]; diag[nostic].");
+        }
+
+        public static Option _pushing(Command generation)
+        {
+            return Builders.MakeOption<string>(
                 command: generation,
                 required: false,
                 symbol: "--push",
                 alias: "-p",
                 defaultvalue: "n",
-                description: "Push to GitHub with project name ? (y/n)") as Option<string>;
+                description: "Push to GitHub with repo-name ? (y/n)");
         }
 
-        // TEMPLATE
-        /*        "public static Option<{type}>? _{name}(RootCommand ROOTCOMMAND)
-                {
-                    //OPTION push to github (COMMAND generation)
-                    return Builders.MakeOption(
-                        command: Commands.Construct_{command}(ROOTCOMMAND),
-                        required: {required},
-                        symbol: "{symbol}",
-                        alias: "{alias}",
-                        defaultvalue: "{defaultvalue}",
-                        description: "{description}") as Option<{type}>;
-                }"*/
+        public static Option _dir_choice(Command creation)
+        {
+            return Builders.MakeOption<DirectoryInfo>(
+                command: creation,
+                required: true,
+                symbol: "--directory",
+                alias: "-d",
+                defaultvalue: null,
+                description: "Specify the directory output");
+        }
     }
 }

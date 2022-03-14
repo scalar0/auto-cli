@@ -1,4 +1,6 @@
-﻿namespace autocli
+﻿// This file must be pasted in ther interface folder
+
+namespace autocli
 {
     public static class Builders
     {
@@ -7,8 +9,7 @@
             string description)
         {
             RootCommand ROOTCOMMAND = new();
-            ROOTCOMMAND.Description = Utils.Boxed(title);
-            ROOTCOMMAND.Description += description;
+            ROOTCOMMAND.Description = Utils.Boxed(title) + description;
             ROOTCOMMAND.Handler = CommandHandler.Create(() => ROOTCOMMAND.Invoke("-h"));
 
             return ROOTCOMMAND;
@@ -25,35 +26,50 @@
             return cmd;
         }
 
-        public static Argument MakeArgument(
+        public static Argument<T> MakeArgument<T>(
             Command command,
             string symbol,
             string? defaultvalue,
             string description)
         {
-            Argument argument = new(symbol);
+            Argument<T> argument = new(symbol);
+            if (defaultvalue != null) argument.SetDefaultValue(defaultvalue);
             argument.Description = description;
-            if (defaultvalue != null)
-                argument.SetDefaultValue(defaultvalue);
             command.AddArgument(argument);
             return argument;
         }
 
-        public static Option MakeOption(
+        public static Option<T> MakeOption<T>(
             Command command,
             bool required,
             string symbol,
             string? alias,
-            string defaultvalue,
+            string? defaultvalue,
             string description)
         {
-            Option option = new(symbol);
-            option.SetDefaultValue(defaultvalue);
-            option.Description = description;
-            if (alias != null) option.AddAlias(alias);
+            Option<T> option = new(symbol);
             option.IsRequired = required;
+            if (alias != null) option.AddAlias(alias);
+            if (defaultvalue != null) option.SetDefaultValue(defaultvalue);
+            option.Description = description;
             command.AddOption(option);
             return option;
+        }
+    }
+
+    // TODO:    Template for each entity
+    public static class Templates
+    {
+        public static void _Command()
+        {
+        }
+
+        public static void _Argument()
+        {
+        }
+
+        public static void _Option()
+        {
         }
     }
 }

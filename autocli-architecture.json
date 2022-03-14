@@ -1,19 +1,21 @@
 {
+  "title": "Title of the application",
+  "description": "description of the applciation",
   "outfolder": "path",
-  "cli": "cd {PATH} ; dotnet new console -f net6.0 -n {NAME} -o .",
+  "cli": "dotnet new console -f net6.0 -n {NAME} -o {PATH}",
   "repo": "repo-name",
   "packages": [
     {
       "name": "System.CommandLine",
-      "cli": "dotnet add package System.CommandLine --prerelease"
+      "version": "--prerelease"
     },
     {
       "name": "System.CommandLine.Hosting",
-      "cli": "dotnet add package System.CommandLine.Hosting --prerelease"
+      "version": "--prerelease"
     },
     {
       "name": "System.CommandLine.NamingConventionBinder",
-      "cli": "dotnet add package System.CommandLine.NamingConventionBinder --prerelease"
+      "version": "--prerelease"
     }
   ],
   "commands": [

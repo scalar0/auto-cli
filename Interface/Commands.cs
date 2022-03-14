@@ -1,29 +1,36 @@
-﻿namespace autocli
+﻿// This file is supposed to be auto-generated
+
+namespace autocli
 {
     public static class Commands
     {
-        public static Command _generation(RootCommand ROOTCOMMAND)
+        // TODO:    Parse .json data to option for --output directory for CREATE command
+        public static Command _creation(RootCommand command)
         {
             return Builders.MakeCommand(
-                command: ROOTCOMMAND,
+                command: command,
+                symbol: "create",
+                description: "Creates a template of a new .json configuration file with specified name.");
+        }
+
+        // BUG:     _generation : args not parsed
+        public static Command _generation(RootCommand command)
+        {
+            return Builders.MakeCommand(
+                command: command,
                 symbol: "generate",
                 description: "Generate the CLI project based on the input .json configuration file.");
         }
 
-        public static Command _creation(RootCommand ROOTCOMMAND)
+        // BUG:     _testing : args not parsed
+        public static Command _testing(RootCommand command)
         {
             return Builders.MakeCommand(
-                    command: ROOTCOMMAND,
-                    symbol: "create",
-                    description: "Creates a template of a new .json configuration file with specified name.");
-        }
-
-        public static Command _testing(RootCommand ROOTCOMMAND)
-        {
-            return Builders.MakeCommand(
-                    command: ROOTCOMMAND,
-                    symbol: "testing",
-                    description: "Test command.");
+                command: command,
+                symbol: "testing",
+                description: "Test command.");
         }
     }
 }
+
+//TODO:     Search for logging
