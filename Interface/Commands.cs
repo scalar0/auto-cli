@@ -21,15 +21,6 @@ namespace autocli
                 symbol: "generate",
                 description: "Generate the CLI project based on the input .json configuration file.");
         }
-
-        // BUG:     _testing : args not parsed
-        public static Command _testing(RootCommand command)
-        {
-            return Builders.MakeCommand(
-                command: command,
-                symbol: "testing",
-                description: "Test command.");
-        }
     }
 }
 

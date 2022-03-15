@@ -21,14 +21,5 @@ namespace autocli
                 defaultvalue: null,
                 description: "Path to .json configuration file.");
         }
-
-        public static Argument _test_path(Command testing)
-        {
-            return Builders.MakeArgument<string>(
-                command: testing,
-                symbol: "test",
-                defaultvalue: null,
-                description: "test");
-        }
     }
 }

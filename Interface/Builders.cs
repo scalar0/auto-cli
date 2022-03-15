@@ -22,6 +22,7 @@ namespace autocli
         {
             Command cmd = new(symbol);
             cmd.Description = description;
+            // Adding command
             command.AddCommand(cmd);
             return cmd;
         }
@@ -35,6 +36,7 @@ namespace autocli
             Argument<T> argument = new(symbol);
             if (defaultvalue != null) argument.SetDefaultValue(defaultvalue);
             argument.Description = description;
+            // Adding argument
             command.AddArgument(argument);
             return argument;
         }
@@ -52,6 +54,7 @@ namespace autocli
             if (alias != null) option.AddAlias(alias);
             if (defaultvalue != null) option.SetDefaultValue(defaultvalue);
             option.Description = description;
+            // Adding option
             command.AddOption(option);
             return option;
         }

@@ -1,9 +1,9 @@
 {
   "title": "Title of the application",
-  "description": "description of the applciation",
-  "outfolder": "path",
-  "cli": "dotnet new console -f net6.0 -n {NAME} -o {PATH}",
-  "repo": "repo-name",
+  "description": "description of the application",
+  "outfolder": "~/autocli",
+  "cli": "dotnet new console -f net6.0 -n autocli -o .",
+  "repo": "auto-CLI",
   "packages": [
     {
       "name": "System.CommandLine",

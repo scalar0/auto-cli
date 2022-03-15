@@ -18,7 +18,6 @@ namespace autocli
 
             Command creation = Commands._creation(command);
             Command generation = Commands._generation(command);
-            Command testing = Commands._testing(command);
 
             // ===========================================OPTIONS===========================================
 
@@ -30,12 +29,10 @@ namespace autocli
 
             Arguments._file_name(creation);
             Arguments._file_path(generation);
-            Arguments._test_path(testing);
 
             // ===========================================HANDLERS===========================================
 
             creation.Handler = CommandHandler.Create<string, DirectoryInfo>(Handlers.Create_Template);
-            testing.Handler = CommandHandler.Create<string>(Handlers.Test);
             generation.Handler = CommandHandler.Create<FileInfo>(Handlers.Generate);
 
             // ===========================================INVOKE===========================================
