@@ -14,8 +14,8 @@
         public static void Generate(FileInfo file)
         {
             // Retrieve project name
-            string project_name = file.FullName;
-            Console.WriteLine($"Starting {project_name} generation at :\n\n{file}\n");
+            string project_name = Path.GetFileNameWithoutExtension(file.FullName);
+            Console.WriteLine($"Starting {project_name} generation at :\n\n{file.FullName}\n");
         }
     }
 }

@@ -13,8 +13,8 @@ namespace autocli
             // ===========================================COMMANDS===========================================
 
             RootCommand command = Builders.MakeRootCommand(
-                title: "AUTOCLI : automation for CLI applications interface creation\n",
-                description: "[autocli] aims to automate .NET 6.0.* CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.\n");
+                title: "AUTOCLI : automation for CLI applications interface creation",
+                description: "[autocli] aims to automate .NET 6.0.* CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.");
 
             Command creation = Commands._creation(command);
             Command generation = Commands._generation(command);

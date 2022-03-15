@@ -35,7 +35,7 @@ namespace autocli
                 symbol: "--directory",
                 alias: "-d",
                 defaultvalue: null,
-                description: "Specify the directory output");
+                description: "Specify the directory output.");
         }
     }
 }

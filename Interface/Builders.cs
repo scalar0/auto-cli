@@ -9,7 +9,7 @@ namespace autocli
             string description)
         {
             RootCommand ROOTCOMMAND = new();
-            ROOTCOMMAND.Description = Utils.Boxed(title) + description;
+            ROOTCOMMAND.Description = Utils.Boxed(title) + description + "\n";
             ROOTCOMMAND.Handler = CommandHandler.Create(() => ROOTCOMMAND.Invoke("-h"));
 
             return ROOTCOMMAND;

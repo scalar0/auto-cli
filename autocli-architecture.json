@@ -1,6 +1,6 @@
 {
-  "title": "Title of the application",
-  "description": "description of the application",
+  "title": "AUTOCLI : automation for CLI applications interface creation",
+  "description": "[autocli] aims to automate .NET 6.0.* CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.",
   "outfolder": "~/autocli",
   "cli": "dotnet new console -f net6.0 -n autocli -o .",
   "repo": "auto-CLI",
@@ -20,32 +20,66 @@
   ],
   "commands": [
     {
-      "name": "subcommand",
-      "command": "upcommand",
-      "symbol": "cmdlet",
-      "decription": "description"
+      "name": "creation",
+      "command": "RootCommand",
+      "symbol": "create",
+      "decription": "Creates a template of a new .json configuration file with specified name."
+    },
+    {
+      "name": "generatin",
+      "command": "RootCommand",
+      "symbol": "generate",
+      "decription": "Generate the CLI project based on the input .json configuration file."
     }
   ],
   "arguments": [
     {
-      "name": "argument",
+      "name": "file_name",
       "type": "string",
-      "command": "cmd",
-      "symbol": "<arg>",
-      "defaultvalue": "value",
-      "decription": "description"
+      "command": "creation",
+      "symbol": "<name>",
+      "defaultvalue": "null",
+      "decription": "Name of .json configuration file."
+    },
+    {
+      "name": "file",
+      "type": "FileInfo",
+      "command": "generation",
+      "symbol": "<file>",
+      "defaultvalue": "null",
+      "decription": ".json configuration file."
     }
   ],
   "options": [
     {
-      "name": "option",
+      "name": "dir_choice",
       "type": "string",
-      "command": "cmd",
+      "command": "creation",
       "required": "true",
-      "symbol": "--option",
-      "alias": "-o",
-      "defaultvalue": "value",
-      "decription": "description"
+      "symbol": "--directory",
+      "alias": "-d",
+      "defaultvalue": "null",
+      "decription": "Specify the directory output."
+    },
+    {
+      "name": "verbosity",
+      "type": "string",
+      "command": "generation",
+      "required": "false",
+      "symbol": "--verbosity",
+      "alias": "-v",
+      "defaultvalue": "m",
+      "decription": "Choix de verbosité de sortie : q[uiet]; m[inimal]; diag[nostic]."
+    },
+    {
+      "name": "pushing",
+      "type": "string",
+      "command": "generation",
+      "required": "false",
+      "symbol": "--push",
+      "alias": "-p",
+      "defaultvalue": "n",
+      "decription": "Push to GitHub with repo-name ? (y/n)"
     }
   ]
 }
