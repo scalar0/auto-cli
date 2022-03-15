@@ -5,7 +5,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <ApplicationIcon>autocli.ico</ApplicationIcon>
+    <ApplicationIcon>Interface\autocli.ico</ApplicationIcon>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <Version>$(VersionPrefix)</Version>
   </PropertyGroup>
@@ -15,14 +15,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="autocli.ico" />
+    <Content Include="Interface\autocli.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Serilog" Version="2.11.0-dev-01380" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.2-dev-00890" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.1-dev-00947" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta3.22114.1" />
     <PackageReference Include="System.CommandLine.Hosting" Version="0.4.0-alpha.22114.1" />
     <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta3.22114.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="logs\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>

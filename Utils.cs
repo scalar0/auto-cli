@@ -5,7 +5,7 @@
         // Method to Box the title of the application
         public static string Boxed(string title)
         {
-            int? l = title.Length;
+            int l = title.Length;
             string box = "";
             for (int c = 1; c < l; c++)
             {

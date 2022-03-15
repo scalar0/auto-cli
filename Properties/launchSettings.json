@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "autocli": {
+      "commandName": "Project",
+      "workingDirectory": "."
+    }
+  }
+}

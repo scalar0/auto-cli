@@ -1,4 +1,5 @@
-﻿global using System.CommandLine;
+﻿global using Serilog;
+global using System.CommandLine;
 global using System.CommandLine.NamingConventionBinder;
 global using System.CommandLine.Parsing;
 
@@ -10,6 +11,12 @@ namespace autocli
     {
         public static async Task Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.File("./logs/autocli.log.txt", rollingInterval: RollingInterval.Minute)
+                .CreateLogger();
+
             // ===========================================COMMANDS===========================================
 
             RootCommand command = Builders.MakeRootCommand(
@@ -21,23 +28,24 @@ namespace autocli
 
             // ===========================================OPTIONS===========================================
 
-            Options._verbosity(generation);
-            Options._pushing(generation);
-            Options._dir_choice(creation);
+            Option verbosity = Options._verbosity(generation);
+            Option pushing = Options._pushing(generation);
+            Option dir_choice = Options._dir_choice(creation);
 
             // ===========================================ARGUMENTS===========================================
 
-            Arguments._file_name(creation);
-            Arguments._file_path(generation);
+            Argument file_name = Arguments._file_name(creation);
+            Argument file_path = Arguments._file_path(generation);
 
             // ===========================================HANDLERS===========================================
 
             creation.Handler = CommandHandler.Create<string, DirectoryInfo>(Handlers.Create_Template);
-            generation.Handler = CommandHandler.Create<FileInfo>(Handlers.Generate);
+            generation.Handler = CommandHandler.Create<string>(Handlers.Generate);
 
             // ===========================================INVOKE===========================================
 
             // Parse the incoming args and invoke the handler
+            Log.CloseAndFlush();
             await command.InvokeAsync(args);
         }
     }

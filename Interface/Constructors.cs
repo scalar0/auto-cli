@@ -11,7 +11,7 @@ namespace autocli
             RootCommand ROOTCOMMAND = new();
             ROOTCOMMAND.Description = Utils.Boxed(title) + description + "\n";
             ROOTCOMMAND.Handler = CommandHandler.Create(() => ROOTCOMMAND.Invoke("-h"));
-
+            Log.Debug("RootCommand built.");
             return ROOTCOMMAND;
         }
 
@@ -24,6 +24,7 @@ namespace autocli
             cmd.Description = description;
             // Adding command
             command.AddCommand(cmd);
+            Log.Debug("Command {symbol} built and added to {Command}.", symbol, command);
             return cmd;
         }
 
@@ -38,6 +39,7 @@ namespace autocli
             argument.Description = description;
             // Adding argument
             command.AddArgument(argument);
+            Log.Debug("Argument {Arg} built and added to {Command}.", symbol, command);
             return argument;
         }
 
@@ -56,6 +58,7 @@ namespace autocli
             option.Description = description;
             // Adding option
             command.AddOption(option);
+            Log.Debug("Option {symbol} built and added to {Command}.", symbol, command);
             return option;
         }
     }
@@ -63,15 +66,38 @@ namespace autocli
     // TODO:    Template for each entity
     public static class Templates
     {
-        public static void _Command()
+        public static void _RootCommand(
+            string title,
+            string description)
         {
         }
 
-        public static void _Argument()
+        public static void _Command(
+            Type T,
+            Command command,
+            string symbol,
+            string? defaultvalue,
+            string description)
         {
         }
 
-        public static void _Option()
+        public static void _Argument(
+            Type T,
+            Command command,
+            string symbol,
+            string? defaultvalue,
+            string description)
+        {
+        }
+
+        public static void _Option(
+            Type T,
+            Command command,
+            bool required,
+            string symbol,
+            string? alias,
+            string? defaultvalue,
+            string description)
         {
         }
     }
