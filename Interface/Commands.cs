@@ -10,7 +10,8 @@ namespace autocli
             return Builders.MakeCommand(
                 command: command,
                 symbol: "create",
-                description: "Creates a template of a new .json configuration file with specified name.");
+                description: "Creates a template of a new .json configuration file with specified name.",
+                setverbosity: false);
         }
 
         // BUG:     _generation : args not parsed
@@ -19,7 +20,8 @@ namespace autocli
             return Builders.MakeCommand(
                 command: command,
                 symbol: "generate",
-                description: "Generate the CLI project based on the input .json configuration file.");
+                description: "Generate the CLI project based on the input .json configuration file.",
+                setverbosity: true);
         }
     }
 }

@@ -23,7 +23,8 @@
       "name": "subcommand",
       "command": "upcommand",
       "symbol": "cmdlet",
-      "decription": "description"
+      "description": "description",
+      "setverbosity": "bool"
     }
   ],
   "arguments": [
@@ -33,7 +34,7 @@
       "command": "cmd",
       "symbol": "<arg>",
       "defaultvalue": "value",
-      "decription": "description"
+      "description": "description"
     }
   ],
   "options": [
@@ -45,7 +46,7 @@
       "symbol": "--option",
       "alias": "-o",
       "defaultvalue": "value",
-      "decription": "description"
+      "description": "description"
     }
   ]
 }

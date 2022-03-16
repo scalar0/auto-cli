@@ -28,9 +28,8 @@ namespace autocli
 
             // ===========================================OPTIONS===========================================
 
-            Option verbosity = Options._verbosity(generation);
-            Option pushing = Options._pushing(generation);
-            Option dir_choice = Options._dir_choice(creation);
+            Option<string> pushing = Options._pushing(generation);
+            Option<DirectoryInfo> dir_choice = Options._dir_choice(creation);
 
             // ===========================================ARGUMENTS===========================================
 

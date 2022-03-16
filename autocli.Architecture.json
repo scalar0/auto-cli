@@ -35,13 +35,15 @@
       "name": "creation",
       "command": "RootCommand",
       "symbol": "create",
-      "decription": "Creates a template of a new .json configuration file with specified name."
+      "description": "Creates a template of a new .json configuration file with specified name.",
+      "setverbosity": "false"
     },
     {
-      "name": "generatin",
+      "name": "generation",
       "command": "RootCommand",
       "symbol": "generate",
-      "decription": "Generate the CLI project based on the input .json configuration file."
+      "description": "Generate the CLI project based on the input .json configuration file.",
+      "setverbosity": "true"
     }
   ],
   "arguments": [
@@ -51,7 +53,7 @@
       "command": "creation",
       "symbol": "<name>",
       "defaultvalue": "null",
-      "decription": "Name of .json configuration file."
+      "description": "Name of .json configuration file."
     },
     {
       "name": "file",
@@ -59,7 +61,7 @@
       "command": "generation",
       "symbol": "<file>",
       "defaultvalue": "null",
-      "decription": ".json configuration file."
+      "description": ".json configuration file."
     }
   ],
   "options": [
@@ -71,17 +73,7 @@
       "symbol": "--directory",
       "alias": "-d",
       "defaultvalue": "null",
-      "decription": "Specify the directory output."
-    },
-    {
-      "name": "verbosity",
-      "type": "string",
-      "command": "generation",
-      "required": "false",
-      "symbol": "--verbosity",
-      "alias": "-v",
-      "defaultvalue": "m",
-      "decription": "Choix de verbosité de sortie : q[uiet]; m[inimal]; diag[nostic]."
+      "description": "Specify the directory output."
     },
     {
       "name": "pushing",
@@ -91,7 +83,7 @@
       "symbol": "--push",
       "alias": "-p",
       "defaultvalue": "n",
-      "decription": "Push to GitHub with repo-name ? (y/n)"
+      "description": "Push to GitHub with repo-name ? (y/n)"
     }
   ]
 }

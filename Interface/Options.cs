@@ -4,19 +4,7 @@ namespace autocli
 {
     public static class Options
     {
-        //TODO:    Implement verbosity option
-        public static Option _verbosity(Command generation)
-        {
-            return Builders.MakeOption<string>(
-                command: generation,
-                required: false,
-                symbol: "--verbosity",
-                alias: "-v",
-                defaultvalue: "m",
-                description: "Choix de verbosité de sortie : q[uiet]; m[inimal]; diag[nostic].");
-        }
-
-        public static Option _pushing(Command generation)
+        public static Option<string> _pushing(Command generation)
         {
             return Builders.MakeOption<string>(
                 command: generation,
@@ -27,7 +15,7 @@ namespace autocli
                 description: "Push to GitHub with repo-name ? (y/n)");
         }
 
-        public static Option _dir_choice(Command creation)
+        public static Option<DirectoryInfo> _dir_choice(Command creation)
         {
             return Builders.MakeOption<DirectoryInfo>(
                 command: creation,

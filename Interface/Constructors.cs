@@ -18,13 +18,16 @@ namespace autocli
         public static Command MakeCommand(
             Command command,
             string symbol,
-            string description)
+            string description,
+            bool setverbosity)
         {
             Command cmd = new(symbol);
             cmd.Description = description;
             // Adding command
             command.AddCommand(cmd);
-            Log.Debug("Command {symbol} built and added to {Command}.", symbol, command);
+            string upco = $"{command}";
+            Log.Debug("Command {symbol} built and added to {upco}.", symbol, upco);
+            if (setverbosity) SetVerbosity(cmd);
             return cmd;
         }
 
@@ -39,7 +42,8 @@ namespace autocli
             argument.Description = description;
             // Adding argument
             command.AddArgument(argument);
-            Log.Debug("Argument {Arg} built and added to {Command}.", symbol, command);
+            string upco = $"{command}";
+            Log.Debug("Argument {symbol} built and added to {upco}.", symbol, upco);
             return argument;
         }
 
@@ -58,8 +62,21 @@ namespace autocli
             option.Description = description;
             // Adding option
             command.AddOption(option);
-            Log.Debug("Option {symbol} built and added to {Command}.", symbol, command);
+            string upco = $"{command}";
+            Log.Debug("Option {symbol} built and added to {upco}.", symbol, upco);
             return option;
+        }
+
+        // Implement verbosity option
+        public static Option<string> SetVerbosity(Command command)
+        {
+            return MakeOption<string>(
+                command: command,
+                required: false,
+                symbol: "--verbosity",
+                alias: "-v",
+                defaultvalue: "m",
+                description: "Choix de verbosité de sortie : q[uiet]; m[inimal]; diag[nostic].");
         }
     }
 
@@ -73,11 +90,11 @@ namespace autocli
         }
 
         public static void _Command(
-            Type T,
             Command command,
             string symbol,
             string? defaultvalue,
-            string description)
+            string description,
+            bool setverbosity)
         {
         }
 
