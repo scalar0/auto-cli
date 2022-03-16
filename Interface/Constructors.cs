@@ -1,17 +1,23 @@
 ﻿// This file must be pasted in ther interface folder
 
-namespace autocli
+using autocli.Functionnals;
+
+namespace autocli.Interface
 {
     public static class Builders
     {
         public static RootCommand MakeRootCommand(
             string title,
-            string description)
+            string description,
+            bool setverbosity)
         {
-            RootCommand ROOTCOMMAND = new();
-            ROOTCOMMAND.Description = Utils.Boxed(title) + description + "\n";
+            RootCommand ROOTCOMMAND = new()
+            {
+                Description = Utils.Boxed(title) + description + "\n"
+            };
             ROOTCOMMAND.Handler = CommandHandler.Create(() => ROOTCOMMAND.Invoke("-h"));
             Log.Debug("RootCommand built.");
+            if (setverbosity) SetVerbosity(ROOTCOMMAND);
             return ROOTCOMMAND;
         }
 
@@ -21,12 +27,20 @@ namespace autocli
             string description,
             bool setverbosity)
         {
-            Command cmd = new(symbol);
-            cmd.Description = description;
-            // Adding command
-            command.AddCommand(cmd);
-            string upco = $"{command}";
-            Log.Debug("Command {symbol} built and added to {upco}.", symbol, upco);
+            Command cmd = new(symbol)
+            {
+                Description = description
+            };
+            try
+            {
+                command.AddCommand(cmd);
+                string upco = $"{command}";
+                Log.Debug("Command {symbol} built and added to {upco}.", symbol, upco);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, ex.Message, ex.ToString);
+            }
             if (setverbosity) SetVerbosity(cmd);
             return cmd;
         }
@@ -37,13 +51,21 @@ namespace autocli
             string? defaultvalue,
             string description)
         {
-            Argument<T> argument = new(symbol);
+            Argument<T> argument = new(symbol)
+            {
+                Description = description
+            };
             if (defaultvalue != null) argument.SetDefaultValue(defaultvalue);
-            argument.Description = description;
-            // Adding argument
-            command.AddArgument(argument);
-            string upco = $"{command}";
-            Log.Debug("Argument {symbol} built and added to {upco}.", symbol, upco);
+            try
+            {
+                command.AddArgument(argument);
+                string upco = $"{command}";
+                Log.Debug("Argument {symbol} built and added to {upco}.", symbol, upco);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, ex.Message, ex.ToString);
+            }
             return argument;
         }
 
@@ -55,15 +77,23 @@ namespace autocli
             string? defaultvalue,
             string description)
         {
-            Option<T> option = new(symbol);
-            option.IsRequired = required;
+            Option<T> option = new(symbol)
+            {
+                IsRequired = required,
+                Description = description
+            };
             if (alias != null) option.AddAlias(alias);
             if (defaultvalue != null) option.SetDefaultValue(defaultvalue);
-            option.Description = description;
-            // Adding option
-            command.AddOption(option);
-            string upco = $"{command}";
-            Log.Debug("Option {symbol} built and added to {upco}.", symbol, upco);
+            try
+            {
+                command.AddOption(option);
+                string upco = $"{command}";
+                Log.Debug("Option {symbol} built and added to {upco}.", symbol, upco);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, ex.Message, ex.ToString);
+            }
             return option;
         }
 
@@ -85,7 +115,8 @@ namespace autocli
     {
         public static void _RootCommand(
             string title,
-            string description)
+            string description,
+            bool setverbosity)
         {
         }
 

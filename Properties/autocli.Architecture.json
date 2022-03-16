@@ -4,6 +4,7 @@
   "outfolder": "~/autocli",
   "cli": "dotnet new console -f net6.0 -n autocli -o .",
   "repo": "auto-CLI",
+  "setverbosity": "true",
   "packages": [
     {
       "name": "System.CommandLine",

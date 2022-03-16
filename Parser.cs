@@ -2,6 +2,9 @@
 global using System.CommandLine;
 global using System.CommandLine.NamingConventionBinder;
 global using System.CommandLine.Parsing;
+using autocli.Functionnals;
+using autocli.Interface;
+using Serilog.Core;
 
 // This file is supposed to be auto-generated
 
@@ -11,9 +14,11 @@ namespace autocli
     {
         public static async Task Main(string[] args)
         {
+            var levelSwitch = new LoggingLevelSwitch(); // .ControlledBy(levelSwitch)
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.Console()
+                .WriteTo.Console(outputTemplate:
+                                "[{Timestamp:HH:mm:ss:ff} {Level:u10}] {Message:1j}{NewLine}{Exception}")
                 .WriteTo.File("./logs/autocli.log.txt", rollingInterval: RollingInterval.Minute)
                 .CreateLogger();
 
@@ -21,15 +26,16 @@ namespace autocli
 
             RootCommand command = Builders.MakeRootCommand(
                 title: "AUTOCLI : automation for CLI applications interface creation",
-                description: "[autocli] aims to automate .NET 6.0.* CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.");
+                description: "[autocli] aims to automate .NET 6.0.* CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.",
+                setverbosity: true);
 
             Command creation = Commands._creation(command);
             Command generation = Commands._generation(command);
 
             // ===========================================OPTIONS===========================================
 
-            Option<string> pushing = Options._pushing(generation);
             Option<DirectoryInfo> dir_choice = Options._dir_choice(creation);
+            Option<string> pushing = Options._pushing(generation);
 
             // ===========================================ARGUMENTS===========================================
 

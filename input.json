@@ -4,6 +4,7 @@
   "outfolder": "path",
   "cli": "dotnet new console -f net6.0 -n {NAME} -o {PATH}",
   "repo": "repo-name",
+  "setverbosity": "bool",
   "packages": [
     {
       "name": "System.CommandLine",
@@ -15,6 +16,18 @@
     },
     {
       "name": "System.CommandLine.NamingConventionBinder",
+      "version": "--prerelease"
+    },
+    {
+      "name": "Serilog",
+      "version": "--prerelease"
+    },
+    {
+      "name": "Serilog.Sinks.Console",
+      "version": "--prerelease"
+    },
+    {
+      "name": "Serilog.Sinks.File",
       "version": "--prerelease"
     }
   ],
