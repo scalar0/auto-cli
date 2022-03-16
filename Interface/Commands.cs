@@ -1,6 +1,6 @@
 ﻿// This file is supposed to be auto-generated
 
-namespace autocli
+namespace autocli.Interface
 {
     public static class Commands
     {

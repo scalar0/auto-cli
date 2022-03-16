@@ -1,4 +1,4 @@
-﻿namespace autocli
+﻿namespace autocli.Functionnals
 {
     public static class Utils
     {

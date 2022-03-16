@@ -2,6 +2,8 @@
 global using System.CommandLine;
 global using System.CommandLine.NamingConventionBinder;
 global using System.CommandLine.Parsing;
+using autocli.Functionnals;
+using autocli.Interface;
 
 // This file is supposed to be auto-generated
 
@@ -28,8 +30,8 @@ namespace autocli
 
             // ===========================================OPTIONS===========================================
 
-            Option<string> pushing = Options._pushing(generation);
             Option<DirectoryInfo> dir_choice = Options._dir_choice(creation);
+            Option<string> pushing = Options._pushing(generation);
 
             // ===========================================ARGUMENTS===========================================
 

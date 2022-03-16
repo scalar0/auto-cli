@@ -16,6 +16,18 @@
     {
       "name": "System.CommandLine.NamingConventionBinder",
       "version": "--prerelease"
+    },
+    {
+      "name": "Serilog",
+      "version": "--prerelease"
+    },
+    {
+      "name": "Serilog.Sinks.Console",
+      "version": "--prerelease"
+    },
+    {
+      "name": "Serilog.Sinks.File",
+      "version": "--prerelease"
     }
   ],
   "commands": [
