@@ -4,7 +4,7 @@ using autocli.Functionnals;
 
 namespace autocli.Interface
 {
-    public static class Builders
+    public static class Constructors
     {
         public static RootCommand MakeRootCommand(
             string title,
@@ -15,7 +15,7 @@ namespace autocli.Interface
             {
                 Description = Utils.Boxed(title) + description + "\n"
             };
-            ROOTCOMMAND.Handler = CommandHandler.Create(() => ROOTCOMMAND.Invoke("-h"));
+            ROOTCOMMAND.SetHandler(() => ROOTCOMMAND.Invoke("-h"));
             Log.Debug("RootCommand built.");
             if (setverbosity) SetVerbosity(ROOTCOMMAND);
             return ROOTCOMMAND;
@@ -107,46 +107,6 @@ namespace autocli.Interface
                 alias: "-v",
                 defaultvalue: "m",
                 description: "Choix de verbosité de sortie : q[uiet]; m[inimal]; diag[nostic].");
-        }
-    }
-
-    // TODO:    Template for each entity
-    public static class Templates
-    {
-        public static void _RootCommand(
-            string title,
-            string description,
-            bool setverbosity)
-        {
-        }
-
-        public static void _Command(
-            Command command,
-            string symbol,
-            string? defaultvalue,
-            string description,
-            bool setverbosity)
-        {
-        }
-
-        public static void _Argument(
-            Type T,
-            Command command,
-            string symbol,
-            string? defaultvalue,
-            string description)
-        {
-        }
-
-        public static void _Option(
-            Type T,
-            Command command,
-            bool required,
-            string symbol,
-            string? alias,
-            string? defaultvalue,
-            string description)
-        {
         }
     }
 }

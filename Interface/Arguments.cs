@@ -4,18 +4,18 @@ namespace autocli.Interface
 {
     public static class Arguments
     {
-        public static Argument _file_name(Command creation)
+        public static Argument<string> _file_name(Command creation)
         {
-            return Builders.MakeArgument<string>(
+            return Constructors.MakeArgument<string>(
                 command: creation,
                 symbol: "name",
                 defaultvalue: null,
                 description: "Name of .json configuration file.");
         }
 
-        public static Argument _file_path(Command generation)
+        public static Argument<string> _file_path(Command generation)
         {
-            return Builders.MakeArgument<string>(
+            return Constructors.MakeArgument<string>(
                 command: generation,
                 symbol: "file",
                 defaultvalue: null,

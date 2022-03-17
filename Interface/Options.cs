@@ -6,7 +6,7 @@ namespace autocli.Interface
     {
         public static Option<DirectoryInfo> _dir_choice(Command creation)
         {
-            return Builders.MakeOption<DirectoryInfo>(
+            return Constructors.MakeOption<DirectoryInfo>(
                 command: creation,
                 required: true,
                 symbol: "--directory",
@@ -17,7 +17,7 @@ namespace autocli.Interface
 
         public static Option<string> _pushing(Command generation)
         {
-            return Builders.MakeOption<string>(
+            return Constructors.MakeOption<string>(
                 command: generation,
                 required: false,
                 symbol: "--push",
