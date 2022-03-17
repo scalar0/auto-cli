@@ -15,10 +15,6 @@
       "version": "--prerelease"
     },
     {
-      "name": "System.CommandLine.NamingConventionBinder",
-      "version": "--prerelease"
-    },
-    {
       "name": "Serilog",
       "version": "--prerelease"
     },
@@ -68,7 +64,7 @@
   "options": [
     {
       "name": "dir_choice",
-      "type": "string",
+      "type": "DirectoryInfo",
       "command": "creation",
       "required": "true",
       "symbol": "--directory",
