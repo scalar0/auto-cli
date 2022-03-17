@@ -1,12 +1,4 @@
-﻿global using Serilog;
-global using System.CommandLine;
-global using System.CommandLine.NamingConventionBinder;
-global using System.CommandLine.Parsing;
-using autocli.Functionnals;
-using autocli.Interface;
-using Serilog.Core;
-
-// This file is supposed to be auto-generated
+﻿// This file is supposed to be auto-generated
 
 namespace autocli
 {
