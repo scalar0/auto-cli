@@ -15,7 +15,7 @@
         {
             // Retrieve project name
             string project_name = Path.GetFileNameWithoutExtension(path);
-            Console.WriteLine($"Starting {project_name} generation at :\n\n{path}\n");
+            Console.WriteLine($"Starting {project_name} generation at :\n\n{path} ...\n");
         }
     }
 }

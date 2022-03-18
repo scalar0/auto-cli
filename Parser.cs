@@ -14,7 +14,7 @@ namespace autocli
         {
             var levelSwitch = new LoggingLevelSwitch(); // .ControlledBy(levelSwitch)
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
+                .MinimumLevel.Debug()
                 .WriteTo.Console(outputTemplate:
                                 "[{Timestamp:HH:mm:ss:ff} {Level:u4}] {Message:1j}{NewLine}{Exception}")
                 .WriteTo.File("./logs/autocli.log.txt", rollingInterval: RollingInterval.Minute)

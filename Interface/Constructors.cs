@@ -27,13 +27,12 @@ namespace autocli.Interface
             string description,
             bool setverbosity)
         {
-            Command cmd = new(symbol)
-            {
-                Description = description
-            };
+            Command cmd = new(symbol);
             try
             {
+                cmd.Description = description;
                 command.AddCommand(cmd);
+                if (setverbosity) SetVerbosity(cmd);
                 string upco = $"{command}";
                 Log.Debug("Command {symbol} built and added to {upco}.", symbol, upco);
             }
@@ -41,7 +40,6 @@ namespace autocli.Interface
             {
                 Log.Error(ex, ex.Message, ex.ToString);
             }
-            if (setverbosity) SetVerbosity(cmd);
             return cmd;
         }
 
@@ -51,13 +49,11 @@ namespace autocli.Interface
             string? defaultvalue,
             string description)
         {
-            Argument<T> argument = new(symbol)
-            {
-                Description = description
-            };
-            if (defaultvalue != null) argument.SetDefaultValue(defaultvalue);
+            Argument<T> argument = new(symbol);
+            if (defaultvalue is not null) argument.SetDefaultValue(defaultvalue);
             try
             {
+                argument.Description = description;
                 command.AddArgument(argument);
                 string upco = $"{command}";
                 Log.Debug("Argument {symbol} built and added to {upco}.", symbol, upco);
@@ -77,15 +73,13 @@ namespace autocli.Interface
             string? defaultvalue,
             string description)
         {
-            Option<T> option = new(symbol)
-            {
-                IsRequired = required,
-                Description = description
-            };
-            if (alias != null) option.AddAlias(alias);
-            if (defaultvalue != null) option.SetDefaultValue(defaultvalue);
+            Option<T> option = new(symbol);
+            if (alias is not null) option.AddAlias(alias);
+            if (defaultvalue is not null) option.SetDefaultValue(defaultvalue);
             try
             {
+                option.IsRequired = required;
+                option.Description = description;
                 command.AddOption(option);
                 string upco = $"{command}";
                 Log.Debug("Option {symbol} built and added to {upco}.", symbol, upco);
