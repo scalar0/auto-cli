@@ -1,0 +1,16 @@
+[
+  {
+    "Name": "create",
+    "Parent": "RootCommand",
+    "Method": "creation",
+    "Description": "Creates a template of a new .json configuration file with specified name.",
+    "Verbosity": "false"
+  },
+  {
+    "Name": "generate",
+    "Parent": "RootCommand",
+    "Method": "generation",
+    "Description": "Generate the CLI project based on the input .json configuration file.",
+    "Verbosity": "true"
+  }
+]

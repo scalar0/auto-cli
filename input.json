@@ -30,7 +30,7 @@
   "commands": [
     {
       "name": "subcommand",
-      "command": "upcommand",
+      "parent": "upcommand",
       "symbol": "cmdlet",
       "description": "description",
       "setverbosity": "bool"
@@ -40,7 +40,7 @@
     {
       "name": "argument",
       "type": "string",
-      "command": "cmd",
+      "parent": "cmd",
       "symbol": "<arg>",
       "defaultvalue": "value",
       "description": "description"

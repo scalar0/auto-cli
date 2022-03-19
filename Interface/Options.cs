@@ -1,29 +1,39 @@
-﻿// This file is supposed to be auto-generated
-
-namespace autocli.Interface
+﻿namespace autocli.Interface
 {
-    public static class Options
+    [Serializable]
+    public class Options : Option
     {
-        public static Option<DirectoryInfo> _dir_choice(Command creation)
+        /// <summary>
+        /// The parent command of the option.
+        /// </summary>
+        public object Parent { get; set; }
+
+        /// <summary>
+        /// The name of the method that will be generated to call the option.
+        /// </summary>
+        public string Method { get; set; }
+
+        public Options(string[] symbols)
+            : base(symbols)
         {
-            return Constructors.MakeOption<DirectoryInfo>(
-                command: creation,
-                required: true,
-                symbol: "--directory",
-                alias: "-d",
-                defaultvalue: null,
-                description: "Specify the directory output.");
         }
 
-        public static Option<string> _pushing(Command generation)
+        // TODO:    Correct the symbols in the json template and Constructors
+        /// <summary>
+        /// Initializes a new instance of the Options class.
+        /// </summary>
+        /// <param name="symbols">Aliases of the option.</param>
+        /// <param name="description">Description of the option, shown in help.</param>
+        /// <param name="parent">Parent command of the option</param>
+        /// <param name="method">Name of the method calling the option.</param>
+        public Options(string[] symbols,
+                          string? description,
+                          Command parent,
+                          string method)
+            : base(symbols, description)
         {
-            return Constructors.MakeOption<string>(
-                command: generation,
-                required: false,
-                symbol: "--push",
-                alias: "-p",
-                defaultvalue: "n",
-                description: "Push to GitHub with repo-name ? (y/n)");
+            Parent = parent;
+            Method = method;
         }
     }
 }

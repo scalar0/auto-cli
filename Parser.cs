@@ -24,29 +24,52 @@ namespace autocli
 
             RootCommand command = Constructors.MakeRootCommand(
                 title: "AUTOCLI : automation for CLI applications interface creation",
-                description: "[autocli] aims to automate .NET 6.0.* CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.",
-                setverbosity: true);
+                description: "[autocli] aims to automate .NET 6.0.* CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.");
 
-            Command creation = Constructors.MakeCommand(
-                command: command,
+            SubCommand creation = Constructors.MakeCommand(
+                parent: command,
                 symbol: "create",
                 description: "Creates a template of a new .json configuration file with specified name.",
-                setverbosity: false);
-            Command generation = Constructors.MakeCommand(
-                command: command,
+                verbosity: false);
+            SubCommand generation = Constructors.MakeCommand(
+                parent: command,
                 symbol: "generate",
                 description: "Generate the CLI project based on the input .json configuration file.",
-                setverbosity: true);
+                verbosity: true);
             Log.Debug("Commands and subcommands built.");
+
+            List<SubCommand>? scom = Utils.GetSubCommands(@"C:\Users\matte\source\repos\autoCLI\Properties\subcom.json");
+            if (scom is not null) foreach (SubCommand com in scom)
+                {
+                    Log.Debug($"{com}");
+                }
             // ===========================================OPTIONS===========================================
 
-            Option<DirectoryInfo> dir_choice = Options._dir_choice(creation);
-            Option<string> pushing = Options._pushing(generation);
+            Option<DirectoryInfo> dir_choice = Constructors.MakeOption<DirectoryInfo>(
+                command: creation,
+                required: true,
+                symbols: new string[] { "--directory", "-d" },
+                defaultvalue: null,
+                description: "Specify the directory output.");
+            Option<string> pushing = Constructors.MakeOption<string>(
+                command: generation,
+                required: false,
+                symbols: new string[] { "--push", "-p" },
+                defaultvalue: "n",
+                description: "Push to GitHub with repo-name ? (y/n)");
             Log.Debug("Options built.");
             // ===========================================ARGUMENTS===========================================
 
-            Argument<string> file_name = Arguments._file_name(creation);
-            Argument<string> file_path = Arguments._file_path(generation);
+            Argument<string> file_name = Constructors.MakeArgument<string>(
+                command: creation,
+                symbol: "name",
+                defaultvalue: null,
+                description: "Name of .json configuration file.");
+            Argument<string> file_path = Constructors.MakeArgument<string>(
+                command: generation,
+                symbol: "file",
+                defaultvalue: null,
+                description: "Path to .json configuration file."); ;
             Log.Debug("Arguments built.");
             // ===========================================HANDLERS===========================================
 

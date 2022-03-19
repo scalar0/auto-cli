@@ -1,25 +1,38 @@
-﻿// This file is supposed to be auto-generated
-
-namespace autocli.Interface
+﻿namespace autocli.Interface
 {
-    public static class Arguments
+    [Serializable]
+    public class Arguments : Argument
     {
-        public static Argument<string> _file_name(Command creation)
+        /// <summary>
+        /// The parent command of the argument.
+        /// </summary>
+        public object Parent { get; set; }
+
+        /// <summary>
+        /// The name of the method that will be generated to call the argument.
+        /// </summary>
+        public string Method { get; set; }
+
+        public Arguments(string symbol)
+            : base(symbol)
         {
-            return Constructors.MakeArgument<string>(
-                command: creation,
-                symbol: "name",
-                defaultvalue: null,
-                description: "Name of .json configuration file.");
         }
 
-        public static Argument<string> _file_path(Command generation)
+        /// <summary>
+        /// Initializes a new instance of the Arguments class.
+        /// </summary>
+        /// <param name="symbol">Symbol/command-let of the argument.</param>
+        /// <param name="description">Cescription of the argument, shown in help.</param>
+        /// <param name="parent">Parent command of the argument</param>
+        /// <param name="method">Name of the method calling the argument.</param>
+        public Arguments(string symbol,
+                          string? description,
+                          Command parent,
+                          string method)
+            : base(symbol, description)
         {
-            return Constructors.MakeArgument<string>(
-                command: generation,
-                symbol: "file",
-                defaultvalue: null,
-                description: "Path to .json configuration file.");
+            Parent = parent;
+            Method = method;
         }
     }
 }
