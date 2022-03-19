@@ -27,8 +27,16 @@ namespace autocli
                 description: "[autocli] aims to automate .NET 6.0.* CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.",
                 setverbosity: true);
 
-            Command creation = Commands._creation(command);
-            Command generation = Commands._generation(command);
+            Command creation = Constructors.MakeCommand(
+                command: command,
+                symbol: "create",
+                description: "Creates a template of a new .json configuration file with specified name.",
+                setverbosity: false);
+            Command generation = Constructors.MakeCommand(
+                command: command,
+                symbol: "generate",
+                description: "Generate the CLI project based on the input .json configuration file.",
+                setverbosity: true);
             Log.Debug("Commands and subcommands built.");
             // ===========================================OPTIONS===========================================
 

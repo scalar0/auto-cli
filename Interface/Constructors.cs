@@ -4,6 +4,23 @@ using autocli.Functionnals;
 
 namespace autocli.Interface
 {
+    // Defining SubCommand class inheritance of class Command
+    public sealed class SubCommand : Command
+    {
+        public Command Parent { get; set; }
+        public bool Setverbosity { get; set; }
+
+        public SubCommand(string name) : base(name)
+        {
+        }
+
+        public SubCommand(string name, string? description, Command parent, bool setverbosity) : base(name, description)
+        {
+            Parent = parent;
+            Setverbosity = setverbosity;
+        }
+    }
+
     public static class Constructors
     {
         public static RootCommand MakeRootCommand(
@@ -21,20 +38,23 @@ namespace autocli.Interface
             return ROOTCOMMAND;
         }
 
-        public static Command MakeCommand(
+        public static SubCommand MakeCommand(
             Command command,
             string symbol,
             string description,
             bool setverbosity)
         {
-            Command cmd = new(symbol);
+            SubCommand cmd = new(symbol);
             try
             {
                 cmd.Description = description;
                 command.AddCommand(cmd);
-                if (setverbosity) SetVerbosity(cmd);
-                string upco = $"{command}";
-                Log.Debug("Command {symbol} built and added to {upco}.", symbol, upco);
+                if (setverbosity)
+                {
+                    SetVerbosity(cmd);
+                    cmd.Setverbosity = setverbosity;
+                }
+                Log.Debug("{C} built and added to {U}.", $"{cmd}", $"{command}");
             }
             catch (Exception ex)
             {
@@ -55,8 +75,7 @@ namespace autocli.Interface
             {
                 argument.Description = description;
                 command.AddArgument(argument);
-                string upco = $"{command}";
-                Log.Debug("Argument {symbol} built and added to {upco}.", symbol, upco);
+                Log.Debug("{A} built and added to {U}.", $"{argument}", $"{command}");
             }
             catch (Exception ex)
             {
@@ -81,8 +100,7 @@ namespace autocli.Interface
                 option.IsRequired = required;
                 option.Description = description;
                 command.AddOption(option);
-                string upco = $"{command}";
-                Log.Debug("Option {symbol} built and added to {upco}.", symbol, upco);
+                Log.Debug("{O} built and added to {U}.", $"{option}", $"{command}");
             }
             catch (Exception ex)
             {
