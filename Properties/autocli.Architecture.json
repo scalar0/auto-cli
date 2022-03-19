@@ -29,55 +29,55 @@
   ],
   "commands": [
     {
-      "name": "creation",
-      "command": "RootCommand",
       "symbol": "create",
+      "parent": "RootCommand",
+      "method": "creation",
       "description": "Creates a template of a new .json configuration file with specified name.",
-      "setverbosity": "false"
+      "verbosity": "false"
     },
     {
-      "name": "generation",
-      "command": "RootCommand",
       "symbol": "generate",
+      "parent": "RootCommand",
+      "method": "generation",
       "description": "Generate the CLI project based on the input .json configuration file.",
-      "setverbosity": "true"
+      "verbosity": "true"
     }
   ],
   "arguments": [
     {
-      "name": "file_name",
+      "symbol": "<name>",
       "type": "string",
       "command": "creation",
-      "symbol": "<name>",
+      "method": "file_name",
       "defaultvalue": "null",
       "description": "Name of .json configuration file."
     },
     {
-      "name": "file",
+      "symbol": "<file>",
       "type": "FileInfo",
       "command": "generation",
-      "symbol": "<file>",
+      "method": "file",
       "defaultvalue": "null",
       "description": ".json configuration file."
     }
   ],
   "options": [
     {
-      "name": "dir_choice",
+      "symbol": "--directory",
       "type": "DirectoryInfo",
       "command": "creation",
       "required": "true",
-      "symbol": "--directory",
+      "method": "dir_choice",
       "alias": "-d",
       "defaultvalue": "null",
       "description": "Specify the directory output."
     },
     {
-      "name": "pushing",
+      "symbol": "--push",
       "type": "string",
       "command": "generation",
       "required": "false",
-      "symbol": "--push",
+      "method": "pushing",
       "alias": "-p",
       "defaultvalue": "n",
       "description": "Push to GitHub with repo-name ? (y/n)"

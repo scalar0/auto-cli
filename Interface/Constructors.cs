@@ -4,57 +4,49 @@ using autocli.Functionnals;
 
 namespace autocli.Interface
 {
-    // Defining SubCommand class inheritance of class Command
-    public sealed class SubCommand : Command
-    {
-        public Command Parent { get; set; }
-        public bool Setverbosity { get; set; }
-
-        public SubCommand(string name) : base(name)
-        {
-        }
-
-        public SubCommand(string name, string? description, Command parent, bool setverbosity) : base(name, description)
-        {
-            Parent = parent;
-            Setverbosity = setverbosity;
-        }
-    }
-
+    /// <summary>
+    /// The Constructors class creates each entity needed for the application interface on the CLI.
+    /// For each method the arguments must be parsed from .json configuration file.
+    /// </summary>
     public static class Constructors
     {
+        /// <summary>
+        /// Constructs a new instance of the RootCommand class.
+        /// </summary>
+        /// <param name="title">Describe the application title displayed in the console output.</param>
+        /// <param name="description">Description of the application purpose.</param>
+        /// <returns>RootCommand for these parameters.</returns>
         public static RootCommand MakeRootCommand(
             string title,
-            string description,
-            bool setverbosity)
+            string description)
         {
-            RootCommand ROOTCOMMAND = new()
-            {
-                Description = Utils.Boxed(title) + description + "\n"
-            };
-            ROOTCOMMAND.SetHandler(() => ROOTCOMMAND.Invoke("-h"));
+            RootCommand rcom = new(Utils.Boxed(title) + description + "\n");
+            rcom.SetHandler(() => rcom.Invoke("-h"));
             Log.Debug("RootCommand built.");
-            if (setverbosity) SetVerbosity(ROOTCOMMAND);
-            return ROOTCOMMAND;
+            return rcom;
         }
 
+        /// <summary>
+        /// Constructs a new instance of the SubCommand class.
+        /// </summary>
+        /// <param name="parent">Parent Command.</param>
+        /// <param name="symbol">Command-let of the command.</param>
+        /// <param name="description"></param>
+        /// <param name="verbosity">Output verbosity for debugging.</param>
+        /// <returns>The corresponding SubCommand.</returns>
         public static SubCommand MakeCommand(
-            Command command,
+            Command parent,
             string symbol,
             string description,
-            bool setverbosity)
+            bool verbosity)
         {
             SubCommand cmd = new(symbol);
             try
             {
                 cmd.Description = description;
-                command.AddCommand(cmd);
-                if (setverbosity)
-                {
-                    SetVerbosity(cmd);
-                    cmd.Setverbosity = setverbosity;
-                }
-                Log.Debug("{C} built and added to {U}.", $"{cmd}", $"{command}");
+                cmd.Parent = parent;
+                cmd.SetVerbosity(verbosity);
+                Log.Debug("{C} built and added to {U}.", $"{cmd}", $"{parent}");
             }
             catch (Exception ex)
             {
@@ -63,6 +55,15 @@ namespace autocli.Interface
             return cmd;
         }
 
+        /// <summary>
+        /// Constructs a new instance of the Argument class.
+        /// </summary>
+        /// <typeparam name="T">Type fo the argument.</typeparam>
+        /// <param name="command">Parent command for the argument.</param>
+        /// <param name="symbol">Argument's name.</param>
+        /// <param name="defaultvalue">Default value of the argument (none if null).</param>
+        /// <param name="description"></param>
+        /// <returns>The corresponding Argument.</returns>
         public static Argument<T> MakeArgument<T>(
             Command command,
             string symbol,
@@ -70,10 +71,10 @@ namespace autocli.Interface
             string description)
         {
             Argument<T> argument = new(symbol);
-            if (defaultvalue is not null) argument.SetDefaultValue(defaultvalue);
             try
             {
                 argument.Description = description;
+                if (defaultvalue is not null) argument.SetDefaultValue(defaultvalue);
                 command.AddArgument(argument);
                 Log.Debug("{A} built and added to {U}.", $"{argument}", $"{command}");
             }
@@ -84,6 +85,19 @@ namespace autocli.Interface
             return argument;
         }
 
+        /// <summary>
+        /// Constructs a new instance of the Option class.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="command">Parent command.</param>
+        /// <param name="required">
+        /// Boolean to specify if the option must be required by the cli parser.
+        /// </param>
+        /// <param name="symbol">Name of the option.</param>
+        /// <param name="alias">Alias of the symbol.</param>
+        /// <param name="defaultvalue"></param>
+        /// <param name="description"></param>
+        /// <returns>The corresponding Option.</returns>
         public static Option<T> MakeOption<T>(
             Command command,
             bool required,
@@ -107,18 +121,6 @@ namespace autocli.Interface
                 Log.Error(ex, ex.Message, ex.ToString);
             }
             return option;
-        }
-
-        // Implement verbosity option
-        public static Option<string> SetVerbosity(Command command)
-        {
-            return MakeOption<string>(
-                command: command,
-                required: false,
-                symbol: "--verbosity",
-                alias: "-v",
-                defaultvalue: "m",
-                description: "Choix de verbosité de sortie : q[uiet]; m[inimal]; diag[nostic].");
         }
     }
 }

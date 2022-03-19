@@ -1,6 +1,5 @@
 ﻿namespace autocli.Interface
 {
-    // TODO:    Template for each entity
     public static class Templates
     {
         public static string _RootCommand(
