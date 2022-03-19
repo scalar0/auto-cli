@@ -1,86 +1,89 @@
 {
-  "title": "AUTOCLI : automation for CLI applications interface creation",
-  "description": "[autocli] aims to automate .NET 6.0.* CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.",
-  "outfolder": "~/autocli",
+  "Title": "AUTOCLI : automation for CLI applications interface creation",
+  "Description": "[autocli] aims to automate .NET 6.0.* CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's Commands, subCommands, options, arguments and properties.",
+  "Outfolder": "~/autocli",
   "cli": "dotnet new console -f net6.0 -n autocli -o .",
-  "repo": "auto-CLI",
-  "setverbosity": "true",
-  "packages": [
+  "Repo": "auto-CLI",
+  "Packages": [
     {
-      "name": "System.CommandLine",
-      "version": "--prerelease"
+      "Name": "System.CommandLine",
+      "Version": "--prerelease"
     },
     {
-      "name": "System.CommandLine.Hosting",
-      "version": "--prerelease"
+      "Name": "System.CommandLine.Hosting",
+      "Version": "--prerelease"
     },
     {
-      "name": "Serilog",
-      "version": "--prerelease"
+      "Name": "Serilog",
+      "Version": "--prerelease"
     },
     {
-      "name": "Serilog.Sinks.Console",
-      "version": "--prerelease"
+      "Name": "Serilog.Sinks.Console",
+      "Version": "--prerelease"
     },
     {
-      "name": "Serilog.Sinks.File",
-      "version": "--prerelease"
+      "Name": "Serilog.Sinks.File",
+      "Version": "--prerelease"
     }
   ],
-  "commands": [
+  "Commands": [
     {
-      "symbol": "create",
-      "parent": "RootCommand",
-      "method": "creation",
-      "description": "Creates a template of a new .json configuration file with specified name.",
-      "verbosity": "false"
+      "Symbol": "create",
+      "Parent": "RootCommand",
+      "Method": "creation",
+      "Verbosity": "false",
+      "Description": "Creates a template of a new .json configuration file with specified name."
     },
     {
-      "symbol": "generate",
-      "parent": "RootCommand",
-      "method": "generation",
-      "description": "Generate the CLI project based on the input .json configuration file.",
-      "verbosity": "true"
+      "Symbol": "generate",
+      "Parent": "RootCommand",
+      "Method": "generation",
+      "Verbosity": "true",
+      "Description": "Generate the CLI project based on the input .json configuration file."
     }
   ],
-  "arguments": [
+  "Arguments": [
     {
-      "symbol": "<name>",
-      "type": "string",
-      "command": "creation",
-      "method": "file_name",
-      "defaultvalue": "null",
-      "description": "Name of .json configuration file."
+      "Symbol": "<name>",
+      "Type": "string",
+      "Command": "creation",
+      "Method": "file_name",
+      "Defaultvalue": "null",
+      "Description": "Name of .json configuration file."
     },
     {
-      "symbol": "<file>",
-      "type": "FileInfo",
-      "command": "generation",
-      "method": "file",
-      "defaultvalue": "null",
-      "description": ".json configuration file."
+      "Symbol": "<file>",
+      "Type": "FileInfo",
+      "Command": "generation",
+      "Method": "file",
+      "Defaultvalue": "null",
+      "Description": ".json configuration file."
     }
   ],
-  "options": [
+  "Options": [
     {
-      "symbol": "--directory",
-      "type": "DirectoryInfo",
-      "command": "creation",
-      "required": "true",
-      "method": "dir_choice",
-      "alias": "-d",
-      "defaultvalue": "null",
-      "description": "Specify the directory output."
+      "Symbols": [
+        "--directory",
+        "-d"
+      ],
+      "Type": "DirectoryInfo",
+      "Command": "creation",
+      "Required": "true",
+      "Method": "dir_choice",
+      "Defaultvalue": "null",
+      "Description": "Specify the directory output."
     },
     {
-      "symbol": "--push",
-      "type": "string",
-      "command": "generation",
-      "required": "false",
-      "method": "pushing",
-      "alias": "-p",
-      "defaultvalue": "n",
-      "description": "Push to GitHub with repo-name ? (y/n)"
+      "Symbols": [
+        "--push",
+        "-p"
+      ],
+      "Type": "string",
+      "Command": "generation",
+      "Required": "false",
+      "Method": "pushing",
+      "Defaultvalue": "n",
+      "Description": "Push to GitHub with repo-name ? (y/n)"
     }
   ]
 }

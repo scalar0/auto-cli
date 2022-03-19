@@ -10,6 +10,10 @@ namespace autocli
 {
     public static class Parser
     {
+        /// <summary>
+        /// Async task to parse the array of args as strings
+        /// </summary>
+        /// <param name="args">Type : string[]</param>
         public static async Task Main(string[] args)
         {
             var levelSwitch = new LoggingLevelSwitch(); // .ControlledBy(levelSwitch)
@@ -38,11 +42,11 @@ namespace autocli
                 verbosity: true);
             Log.Debug("Commands and subcommands built.");
 
-            List<SubCommand>? scom = Utils.GetSubCommands(@"C:\Users\matte\source\repos\autoCLI\Properties\subcom.json");
-            if (scom is not null) foreach (SubCommand com in scom)
-                {
-                    Log.Debug($"{com}");
-                }
+            /*            List<SubCommand>? scom = ParseArchitecture.GetSubCommands(@"C:\Users\matte\source\repos\autoCLI\Properties\subcom.json");
+                        if (scom is not null) foreach (SubCommand com in scom)
+                            {
+                                Log.Debug($"{com}");
+                            }*/
             // ===========================================OPTIONS===========================================
 
             Option<DirectoryInfo> dir_choice = Constructors.MakeOption<DirectoryInfo>(
@@ -85,6 +89,7 @@ namespace autocli
             // Parse the incoming args and invoke the handler
             Log.Debug("Invoking args...");
             Log.CloseAndFlush();
+
             await command.InvokeAsync(args);
         }
     }

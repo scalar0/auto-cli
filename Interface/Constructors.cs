@@ -1,6 +1,4 @@
-﻿// This file must be pasted in ther interface folder
-
-using autocli.Functionnals;
+﻿using autocli.Functionnals;
 
 namespace autocli.Interface
 {

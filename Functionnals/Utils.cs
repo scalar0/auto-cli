@@ -1,7 +1,4 @@
-﻿using autocli.Interface;
-using Newtonsoft.Json;
-
-namespace autocli.Functionnals
+﻿namespace autocli.Functionnals
 {
     public static class Utils
     {
@@ -39,16 +36,6 @@ namespace autocli.Functionnals
             string crit = string.IsNullOrEmpty(input) ? keyword : input;
             string[] data_file = Directory.GetFiles(Directory.GetCurrentDirectory(), crit);
             return data_file[^1];
-        }
-
-        /// <summary>
-        /// Method to retrieve SubCommands from .json file.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static List<SubCommand>? GetSubCommands(string path)
-        {
-            return JsonConvert.DeserializeObject<List<SubCommand>>(File.ReadAllText(path));
         }
     }
 }

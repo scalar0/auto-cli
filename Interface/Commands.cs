@@ -1,6 +1,4 @@
-﻿// This file is supposed to be pasted
-
-namespace autocli.Interface
+﻿namespace autocli.Interface
 {
     [Serializable]
     public class SubCommand : Command
@@ -64,10 +62,10 @@ namespace autocli.Interface
         /// name="method">The name of the method calling the command.param> <param
         /// name="verbosity">The verbosity type output to debug in the console.</param>
         public SubCommand(string symbol,
-                          string? description,
                           Command parent,
+                          string method,
                           bool verbosity,
-                          string method)
+                          string? description)
             : base(symbol, description)
         {
             SetParent(parent);

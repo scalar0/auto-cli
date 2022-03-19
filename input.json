@@ -1,61 +1,61 @@
 {
-  "title": "Title of the application",
-  "description": "description of the application",
-  "outfolder": "path",
-  "cli": "dotnet new console -f net6.0 -n {NAME} -o {PATH}",
-  "repo": "repo-name",
-  "setverbosity": "bool",
-  "packages": [
+  "Title": "title",
+  "Description": "description",
+  "Outfolder": "~/path",
+  "Repo": "repo-name",
+  "Packages": [
     {
-      "name": "System.CommandLine",
-      "version": "--prerelease"
+      "Name": "System.CommandLine",
+      "Version": "--prerelease"
     },
     {
-      "name": "System.CommandLine.Hosting",
-      "version": "--prerelease"
+      "Name": "System.CommandLine.Hosting",
+      "Version": "--prerelease"
     },
     {
-      "name": "Serilog",
-      "version": "--prerelease"
+      "Name": "Serilog",
+      "Version": "--prerelease"
     },
     {
-      "name": "Serilog.Sinks.Console",
-      "version": "--prerelease"
+      "Name": "Serilog.Sinks.Console",
+      "Version": "--prerelease"
     },
     {
-      "name": "Serilog.Sinks.File",
-      "version": "--prerelease"
+      "Name": "Serilog.Sinks.File",
+      "Version": "--prerelease"
     }
   ],
-  "commands": [
+  "Commands": [
     {
-      "name": "subcommand",
-      "parent": "upcommand",
-      "symbol": "cmdlet",
-      "description": "description",
-      "setverbosity": "bool"
+      "Symbol": "symbol",
+      "Parent": "parent",
+      "Method": "method-name",
+      "Verbosity": "bool",
+      "Description": "description"
     }
   ],
-  "arguments": [
+  "Arguments": [
     {
-      "name": "argument",
-      "type": "string",
-      "parent": "cmd",
-      "symbol": "<arg>",
-      "defaultvalue": "value",
-      "description": "description"
+      "Symbol": "<name>",
+      "Type": "Type",
+      "Command": "command",
+      "Method": "method",
+      "Defaultvalue": "null",
+      "Description": "description"
     }
   ],
-  "options": [
+  "Options": [
     {
-      "name": "option",
-      "type": "string",
-      "command": "cmd",
-      "required": "true",
-      "symbol": "--option",
-      "alias": "-o",
-      "defaultvalue": "value",
-      "description": "description"
+      "Symbols": [
+        "--option",
+        "-o (alias)"
+      ],
+      "Type": "Type",
+      "Command": "command",
+      "Required": "bool",
+      "Method": "method",
+      "Defaultvalue": "null",
+      "Description": "description"
     }
   ]
 }
