@@ -1,14 +1,13 @@
 ﻿namespace autocli.Interface
 {
-    [Serializable]
     public class SubCommand : Command
     {
         /// <summary>
         /// The parent command of the subcommand.
         /// </summary>
-        private readonly Command parent;
+        public Command Parent;
 
-        public Command GetParent() => parent;
+        public Command GetParent() => Parent;
 
         /// <summary>
         /// Sets the parent of a command by adding the command to the parent via the AddCommand method.
@@ -28,9 +27,9 @@
         /// <summary>
         /// Boolean to set the verbosity of the output on the cli.
         /// </summary>
-        private readonly bool verbosity;
+        public bool Verbosity;
 
-        public bool GetVerbosity() => verbosity;
+        public bool GetVerbosity() => Verbosity;
 
         /// <summary>
         /// Construct the verbosity option (or not if false).
@@ -42,13 +41,15 @@
             {
                 return Constructors.MakeOption<string>(
                 command: this,
-                required: false,
                 symbols: new string[] { "--verbosity", "-v" },
+                required: false,
                 defaultvalue: "m",
                 description: "Choix de verbosité de sortie : q[uiet]; m[inimal]; diag[nostic].");
             }
             else return null;
         }
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         public SubCommand(string symbol)
             : base(symbol)
@@ -71,6 +72,32 @@
             SetParent(parent);
             Method = method;
             SetVerbosity(verbosity);
+        }
+
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    }
+
+    public class SubCommands : Command
+    {
+        public Command Parent { get; set; }
+        public string Method { get; set; }
+        public bool Verbosity { get; set; }
+
+        public SubCommands(string symbol)
+            : base(symbol)
+        {
+        }
+
+        public SubCommands(string symbol,
+                          Command parent,
+                          string method,
+                          bool verbosity,
+                          string? description)
+            : base(symbol, description)
+        {
+            Parent = parent;
+            Method = method;
+            Verbosity = verbosity;
         }
     }
 }

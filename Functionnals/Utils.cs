@@ -11,7 +11,7 @@
         {
             int l = title.Length;
             string box = "";
-            for (int c = 1; c < l; c++)
+            for (int c = 0; c < l; c++)
             {
                 box += "_";
             }

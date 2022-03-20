@@ -1,53 +1,75 @@
-﻿using autocli.Interface;
-using Newtonsoft.Json;
+﻿global using Newtonsoft.Json;
+using System.Reflection;
 
 namespace autocli.Functionnals
 {
+    /// <summary>
+    /// Class API to parse the architecture from the configuration file.
+    /// </summary>
     internal static class ParseArchitecture
     {
-        /// <summary>
-        /// Method to polymorphically deserialize SubCommands from .json file.
-        /// </summary>
-        /// <param name="json"></param>
-        /// <returns></returns>
-        public static List<SubCommand>? GetSubCommands(string json)
+        /// <summary> Serialize the Json configuration file and parses it to a dictionnary.
+        /// </summary> <param name="path">Path of configuration file.</param>
+        /// <returns>Dictionary<property, string></returns>
+        public static Dictionary<string, Newtonsoft.Json.Linq.JArray> JsonParser(string path)
+        {
+            return JsonConvert.DeserializeObject<Dictionary<string, Newtonsoft.Json.Linq.JArray>>(File.ReadAllText(path))!;
+        }
+
+        /// <summary> Method to retrieve properties of the application. </summary> <param
+        /// name="json">Dictionnary extracted from the json file.</param>
+        /// <returns>Dictionary<property, string></returns>
+        public static Dictionary<string, string> GetProperties(Dictionary<string, Newtonsoft.Json.Linq.JArray> json)
+        {
+            string name = MethodBase.GetCurrentMethod()!.Name.Remove(0, 3);
+            Log.Debug("Extracting {entity}...", name);
+            return json[$"{name}"].ToObject<List<Dictionary<string, string>>>()![0];
+        }
+
+        /// <summary> Method to deserialize Packages from .json file. </summary> <param
+        /// name="json">Dictionnary extracted from the json file.</param>
+        /// <returns>List<Dictionary<property, string>></returns>
+        public static List<Dictionary<string, string>> GetPackages(Dictionary<string, Newtonsoft.Json.Linq.JArray> json)
+        {
+            //TODO:     Implement deserialization of Packages
+            string name = MethodBase.GetCurrentMethod()!.Name.Remove(0, 3);
+            Log.Debug("Extracting {entity}...", name);
+            return json[$"{name}"].ToObject<List<Dictionary<string, string>>>()!;
+        }
+
+        /// <summary> Method to deserialize SubCommands from .json file. </summary> <param
+        /// name="json">Dictionnary extracted from the json file.</param>
+        /// <returns>List<Dictionary<property, string>></returns>
+        public static List<Dictionary<string, object>> GetCommands(Dictionary<string, Newtonsoft.Json.Linq.JArray> json)
         {
             //TODO:     Implement deserialization of SubCommands
-            return JsonConvert.DeserializeObject<List<SubCommand>>(File.ReadAllText(json));
+            string name = MethodBase.GetCurrentMethod()!.Name.Remove(0, 3);
+            Log.Debug("Extracting {entity}...", name);
+            return json[$"{name}"].ToObject<List<Dictionary<string, object>>>()!;
         }
 
-        /// <summary>
-        /// Method to polymorphically deserialize Arguments from .json file.
-        /// </summary>
-        /// <param name="json"></param>
-        /// <returns></returns>
-        public static List<Arguments>? GetArguments(string json)
+        /// <summary> Method to deserialize Arguments from .json file. </summary> <param
+        /// name="json">Dictionnary extracted from the json file.</param>
+        /// <returns>List<Dictionary<property, string>></returns>
+        public static List<Dictionary<string, object>> GetArguments(Dictionary<string, Newtonsoft.Json.Linq.JArray> json)
         {
             //TODO:     Implement deserialization of Arguments
-            return JsonConvert.DeserializeObject<List<Arguments>>(File.ReadAllText(json));
+            string name = MethodBase.GetCurrentMethod()!.Name.Remove(0, 3);
+            Log.Debug("Extracting {entity}...", name);
+            return json[$"{name}"].ToObject<List<Dictionary<string, object>>>()!;
         }
 
-        /// <summary>
-        /// Method to polymorphically deserialize Options from .json file.
-        /// </summary>
-        /// <param name="json"></param>
-        /// <returns></returns>
-        public static List<Options>? GetOptions(string json)
+        /// <summary> Method to deserialize Options from .json file. </summary> <param
+        /// name="json">Dictionnary extracted from the json file.</param>
+        /// <returns>List<Dictionary<property, string[] or string>></returns>
+        public static List<Dictionary<string, object>> GetOptions(Dictionary<string, Newtonsoft.Json.Linq.JArray> json)
         {
             //TODO:     Implement deserialization of Options
-            return JsonConvert.DeserializeObject<List<Options>>(File.ReadAllText(json));
-        }
-
-        /// <summary>
-        /// Method to retrieve properties of the application.
-        /// </summary>
-        /// <param name="path">Path of .json configuration file.</param>
-        /// <returns>String array of properties.</returns>
-        public static string[] GetProperties(string path)
-        {
-            List<string> properties = new();
-            //TODO:     Implement GetProperties method
-            return properties.ToArray();
+            string name = MethodBase.GetCurrentMethod()!.Name.Remove(0, 3);
+            Log.Debug("Extracting {entity}...", name);
+            return json[$"{name}"].ToObject<List<Dictionary<string, object>>>()!;
         }
     }
+
+    //TODO:     Study polymorphic serialization
 }
