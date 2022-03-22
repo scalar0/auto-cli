@@ -28,8 +28,8 @@ namespace autocli
             Properties properties = ParseArchitecture.GetProperties(dict);
             List<Package>? ListPackage = ParseArchitecture.GetPackages(dict);
             var ListSubCommand = ParseArchitecture.GetCommands(dict);
-            var ListArgument = ParseArchitecture.GetArguments(dict);
-            var ListOption = ParseArchitecture.GetOptions(dict);
+            /*            var ListArgument = ParseArchitecture.GetArguments(dict);
+                        var ListOption = ParseArchitecture.GetOptions(dict);*/
 
             // ===========================================COMMANDS===========================================
 
