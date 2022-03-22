@@ -1,10 +1,10 @@
 ﻿// This file is supposed to be auto-generated
 global using Serilog;
 global using System.CommandLine;
-global using System.CommandLine.Parsing;
 using autocli.Functionnals;
 using autocli.Interface;
 using Serilog.Core;
+using System.CommandLine.Parsing;
 
 namespace autocli
 {
@@ -25,17 +25,17 @@ namespace autocli
                 .CreateLogger();
 
             var dict = ParseArchitecture.JsonParser(@"C:\Users\matte\source\repos\autoCLI\Properties\autocli.Architecture.json");
-            var properties = ParseArchitecture.GetProperties(dict);
-
-            var ListSubCommands = ParseArchitecture.GetCommands(dict);
-            var ListArguments = ParseArchitecture.GetArguments(dict);
-            var ListOptions = ParseArchitecture.GetOptions(dict);
+            Properties properties = ParseArchitecture.GetProperties(dict);
+            List<Package>? ListPackage = ParseArchitecture.GetPackages(dict);
+            var ListSubCommand = ParseArchitecture.GetCommands(dict);
+            var ListArgument = ParseArchitecture.GetArguments(dict);
+            var ListOption = ParseArchitecture.GetOptions(dict);
 
             // ===========================================COMMANDS===========================================
 
             RootCommand RootCommand = Constructors.MakeRootCommand(
-                title: properties["Title"],
-                description: properties["Description"]);
+                title: properties.Title,
+                description: properties.Description);
 
             SubCommand creation = Constructors.MakeCommand(
                 parent: RootCommand,
@@ -48,10 +48,7 @@ namespace autocli
                 description: "Generate the CLI project based on the input .json configuration file.",
                 verbosity: true);
 
-            List<SubCommands>? test = JsonConvert.DeserializeObject<List<SubCommands>>(File.ReadAllText(@"C:\Users\matte\source\repos\autoCLI\Properties\subcom.json"), new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.Auto
-            });
+            // https://youtu.be/shES1R7e1lQ
 
             Log.Debug("Commands and subcommands built.");
 

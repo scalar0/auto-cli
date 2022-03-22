@@ -25,7 +25,7 @@
         public string Method { get; set; }
 
         /// <summary>
-        /// Boolean to set the verbosity of the output on the cli.
+        /// Boolean to set the verbosity.
         /// </summary>
         public bool Verbosity;
 
@@ -34,19 +34,18 @@
         /// <summary>
         /// Construct the verbosity option (or not if false).
         /// </summary>
-        /// <param name="value">Boolean to set the verbosity level</param>
-        public Option<string>? SetVerbosity(bool value)
+        /// <param name="value">Boolean to set the verbosity.</param>
+        public void SetVerbosity(bool value)
         {
             if (value)
             {
-                return Constructors.MakeOption<string>(
+                Constructors.MakeOption<string>(
                 command: this,
                 symbols: new string[] { "--verbosity", "-v" },
                 required: false,
                 defaultvalue: "m",
-                description: "Choix de verbosité de sortie : q[uiet]; m[inimal]; diag[nostic].");
+                description: "Choix de verbosité de sortie : m[inimal]; d[ebug].");
             }
-            else return null;
         }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -56,12 +55,14 @@
         {
         }
 
-        /// <summary> Initializes a new instance of the SubCommand class. </summary> <param
-        /// name="symbol">The symbol/command-let of the command.</param> <param
-        /// name="description">The description of the command, shown in help.</param> <param
-        /// name="parent">The parent command in the hierarchical order.</param> <param
-        /// name="method">The name of the method calling the command.param> <param
-        /// name="verbosity">The verbosity type output to debug in the console.</param>
+        /// <summary>
+        /// Initializes a new instance of the SubCommand class.
+        /// </summary>
+        /// <param name="symbol">The symbol/command-let of the command.</param>
+        /// <param name="parent">The parent command in the hierarchical order.</param>
+        /// <param name="method">The name of the method calling the command.</param>
+        /// <param name="verbosity">The verbosity type output to debug in the console.</param>
+        /// <param name="description">The description of the command, shown in help.</param>
         public SubCommand(string symbol,
                           Command parent,
                           string method,
@@ -75,29 +76,5 @@
         }
 
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    }
-
-    public class SubCommands : Command
-    {
-        public Command Parent { get; set; }
-        public string Method { get; set; }
-        public bool Verbosity { get; set; }
-
-        public SubCommands(string symbol)
-            : base(symbol)
-        {
-        }
-
-        public SubCommands(string symbol,
-                          Command parent,
-                          string method,
-                          bool verbosity,
-                          string? description)
-            : base(symbol, description)
-        {
-            Parent = parent;
-            Method = method;
-            Verbosity = verbosity;
-        }
     }
 }
