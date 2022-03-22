@@ -1,7 +1,7 @@
 ﻿namespace autocli.Interface
 {
     [Serializable]
-    public class Arguments : Argument
+    public class Arguments_ : Argument
     {
         /// <summary>
         /// The parent command of the argument.
@@ -14,10 +14,8 @@
         public string Method { get; set; }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-        public Arguments(string symbol)
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        public Arguments_(string symbol)
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
             : base(symbol)
         {
@@ -30,7 +28,7 @@
         /// <param name="description">Cescription of the argument, shown in help.</param>
         /// <param name="parent">Parent command of the argument</param>
         /// <param name="method">Name of the method calling the argument.</param>
-        public Arguments(string symbol,
+        public Arguments_(string symbol,
                           string? description,
                           Command parent,
                           string method)

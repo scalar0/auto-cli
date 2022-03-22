@@ -15,10 +15,12 @@ namespace autocli.Interface
         /// <param name="description">Description of the application purpose.</param>
         /// <returns>Corresponding RootCommand.</returns>
         public static RootCommand MakeRootCommand(
+            string name,
             string title,
             string description)
         {
             RootCommand rcom = new(Utils.Boxed(title) + description + "\n");
+            rcom.Name = name;
             rcom.SetHandler(() => rcom.Invoke("-h"));
             Log.Debug("RootCommand built.");
             return rcom;
@@ -28,17 +30,17 @@ namespace autocli.Interface
         /// Constructs a new instance of the SubCommand class.
         /// </summary>
         /// <param name="parent">Parent Command.</param>
-        /// <param name="symbol">Command-let of the command.</param>
+        /// <param name="alias">Command-let of the command.</param>
         /// <param name="description"></param>
         /// <param name="verbosity">Output verbosity for debugging.</param>
         /// <returns>Corresponding SubCommand.</returns>
         public static SubCommand MakeCommand(
             Command parent,
-            string symbol,
+            string alias,
             string description,
             bool verbosity)
         {
-            SubCommand cmd = new(symbol);
+            SubCommand cmd = new(alias);
             try
             {
                 cmd.Description = description;
@@ -53,22 +55,28 @@ namespace autocli.Interface
             return cmd;
         }
 
+        public static Command? GetCommand(List<Command> L, string name)
+        {
+            foreach (Command com in L) if (com.Name == name) return com;
+            return null;
+        }
+
         /// <summary>
         /// Constructs a new instance of the Argument class.
         /// </summary>
         /// <typeparam name="T">Type fo the argument.</typeparam>
         /// <param name="command">Parent command for the argument.</param>
-        /// <param name="symbol">Argument's name.</param>
+        /// <param name="alias">Argument's name.</param>
         /// <param name="defaultvalue">Default value of the argument (none if null).</param>
         /// <param name="description"></param>
         /// <returns>Corresponding Argument.</returns>
         public static Argument<T> MakeArgument<T>(
             Command command,
-            string symbol,
+            string alias,
             string? defaultvalue,
             string description)
         {
-            Argument<T> argument = new(symbol);
+            Argument<T> argument = new(alias);
             try
             {
                 argument.Description = description;
@@ -91,18 +99,18 @@ namespace autocli.Interface
         /// <param name="required">
         /// Boolean to specify if the option must be required by the cli parser.
         /// </param>
-        /// <param name="symbols">Aliases of the option.</param>
+        /// <param name="aliases">Aliases of the option.</param>
         /// <param name="defaultvalue"></param>
         /// <param name="description"></param>
         /// <returns>Corresponding Option.</returns>
         public static Option<T> MakeOption<T>(
             Command command,
-            string[] symbols,
+            string[] aliases,
             bool required,
             string? defaultvalue,
             string description)
         {
-            Option<T> option = new(symbols);
+            Option<T> option = new(aliases);
             if (defaultvalue is not null) option.SetDefaultValue(defaultvalue);
             try
             {

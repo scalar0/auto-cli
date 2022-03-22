@@ -2,19 +2,7 @@
 {
     public static class Templates
     {
-        public static string _RootCommand(
-            string title,
-            string description,
-            bool setverbosity)
-        {
-            return
-                $@"RootCommand command = Constructors.MakeRootCommand(
-                title: {title},
-                description: {description},
-                setverbosity: {setverbosity});";
-        }
-
-        public static string _Command(
+        public static string _Commands(
             string name,
             Command command,
             string symbol,
@@ -32,7 +20,7 @@
         }}";
         }
 
-        public static string _Argument(
+        public static string _Arguments(
             Type T,
             string name,
             Command command,
@@ -51,7 +39,7 @@
         }}";
         }
 
-        public static string _Option(
+        public static string _Options(
             Type T,
             string name,
             Command command,

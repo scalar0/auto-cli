@@ -4,7 +4,6 @@ global using System.CommandLine;
 using autocli.Functionnals;
 using autocli.Interface;
 using Serilog.Core;
-using System.CommandLine.Parsing;
 
 namespace autocli
 {
@@ -16,83 +15,72 @@ namespace autocli
         /// <param name="args">Type : string[]</param>
         public static async Task Main(string[] args)
         {
+            // ===========================================LOGGER===========================================
             var levelSwitch = new LoggingLevelSwitch(); // .ControlledBy(levelSwitch)
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
+                .MinimumLevel.Information()
                 .WriteTo.Console(outputTemplate:
                                 "[{Timestamp:HH:mm:ss:ff} {Level:u4}] {Message:1j}{NewLine}{Exception}")
                 .WriteTo.File("./logs/autocli.log.txt", rollingInterval: RollingInterval.Minute)
                 .CreateLogger();
-
+            // ===========================================PROPERTIES=========================================
             var dict = ParseArchitecture.JsonParser(@"C:\Users\matte\source\repos\autoCLI\Properties\autocli.Architecture.json");
             Properties properties = ParseArchitecture.GetProperties(dict);
-            List<Package>? ListPackage = ParseArchitecture.GetPackages(dict);
-            var ListSubCommand = ParseArchitecture.GetCommands(dict);
-            var ListArgument = ParseArchitecture.GetArguments(dict);
-            var ListOption = ParseArchitecture.GetOptions(dict);
-
+            List<Packages>? ListPackages = ParseArchitecture.GetPackages(dict);
             // ===========================================COMMANDS===========================================
-
-            RootCommand RootCommand = Constructors.MakeRootCommand(
+            var ListCommands = ParseArchitecture.GetCommands(dict);
+            var Commands = new List<Command>()
+            {
+                Constructors.MakeRootCommand(
+                name: "RootCommand",
                 title: properties.Title,
-                description: properties.Description);
-
-            SubCommand creation = Constructors.MakeCommand(
-                parent: RootCommand,
-                symbol: "create",
-                description: "Creates a template of a new .json configuration file with specified name.",
-                verbosity: false);
-            SubCommand generation = Constructors.MakeCommand(
-                parent: RootCommand,
-                symbol: "generate",
-                description: "Generate the CLI project based on the input .json configuration file.",
-                verbosity: true);
-
-            // https://youtu.be/shES1R7e1lQ
-
-            Log.Debug("Commands and subcommands built.");
-
+                description: properties.Description)
+            };
+            foreach (Commands cmd in ListCommands)
+            {
+                Commands.Add(Constructors.MakeCommand(
+                parent: Constructors.GetCommand(Commands, cmd.Parent)!,
+                alias: cmd.Alias,
+                description: cmd.Description,
+                verbosity: cmd.Verbosity));
+            }
+            Log.Information("Commands built.");
             // ===========================================OPTIONS===========================================
-
-            Option<DirectoryInfo> dir_choice = Constructors.MakeOption<DirectoryInfo>(
-                command: creation,
-                symbols: new string[] { "--directory", "-d" },
-                required: true,
-                defaultvalue: null,
-                description: "Specify the directory output.");
-            Option<string> pushing = Constructors.MakeOption<string>(
-                command: generation,
-                symbols: new string[] { "--push", "-p" },
-                required: false,
-                defaultvalue: "n",
-                description: "Push to GitHub with repo-name ? (y/n)");
-            Log.Debug("Options built.");
+            var ListOptions = ParseArchitecture.GetOptions(dict);
+            var Options = new List<Option>();
+            foreach (Options option in ListOptions)
+            {
+                Options.Add(Constructors.MakeOption<DirectoryInfo>(
+                command: Constructors.GetCommand(Commands, option.Command)!,
+                aliases: option.Aliases,
+                required: option.Required,
+                defaultvalue: option.DefaultValue,
+                description: option.Description));
+            }
+            Log.Information("Options built.");
             // ===========================================ARGUMENTS===========================================
-
-            Argument<string> file_name = Constructors.MakeArgument<string>(
-                command: creation,
-                symbol: "name",
-                defaultvalue: null,
-                description: "Name of .json configuration file.");
-            Argument<string> file_path = Constructors.MakeArgument<string>(
-                command: generation,
-                symbol: "file",
-                defaultvalue: null,
-                description: "Path to .json configuration file.");
-            Log.Debug("Arguments built.");
+            var ListArguments = ParseArchitecture.GetArguments(dict);
+            var Arguments = new List<Argument>();
+            foreach (Arguments arg in ListArguments)
+            {
+                Arguments.Add(Constructors.MakeArgument<string>(
+                command: Constructors.GetCommand(Commands, arg.Command)!,
+                alias: arg.Alias,
+                defaultvalue: arg.DefaultValue,
+                description: arg.Description));
+            }
+            Log.Information("Arguments built.");
             // ===========================================HANDLERS===========================================
 
-            Log.Debug("Implementing handlers...");
+            Log.Information("Implementing handlers...");
 
-            creation.SetHandler<string, DirectoryInfo>(Handlers.creation, file_name, dir_choice);
-            generation.SetHandler<string>(Handlers.generation, file_path, pushing);
+            /*            Constructors.GetCommand(Commands, "create").SetHandler<string, DirectoryInfo>(Handlers.creation, file_name, dir_choice);
+                        Constructors.GetCommand(Commands, "generate").SetHandler<string>(Handlers.generation, file_path, pushing);*/
+            Log.Information("... done.");
             // ===========================================INVOKE===========================================
-
-            // Parse the incoming args and invoke the handler
             Log.Debug("Invoking args...");
             Log.CloseAndFlush();
-
-            await RootCommand.InvokeAsync(args);
+            await Commands[0].InvokeAsync(args);
         }
     }
 }

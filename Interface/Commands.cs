@@ -41,10 +41,10 @@
             {
                 Constructors.MakeOption<string>(
                 command: this,
-                symbols: new string[] { "--verbosity", "-v" },
+                aliases: new string[] { "--verbosity", "-v" },
                 required: false,
                 defaultvalue: "m",
-                description: "Choix de verbosité de sortie : m[inimal]; d[ebug].");
+                description: "Choix de verbosité de sortie : m[inimal]; d[ebug]."); ;
             }
         }
 

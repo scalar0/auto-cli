@@ -1,7 +1,6 @@
 ﻿namespace autocli.Interface
 {
-    [Serializable]
-    public class Options : Option
+    public class Options_ : Option
     {
         /// <summary>
         /// The parent command of the option.
@@ -14,10 +13,8 @@
         public string Method { get; set; }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-        public Options(string[] symbols)
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        public Options_(string[] symbols)
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
             : base(symbols)
         {
@@ -30,12 +27,13 @@
         /// <param name="description">Description of the option, shown in help.</param>
         /// <param name="parent">Parent command of the option</param>
         /// <param name="method">Name of the method calling the option.</param>
-        public Options(string[] symbols,
+        public Options_(string[] symbols,
                           string? description,
                           Command parent,
                           string method)
             : base(symbols, description)
         {
+            Description = description;
             Parent = parent;
             Method = method;
         }

@@ -31,14 +31,12 @@
   ],
   "Commands": [
     {
-      "Name": "creation",
       "Alias": "create",
       "Parent": "RootCommand",
       "Verbosity": false,
       "Description": "Creates a template of a new .json configuration file with specified name."
     },
     {
-      "Name": "generation",
       "Alias": "generate",
       "Parent": "RootCommand",
       "Verbosity": true,
@@ -47,18 +45,16 @@
   ],
   "Arguments": [
     {
-      "Name": "file_name",
       "Alias": "name",
       "Type": "string",
-      "Command": "creation",
+      "Command": "create",
       "Defaultvalue": null,
       "Description": "Name of .json configuration file."
     },
     {
-      "Name": "file_path",
       "Alias": "file",
       "Type": "FileInfo",
-      "Command": "generation",
+      "Command": "generate",
       "Defaultvalue": null,
       "Description": "Path to .json configuration file."
     }
@@ -71,7 +67,7 @@
         "-d"
       ],
       "Type": "DirectoryInfo",
-      "Command": "creation",
+      "Command": "create",
       "Required": true,
       "Defaultvalue": null,
       "Description": "Specify the directory output."
@@ -83,7 +79,7 @@
         "-p"
       ],
       "Type": "string",
-      "Command": "generation",
+      "Command": "generate",
       "Required": false,
       "Defaultvalue": "n",
       "Description": "Push to GitHub with repo-name ? (y/n)"
