@@ -55,9 +55,14 @@ namespace autocli.Interface
             return cmd;
         }
 
-        public static Command? GetCommand(List<Command> L, string name)
+        /// <summary>
+        /// Retrieves the command from the list of all commands.
+        /// </summary>
+        /// <param name="L">List of all commands.</param>
+        /// <param name="alias">Alias of the searched command.</param>
+        public static Command? GetCommand(List<Command> L, string alias)
         {
-            foreach (Command com in L) if (com.Name == name) return com;
+            foreach (Command com in L) if (com.Name == alias) return com;
             return null;
         }
 
@@ -89,6 +94,17 @@ namespace autocli.Interface
                 Log.Error(ex, ex.Message, ex.ToString);
             }
             return argument;
+        }
+
+        /// <summary>
+        /// Retrieves the argument from the list of all arguments
+        /// </summary>
+        /// <param name="L">The list of all arguments.</param>
+        /// <param name="alias">The alias of the searched argument.</param>
+        public static Argument? GetArgument(List<Argument> L, string alias)
+        {
+            foreach (Argument arg in L) if (arg.Name == alias) return arg;
+            return null;
         }
 
         /// <summary>
@@ -124,6 +140,17 @@ namespace autocli.Interface
                 Log.Error(ex, ex.Message, ex.ToString);
             }
             return option;
+        }
+
+        /// <summary>
+        /// Retrieves the option from the list of all arguments
+        /// </summary>
+        /// <param name="L">The list of all options.</param>
+        /// <param name="aliases">The alias of the searched option.</param>
+        public static Option? GetOption(List<Option> L, string[] aliases)
+        {
+            foreach (Option option in L) if (option.Aliases == aliases) return option;
+            return null;
         }
     }
 }

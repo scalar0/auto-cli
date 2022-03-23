@@ -50,7 +50,7 @@ namespace autocli
             var Options = new List<Option>();
             foreach (Options option in ListOptions)
             {
-                Options.Add(Constructors.MakeOption<DirectoryInfo>(
+                Options.Add(Constructors.MakeOption<string>(
                 command: Constructors.GetCommand(Commands, option.Command)!,
                 aliases: option.Aliases,
                 required: option.Required,
