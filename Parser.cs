@@ -16,16 +16,10 @@ namespace autocli
         public static async Task Main(string[] args)
         {
             // ===========================================LOGGER===========================================
-            var levelSwitch = new LoggingLevelSwitch(); // .ControlledBy(levelSwitch)
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
-                .WriteTo.Console(outputTemplate:
-                                "[{Timestamp:HH:mm:ss:ff} {Level:u4}] {Message:1j}{NewLine}{Exception}")
-                .WriteTo.File("./logs/autocli.log.txt", rollingInterval: RollingInterval.Minute)
-                .CreateLogger();
+            Log.Logger = NewLogger();
             // ===========================================PROPERTIES=========================================
             var dict = ParseArchitecture.JsonParser(@"C:\Users\matte\source\repos\autoCLI\Properties\autocli.Architecture.json");
-            Properties properties = ParseArchitecture.GetProperties(dict);
+            Properties app = ParseArchitecture.GetProperties(dict);
             List<Packages>? ListPackages = ParseArchitecture.GetPackages(dict);
             // ===========================================COMMANDS===========================================
             var ListCommands = ParseArchitecture.GetCommands(dict);
@@ -33,8 +27,8 @@ namespace autocli
             {
                 Constructors.MakeRootCommand(
                 name: "RootCommand",
-                title: properties.Title,
-                description: properties.Description)
+                title: app.Title,
+                description: app.Description)
             };
             foreach (Commands cmd in ListCommands)
             {
@@ -81,6 +75,23 @@ namespace autocli
             Log.Debug("Invoking args...");
             Log.CloseAndFlush();
             await Commands[0].InvokeAsync(args);
+        }
+
+        /// <summary>
+        /// Sets and returns a new configured instance of a logger
+        /// </summary>
+        /// <param name="verbosity">Output verbosity of the application</param>
+        /// <returns> </returns>
+        public static ILogger NewLogger(string? verbosity=null)
+        {
+            var verbose = new LoggingLevelSwitch(); // .ControlledBy(verbose)
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console(outputTemplate:
+                                "[{Timestamp:HH:mm:ss:ff} {Level:u4}] {Message:1j}{NewLine}{Exception}")
+                .WriteTo.File("./logs/autocli.log.txt", rollingInterval: RollingInterval.Minute)
+                .CreateLogger();
+            return Log.Logger;
         }
     }
 }

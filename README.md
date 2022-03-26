@@ -1,70 +1,115 @@
-# autoCLI
+# Automated Command Line Interface Creation
 
-auto-CLI aims to automate .NET 6.0.* CLI applications development based on an input architecture stored in a .json file.
-The configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.
+The auto-CLI creation tool aims to automate .NET 6.0.\* CLI applications development based on an input architecture of the project's commands, subcommands, options, arguments and properties.
+The choice was made to store said architecture in a .json configuration file, whose architecture is described in the following sections.
 
 ## Configuration file
 
-### 1 Packages
+The configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties in a .json format, deserializable by the [JSON.NET](https://www.newtonsoft.com) library.
+
+### _Packages_
+
+The package property, stores in a json array the name and version of each NuGet package required by the project. The array must at least contain the following packages in order for the auto-generated interface to work and to implement logging.
+
+<details>
+<summary><b><u>
+Packages Json Array
+</u></b></summary>
 
 ```json
-  "packages": [
+"Packages": [
     {
-      "name": "System.CommandLine",
-      "cli": "dotnet add package System.CommandLine --prerelease"
+      "Name": "System.CommandLine",
+      "Version": "--prerelease"
     },
     {
-      "name": "System.CommandLine.Hosting",
-      "cli": "dotnet add package System.CommandLine.Hosting --prerelease"
+      "Name": "Newtonsoft.Json",
+      "Version": "--prerelease"
     },
     {
-      "name": "System.CommandLine.NamingConventionBinder",
-      "cli": "dotnet add package System.CommandLine.NamingConventionBinder --prerelease"
+      "Name": "Serilog",
+      "Version": "--prerelease"
+    },
+    {
+      "Name": "Serilog.Sinks.Console",
+      "Version": "--prerelease"
+    },
+    {
+      "Name": "Serilog.Sinks.File",
+      "Version": "--prerelease"
     }
   ]
 ```
 
-### 2 Commands
+</details>
+
+Every CLI application built using this tool will rely on the [System.CommandLine API](https://github.com/dotnet/command-line-api) for command line parsing, on [Newtonsoft.Json](https://www.newtonsoft.com/json) to deserialize and build the interface and on [Serilog](https://serilog.net/) for logging.
+
+### _Commands_
+
+The commands array stores in a json array the alias, description, the verbosity option setting and parent of each command of the interface. The alias is the command let to call on the CLI in order to invoke the command and parse its arguments. The description is the text displayed in the help menu of the CLI application. The verbosity option setting is the boolean used to implement the option that will set the verbosity level of the logger. The parent is the parent of the command (e.g. : the root command).
+
+<details>
+<summary><b><u>
+Commands Json Array
+</u></b></summary>
 
 ```json
-  "commands": [
+  "Commands": [
     {
-      "name": "subcommand",
-      "command": "upcommand",
-      "symbol": "cmdlet",
-      "decription": "description"
+      "Alias": "alias",
+      "Parent": "parent",
+      "Verbosity": "bool",
+      "Description": "description"
     }
   ]
-  ```
+```
 
-### 3 Arguments
+</details>
+
+### _Arguments_
+
+The arguments array stores in a json array the alias, description, the type of the argument and the parent of each argument of the interface. The alias is the argument to call on the CLI in order to invoke the argument. The description is the text displayed in the help menu of the CLI application. The type is the type of the argument (e.g. : string, int, bool, etc.). The parent is the parent of the argument (e.g. : the command).
+
+<details>
+<summary><b><u>
+Arguments Json Array
+</u></b></summary>
 
 ```json
-  "arguments": [
+  "Arguments": [
     {
-      "name": "argument",
-      "type": "string",
-      "command": "cmd",
-      "symbol": "<arg>",
-      "defaultvalue": "value",
-      "decription": "description"
+      "Alias": "<name>",
+      "Type": "Type",
+      "Command": "command-alias",
+      "Defaultvalue": null,
+      "Description": "description"
     }
   ]
-  ```
+```
 
-### 4 Options
+</details>
+
+### _Options_
+
+The options array stores in a json array the alias, description, the type of the option and the parent of each option of the interface. The alias is the option to call on the CLI in order to invoke the option. The description is the text displayed in the help menu of the CLI application. The type is the type of the option (e.g. : string, int, bool, etc.). The parent is the parent of the option (e.g. : the command).
+
+<details>
+<summary><b><u>
+Options Json Array
+</u></b></summary>
 
 ```json
-  "options": [
+  "Options": [
     {
-      "name": "option",
-      "type": "string",
-      "command": "cmd",
-      "required": "true",
-      "symbol": "--option",
-      "alias": "-o",
-      "defaultvalue": "value",
-      "decription": "description"
+      "Aliases": ["--option", "-o"],
+      "Type": "Type",
+      "Command": "command-alias",
+      "Required": "bool",
+      "Defaultvalue": "string",
+      "Description": "description"
     }
   ]
-  ```
+```
+
+</details>

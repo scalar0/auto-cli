@@ -1,15 +1,15 @@
 {
-  "Title": "title",
-  "Description": "description",
-  "Outfolder": "~/path",
-  "Repo": "repo-name",
+  "Properties": [
+    {
+      "Title": "title",
+      "Description": "description",
+      "Outfolder": "/project-name",
+      "Repo": "repo-name"
+    }
+  ],
   "Packages": [
     {
       "Name": "System.CommandLine",
-      "Version": "--prerelease"
-    },
-    {
-      "Name": "System.CommandLine.Hosting",
       "Version": "--prerelease"
     },
     {
@@ -27,34 +27,28 @@
   ],
   "Commands": [
     {
-      "Symbol": "symbol",
+      "Alias": "alias",
       "Parent": "parent",
-      "Method": "method-name",
       "Verbosity": "bool",
       "Description": "description"
     }
   ],
   "Arguments": [
     {
-      "Symbol": "<name>",
+      "Alias": "<name>",
       "Type": "Type",
-      "Command": "command",
-      "Method": "method",
-      "Defaultvalue": "null",
+      "Command": "command-alias",
+      "Defaultvalue": null,
       "Description": "description"
     }
   ],
   "Options": [
     {
-      "Symbols": [
-        "--option",
-        "-o (alias)"
-      ],
+      "Aliases": ["--option", "-o"],
       "Type": "Type",
-      "Command": "command",
+      "Command": "command-alias",
       "Required": "bool",
-      "Method": "method",
-      "Defaultvalue": "null",
+      "Defaultvalue": "string",
       "Description": "description"
     }
   ]

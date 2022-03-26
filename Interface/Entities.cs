@@ -30,6 +30,9 @@
         public string Version { get; set; }
     }
 
+    /// <summary>
+    /// Commands class to serialize the commands of the interface.
+    /// </summary>
     public class Commands
     {
         [JsonProperty("Alias")]
@@ -45,6 +48,9 @@
         public string Description { get; set; }
     }
 
+    /// <summary>
+    /// Arguments class to serialize the args of the interface.
+    /// </summary>
     public class Arguments
     {
         [JsonProperty("Alias")]
@@ -63,6 +69,9 @@
         public string Description { get; set; }
     }
 
+    /// <summary>
+    /// Options class to serialize the options of the application.
+    /// </summary>
     public class Options
     {
         [JsonProperty("Aliases")]

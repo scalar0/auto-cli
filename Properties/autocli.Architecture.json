@@ -3,7 +3,7 @@
     {
       "Title": "AUTOCLI : automation for CLI applications interface creation",
       "Description": "[autocli] aims to automate .NET 6.0.* CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's Commands, subCommands, options, arguments and properties.",
-      "Outfolder": "~/autocli",
+      "Outfolder": "/autocli",
       "Repo": "auto-CLI"
     }
   ],
@@ -13,7 +13,7 @@
       "Version": "--prerelease"
     },
     {
-      "Name": "System.CommandLine.Hosting",
+      "Name": "Newtonsoft.Json",
       "Version": "--prerelease"
     },
     {
@@ -61,11 +61,7 @@
   ],
   "Options": [
     {
-      "Name": "dir_choice",
-      "Aliases": [
-        "--directory",
-        "-d"
-      ],
+      "Aliases": [ "--directory", "-d" ],
       "Type": "DirectoryInfo",
       "Command": "create",
       "Required": true,
@@ -73,11 +69,7 @@
       "Description": "Specify the directory output."
     },
     {
-      "Name": "pushing",
-      "Aliases": [
-        "--push",
-        "-p"
-      ],
+      "Aliases": [ "--push", "-p" ],
       "Type": "string",
       "Command": "generate",
       "Required": false,
