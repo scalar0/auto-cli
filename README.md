@@ -1,7 +1,7 @@
 # Automated Command Line Interface Creation
 
-The auto-CLI creation tool aims to automate .NET 6.0.\* CLI applications development based on an input architecture of the project's commands, subcommands, options, arguments and properties.
-The choice was made to store said architecture in a .json configuration file, whose architecture is described in the following sections.
+The auto-CLI tool aims to automate .NET 6.0.\* CLI applications development based on an input architecture of the project's commands, subcommands, options, arguments and properties.
+The choice was made to store said architecture in a .json configuration file, whose structure is described in the following sections.
 
 ## Configuration file
 
@@ -37,6 +37,10 @@ Packages Json Array
     {
       "Name": "Serilog.Sinks.File",
       "Version": "--prerelease"
+    },
+    {
+      "Name": "Package.Name",
+      "Version": "--version"
     }
   ]
 ```

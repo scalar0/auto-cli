@@ -23,6 +23,10 @@
     {
       "Name": "Serilog.Sinks.File",
       "Version": "--prerelease"
+    },
+    {
+      "Name": "Package.Name",
+      "Version": "--version"
     }
   ],
   "Commands": [

@@ -61,7 +61,7 @@
   ],
   "Options": [
     {
-      "Aliases": [ "--directory", "-d" ],
+      "Aliases": ["--directory", "-d"],
       "Type": "DirectoryInfo",
       "Command": "create",
       "Required": true,
@@ -69,7 +69,7 @@
       "Description": "Specify the directory output."
     },
     {
-      "Aliases": [ "--push", "-p" ],
+      "Aliases": ["--push", "-p"],
       "Type": "string",
       "Command": "generate",
       "Required": false,
