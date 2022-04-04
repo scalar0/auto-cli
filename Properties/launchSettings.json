@@ -2,6 +2,7 @@
   "profiles": {
     "autocli": {
       "commandName": "Project",
+      "commandLineArgs": "generate test",
       "workingDirectory": "."
     }
   }

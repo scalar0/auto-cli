@@ -27,7 +27,7 @@
         public string Name { get; set; }
 
         [JsonProperty("Version")]
-        public string Version { get; set; }
+        public string? Version { get; set; }
     }
 
     /// <summary>

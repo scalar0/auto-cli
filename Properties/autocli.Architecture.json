@@ -1,8 +1,8 @@
 {
   "Properties": [
     {
-      "Title": "AUTOCLI : automation for CLI applications interface creation",
-      "Description": "[autocli] aims to automate .NET 6.0.* CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's Commands, subCommands, options, arguments and properties.",
+      "Title": "AUTOCLI : Automated CLI creation tool",
+      "Description": "[autocli] aims to automate .NET CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.",
       "Outfolder": "/autocli",
       "Repo": "auto-CLI"
     }
@@ -10,35 +10,35 @@
   "Packages": [
     {
       "Name": "System.CommandLine",
-      "Version": "--prerelease"
+      "Version": null
     },
     {
       "Name": "Newtonsoft.Json",
-      "Version": "--prerelease"
+      "Version": null
     },
     {
       "Name": "Serilog",
-      "Version": "--prerelease"
+      "Version": null
     },
     {
       "Name": "Serilog.Sinks.Console",
-      "Version": "--prerelease"
+      "Version": null
     },
     {
       "Name": "Serilog.Sinks.File",
-      "Version": "--prerelease"
+      "Version": null
     }
   ],
   "Commands": [
     {
       "Alias": "create",
-      "Parent": "RootCommand",
+      "Parent": "autocli",
       "Verbosity": false,
       "Description": "Creates a template of a new .json configuration file with specified name."
     },
     {
       "Alias": "generate",
-      "Parent": "RootCommand",
+      "Parent": "autocli",
       "Verbosity": true,
       "Description": "Generate the CLI project based on the input .json configuration file."
     }
@@ -61,20 +61,12 @@
   ],
   "Options": [
     {
-      "Aliases": ["--directory", "-d"],
+      "Aliases": [ "--directory", "-d" ],
       "Type": "DirectoryInfo",
       "Command": "create",
       "Required": true,
       "Defaultvalue": null,
       "Description": "Specify the directory output."
-    },
-    {
-      "Aliases": ["--push", "-p"],
-      "Type": "string",
-      "Command": "generate",
-      "Required": false,
-      "Defaultvalue": "n",
-      "Description": "Push to GitHub with repo-name ? (y/n)"
     }
   ]
 }
