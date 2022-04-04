@@ -46,7 +46,7 @@ namespace autocli.Interface
                 cmd.Description = description;
                 cmd.SetParent(parent);
                 cmd.SetVerbosity(verbosity);
-                Log.Debug("{C} built and added to {U}.", $"{cmd}", $"{parent}");
+                Log.Verbose("{C} built and added to {U}.", $"{cmd}", $"{parent}");
             }
             catch (Exception ex)
             {
@@ -62,7 +62,16 @@ namespace autocli.Interface
         /// <param name="alias">Alias of the searched command.</param>
         public static Command? GetCommand(List<Command> L, string alias)
         {
-            foreach (Command com in L) if (com.Name == alias) return com;
+            try
+            {
+                foreach (Command com in L)
+                    if (com.Name == alias)
+                    {
+                        Log.Verbose("Accessing {C}.", $"{com}");
+                        return com;
+                    }
+            }
+            catch (Exception ex) { Log.Error(ex, ex.Message, ex.ToString); }
             return null;
         }
 
@@ -87,7 +96,7 @@ namespace autocli.Interface
                 argument.Description = description;
                 if (defaultvalue is not null) argument.SetDefaultValue(defaultvalue);
                 command.AddArgument(argument);
-                Log.Debug("{A} built and added to {U}.", $"{argument}", $"{command}");
+                Log.Verbose("{A} built and added to {U}.", $"{argument}", $"{command}");
             }
             catch (Exception ex)
             {
@@ -103,7 +112,16 @@ namespace autocli.Interface
         /// <param name="alias">The alias of the searched argument.</param>
         public static Argument? GetArgument(List<Argument> L, string alias)
         {
-            foreach (Argument arg in L) if (arg.Name == alias) return arg;
+            try
+            {
+                foreach (Argument arg in L)
+                    if (arg.Name == alias)
+                    {
+                        Log.Verbose("Accessing {A}.", $"{arg}");
+                        return arg;
+                    }
+            }
+            catch (Exception ex) { Log.Error(ex, ex.Message, ex.ToString); }
             return null;
         }
 
@@ -133,7 +151,7 @@ namespace autocli.Interface
                 option.IsRequired = required;
                 option.Description = description;
                 command.AddOption(option);
-                Log.Debug("{O} built and added to {U}.", $"{option}", $"{command}");
+                Log.Verbose("{O} built and added to {U}.", $"{option}", $"{command}");
             }
             catch (Exception ex)
             {
@@ -149,7 +167,16 @@ namespace autocli.Interface
         /// <param name="aliases">The alias of the searched option.</param>
         public static Option? GetOption(List<Option> L, string[] aliases)
         {
-            foreach (Option option in L) if (option.Aliases == aliases) return option;
+            try
+            {
+                foreach (Option option in L)
+                    if (option.Aliases == aliases)
+                    {
+                        Log.Verbose("Accessing {O}.", $"{option}");
+                        return option;
+                    }
+            }
+            catch (Exception ex) { Log.Error(ex, ex.Message, ex.ToString); }
             return null;
         }
     }

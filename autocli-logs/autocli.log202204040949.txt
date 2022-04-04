@@ -1,0 +1,31 @@
+2022-04-04 09:49:18.553 +02:00 [VRB] Logger built.
+2022-04-04 09:49:18.605 +02:00 [VRB] Deserializing configuration file.
+2022-04-04 09:49:18.748 +02:00 [VRB] Extracting Properties
+2022-04-04 09:49:18.834 +02:00 [VRB] autocli.Interface.Properties built.
+2022-04-04 09:49:18.840 +02:00 [VRB] Extracting Packages
+2022-04-04 09:49:18.850 +02:00 [VRB] System.Collections.Generic.List`1[autocli.Interface.Packages] built.
+2022-04-04 09:49:18.852 +02:00 [VRB] Extracting Commands
+2022-04-04 09:49:18.870 +02:00 [DBG] RootCommand built.
+2022-04-04 09:49:18.871 +02:00 [VRB] Accessing RootCommand: RootCommand.
+2022-04-04 09:49:18.877 +02:00 [VRB] SubCommand: create built and added to RootCommand: RootCommand.
+2022-04-04 09:49:18.880 +02:00 [VRB] Accessing RootCommand: RootCommand.
+2022-04-04 09:49:18.887 +02:00 [VRB] Option`1: verbosity built and added to SubCommand: generate.
+2022-04-04 09:49:18.890 +02:00 [VRB] SubCommand: generate built and added to RootCommand: RootCommand.
+2022-04-04 09:49:18.891 +02:00 [DBG] Commands built.
+2022-04-04 09:49:18.893 +02:00 [VRB] Extracting Options
+2022-04-04 09:49:18.903 +02:00 [VRB] Accessing SubCommand: create.
+2022-04-04 09:49:18.905 +02:00 [VRB] Option`1: directory built and added to SubCommand: create.
+2022-04-04 09:49:18.906 +02:00 [DBG] Options built.
+2022-04-04 09:49:18.908 +02:00 [VRB] Extracting Arguments
+2022-04-04 09:49:18.913 +02:00 [VRB] Accessing SubCommand: create.
+2022-04-04 09:49:18.915 +02:00 [VRB] Argument: name built and added to SubCommand: create.
+2022-04-04 09:49:18.917 +02:00 [VRB] Accessing SubCommand: generate.
+2022-04-04 09:49:18.919 +02:00 [VRB] Argument: file built and added to SubCommand: generate.
+2022-04-04 09:49:18.921 +02:00 [DBG] Arguments built.
+2022-04-04 09:49:18.922 +02:00 [VRB] Accessing SubCommand: create.
+2022-04-04 09:49:18.924 +02:00 [VRB] Accessing Argument: name.
+2022-04-04 09:49:18.926 +02:00 [VRB] Accessing SubCommand: generate.
+2022-04-04 09:49:18.927 +02:00 [VRB] Accessing Argument: file.
+2022-04-04 09:49:18.928 +02:00 [DBG] Handlers implemented.
+2022-04-04 09:49:18.929 +02:00 [INF] Automated CLI creation tool built.
+2022-04-04 09:49:18.930 +02:00 [VRB] Invoking args parser.

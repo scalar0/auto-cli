@@ -15,6 +15,7 @@ namespace autocli.Functionnals
         /// <returns>Dictionary of keys : property and values : dynamic object.</returns>
         public static Dictionary<string, dynamic> JsonParser(string path)
         {
+            Log.Verbose("Deserializing configuration file.");
             return JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(File.ReadAllText(path))!;
         }
 
@@ -26,7 +27,7 @@ namespace autocli.Functionnals
         public static Properties GetProperties(dynamic json)
         {
             const string name = "Properties";
-            Log.Debug("Extracting {entity}...", name);
+            Log.Verbose("Extracting {entity}", name);
             return json[$"{name}"].ToObject<List<Properties>>()[0];
         }
 
@@ -38,7 +39,7 @@ namespace autocli.Functionnals
         public static List<Packages>? GetPackages(dynamic json)
         {
             const string name = "Packages";
-            Log.Debug("Extracting {entity}...", name);
+            Log.Verbose("Extracting {entity}", name);
             return json[name].ToObject<List<Packages>>();
         }
 
@@ -51,7 +52,7 @@ namespace autocli.Functionnals
         {
             //TODO:     Implement deserialization of SubCommands
             const string name = "Commands";
-            Log.Debug("Extracting {entity}...", name);
+            Log.Verbose("Extracting {entity}", name);
             return json[name].ToObject<List<Commands>>();
         }
 
@@ -64,7 +65,7 @@ namespace autocli.Functionnals
         {
             //TODO:     Implement deserialization of Arguments
             const string name = "Arguments";
-            Log.Debug("Extracting {entity}...", name);
+            Log.Verbose("Extracting {entity}", name);
             return json[name].ToObject<List<Arguments>>();
         }
 
@@ -77,7 +78,7 @@ namespace autocli.Functionnals
         {
             //TODO:     Implement deserialization of Options
             const string name = "Options";
-            Log.Debug("Extracting {entity}...", name);
+            Log.Verbose("Extracting {entity}", name);
             return json[name].ToObject<List<Options>>();
         }
     }

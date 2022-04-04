@@ -11,11 +11,18 @@
         [JsonProperty("Description")]
         public string Description { get; set; }
 
-        [JsonProperty("Outfolder")]
-        public string Outfolder { get; set; }
+        [JsonProperty("OutputPath")]
+        public string OutputPath { get; set; }
 
         [JsonProperty("Repo")]
         public string Repo { get; set; }
+
+        public string? Name { get; set; }
+
+        public void SetName(string path)
+        {
+            this.Name = Path.GetFileNameWithoutExtension(path).Remove(0, 13);
+        }
     }
 
     /// <summary>
@@ -27,7 +34,7 @@
         public string Name { get; set; }
 
         [JsonProperty("Version")]
-        public string Version { get; set; }
+        public string? Version { get; set; }
     }
 
     /// <summary>
