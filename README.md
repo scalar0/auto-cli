@@ -74,7 +74,7 @@ Every CLI application built using this tool will rely on the [System.CommandLine
 
 ### _Commands_
 
-The commands array stores in a json array the alias, description, the verbosity option setting and parent of each command of the interface. The alias is the command let to call on the CLI in order to invoke the command and parse its arguments. The description is the text displayed in the help menu of the CLI application. The verbosity option setting is the boolean used to implement the option that will set the verbosity level of the logger. The parent is the parent of the command (e.g. : the root command).
+The commands array stores in a json array the alias, description, the verbosity option setting and parent of each command of the interface. The alias is the command let to call on the CLI in order to invoke the command and parse its arguments. The description is the text displayed in the help menu of the CLI application. The parent is the parent of the command (e.g. : the root command).
 
 <details>
 <summary><b><u>
@@ -86,7 +86,6 @@ Commands Json Array
     {
       "Alias": "alias",
       "Parent": "parent",
-      "Verbosity": "bool",
       "Description": "description"
     }
   ]
@@ -96,7 +95,7 @@ Commands Json Array
 
 ### _Arguments_
 
-The arguments array stores in a json array the alias, description, the type of the argument and the parent of each argument of the interface. The alias is the argument to call on the CLI in order to invoke the argument. The description is the text displayed in the help menu of the CLI application. The type is the type of the argument (e.g. : string, int, bool, etc.). The parent is the parent of the argument (e.g. : the command).
+The arguments array stores in a json array the alias, description, the type of the argument and the parent of each argument of the interface. The alias is the argument to call on the CLI in order to invoke the argument. The description is the text displayed in the help menu of the CLI application. The type is the type of the argument (e.g. : string, int, bool, etc.). The parent is the parent of the argument (e.g. : the command). The defaultvalue property is used to set the value of the argument if no value is provided.
 
 <details>
 <summary><b><u>
@@ -119,7 +118,7 @@ Arguments Json Array
 
 ### _Options_
 
-The options array stores in a json array the alias, description, the type of the option and the parent of each option of the interface. The alias is the option to call on the CLI in order to invoke the option. The description is the text displayed in the help menu of the CLI application. The type is the type of the option (e.g. : string, int, bool, etc.). The parent is the parent of the option (e.g. : the command).
+The options array stores in a json array the alias, description, the type of the option and the parent of each option of the interface. The name of the option is used to uniquely bind it instead of relying on the aliases string array. The description is the text displayed in the help menu of the CLI application. The type is the type of the option (e.g. : string, int, bool, etc.). The parent is the parent of the option (e.g. : the command). The defaultvalue property is used to set the value of the option if no value is provided. The requiered property is used to set the option as required or not.
 
 <details>
 <summary><b><u>

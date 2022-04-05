@@ -1,6 +1,7 @@
 {
   "Properties": [
     {
+      "Name": "Name",
       "Title": "title",
       "Description": "description",
       "OutputPath": "/project-name",
@@ -39,7 +40,7 @@
   ],
   "Arguments": [
     {
-      "Alias": "<name>",
+      "Alias": "name",
       "Type": "Type",
       "Command": "command-alias",
       "Defaultvalue": null,
@@ -48,7 +49,8 @@
   ],
   "Options": [
     {
-      "Aliases": [ "--option", "-o" ],
+      "Name": "name",
+      "Aliases": ["--option", "-o"],
       "Type": "Type",
       "Command": "command-alias",
       "Required": "bool",
