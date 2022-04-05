@@ -7,9 +7,32 @@ The choice was made to store said architecture in a .json configuration file, wh
 
 The configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties in a .json format, deserializable by the [JSON.NET](https://www.newtonsoft.com) library.
 
+### _Properties_
+
+The properties array, stores in a json array the name of the project, the title and the description of the project that will be displayed in the CLI. The output path property is the path to the project repository. The repo property is the name of the git repository.
+
+<details>
+<summary><b><u>
+Properties Json Array
+</u></b></summary>
+
+```json
+"Properties": [
+    {
+      "Name": "autocli",
+      "Title": "AUTOCLI : Automated CLI creation tool",
+      "Description": "[autocli] aims to automate .NET CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.",
+      "OutputPath": "/autocli",
+      "Repo": "auto-CLI"
+    }
+  ],
+```
+
+</details>
+
 ### _Packages_
 
-The package property, stores in a json array the name and version of each NuGet package required by the project. The array must at least contain the following packages in order for the auto-generated interface to work and to implement logging.
+The package array, stores in a json array the name and version of each NuGet package required by the project. The array must at least contain the following packages in order for the auto-generated interface to work and to implement logging.
 
 <details>
 <summary><b><u>
@@ -106,6 +129,7 @@ Options Json Array
 ```json
   "Options": [
     {
+      "Name": "name",
       "Aliases": ["--option", "-o"],
       "Type": "Type",
       "Command": "command-alias",
