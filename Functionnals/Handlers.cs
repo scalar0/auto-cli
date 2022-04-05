@@ -8,9 +8,11 @@
         /// <param name="name"></param>
         /// <param name="directory"></param>
         public static void create(string name,
-                                  DirectoryInfo directory)
+                                  string directory,
+                                  string verbosity = null)
         {
-            string? configfile = Path.Combine(directory.FullName, name) + ".Arcitecture.json";
+            // TODO : Implement verbosity level of create
+            string? configfile = Path.Combine(directory, "Arcitecture." + name) + ".json";
             File.Copy(sourceFileName: @"C:\Users\matte\source\repos\autoCLI\input.json", destFileName: configfile, overwrite: true);
             Console.WriteLine($"Configuration file for {name} project created at :\n{configfile}");
         }
@@ -20,8 +22,10 @@
         /// </summary>
         /// <param name="path"></param>
         public static void generate(Interface.Properties AppProperties,
-                                    List<Interface.Packages> Packages)
+                                    List<Interface.Packages> Packages,
+                                    string verbosity = null)
         {
+            // TODO : Implement verbosity level of generate
             InstallProject(AppProperties);
             InstallPackages(Packages);
         }
@@ -30,10 +34,9 @@
         {
             // Retrieve project name
             string project_name = AppProperties.Name!;
-            Log.Information("Creating new console application.");
+            Log.Information("Creating new console application. Target framework : net6.0.");
             Console.WriteLine($"Project name : {project_name}");
-            Utils.ExecuteCommandSync("dotnet new console -h");
-            Utils.ExecuteCommandSync("dotnet [parse] new console --name " + project_name + ".CLI -f net6.0 --output " + AppProperties.OutputPath);
+            Utils.ExecuteCommandSync("dotnet new console --name " + project_name + ".CLI --framework net6.0 --output " + AppProperties.OutputPath + @"\" + project_name + ".CLI");
         }
 
         public static void InstallPackages(List<Interface.Packages> Packages)
@@ -50,12 +53,20 @@
         public static void CallHandlers(List<Command> Commands,
                                         List<Argument> Arguments,
                                         List<Option> Options,
+                                        Option verbose,
                                         Interface.Properties AppProperties,
                                         List<Interface.Packages> Packages)
         {
-            Interface.Constructors.GetCommand(Commands, "create")!.SetHandler((string name, DirectoryInfo dir) => Handlers.create(name, dir), Interface.Constructors.GetArgument(Arguments, "name")!, Interface.Constructors.GetOption(Options, new string[] { "--directory", "-d" })!);
+            Interface.Constructors.Get(Commands, "create")!.SetHandler(
+                (string name, string directory, string verbosity) => Handlers.create(name, directory, verbosity),
+                Interface.Constructors.Get(Arguments, "name")!,
+                Interface.Constructors.Get(Options, "directory")!,
+                verbose);
 
-            Interface.Constructors.GetCommand(Commands, "generate")!.SetHandler((string _) => Handlers.generate(AppProperties, Packages), Interface.Constructors.GetArgument(Arguments, "file")!);
+            Interface.Constructors.Get(Commands, "generate")!.SetHandler(
+                (string verbosity) => Handlers.generate(AppProperties, Packages, verbosity),
+                Interface.Constructors.Get(Arguments, "file")!,
+                verbose);
         }
     }
 }

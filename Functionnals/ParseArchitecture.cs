@@ -50,7 +50,6 @@ namespace autocli.Functionnals
         /// <returns>List of SubCommand that will constitute the interface of the application.</returns>
         public static List<Commands> GetCommands(dynamic json)
         {
-            //TODO:     Implement deserialization of SubCommands
             const string name = "Commands";
             Log.Verbose("Extracting {entity}", name);
             return json[name].ToObject<List<Commands>>();
@@ -63,7 +62,6 @@ namespace autocli.Functionnals
         /// <returns>List of arguments that will constitute the interface of the application.</returns>
         public static List<Arguments> GetArguments(dynamic json)
         {
-            //TODO:     Implement deserialization of Arguments
             const string name = "Arguments";
             Log.Verbose("Extracting {entity}", name);
             return json[name].ToObject<List<Arguments>>();
@@ -76,7 +74,6 @@ namespace autocli.Functionnals
         /// <returns>List of options that will constitute the interface of the application.</returns>
         public static List<Options> GetOptions(dynamic json)
         {
-            //TODO:     Implement deserialization of Options
             const string name = "Options";
             Log.Verbose("Extracting {entity}", name);
             return json[name].ToObject<List<Options>>();

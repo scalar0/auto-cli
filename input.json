@@ -3,7 +3,7 @@
     {
       "Title": "title",
       "Description": "description",
-      "Outfolder": "/project-name",
+      "OutputPath": "/project-name",
       "Repo": "repo-name"
     }
   ],
@@ -48,7 +48,7 @@
   ],
   "Options": [
     {
-      "Aliases": ["--option", "-o"],
+      "Aliases": [ "--option", "-o" ],
       "Type": "Type",
       "Command": "command-alias",
       "Required": "bool",

@@ -14,16 +14,35 @@ namespace autocli.Interface
         /// <param name="title">Describe the application title displayed in the console output.</param>
         /// <param name="description">Description of the application purpose.</param>
         /// <returns>Corresponding RootCommand.</returns>
-        public static RootCommand MakeRootCommand(
+        public static RootCommand BuildRoot(
             string name,
             string title,
             string description)
         {
             RootCommand rcom = new(Utils.Boxed(title) + description + "\n");
             rcom.Name = name;
-            rcom.SetHandler(() => rcom.Invoke("-h"));
             Log.Debug("RootCommand built.");
             return rcom;
+        }
+
+        /// <summary>
+        /// Retrieves the command or argument from the input list.
+        /// </summary>
+        /// <param name="L">Input list.</param>
+        /// <param name="alias">Alias of the searched entity.</param>
+        public static T? Get<T>(List<T> L, string alias)
+        {
+            try
+            {
+                foreach (dynamic? item in L)
+                    if (item!.Name == alias)
+                    {
+                        Log.Verbose("Accessing {C}.", $"{item}");
+                        return item;
+                    }
+            }
+            catch (Exception ex) { Log.Error(ex, ex.Message, ex.ToString); }
+            return default;
         }
 
         /// <summary>
@@ -34,18 +53,16 @@ namespace autocli.Interface
         /// <param name="description"></param>
         /// <param name="verbosity">Output verbosity for debugging.</param>
         /// <returns>Corresponding SubCommand.</returns>
-        public static SubCommand MakeCommand(
+        public static Command BuildCommand(
             Command parent,
             string alias,
-            string description,
-            bool verbosity)
+            string description)
         {
-            SubCommand cmd = new(alias);
+            Command cmd = new(alias);
             try
             {
                 cmd.Description = description;
-                cmd.SetParent(parent);
-                cmd.SetVerbosity(verbosity);
+                parent.AddCommand(cmd);
                 Log.Verbose("{C} built and added to {U}.", $"{cmd}", $"{parent}");
             }
             catch (Exception ex)
@@ -53,26 +70,6 @@ namespace autocli.Interface
                 Log.Error(ex, ex.Message, ex.ToString);
             }
             return cmd;
-        }
-
-        /// <summary>
-        /// Retrieves the command from the list of all commands.
-        /// </summary>
-        /// <param name="L">List of all commands.</param>
-        /// <param name="alias">Alias of the searched command.</param>
-        public static Command? GetCommand(List<Command> L, string alias)
-        {
-            try
-            {
-                foreach (Command com in L)
-                    if (com.Name == alias)
-                    {
-                        Log.Verbose("Accessing {C}.", $"{com}");
-                        return com;
-                    }
-            }
-            catch (Exception ex) { Log.Error(ex, ex.Message, ex.ToString); }
-            return null;
         }
 
         /// <summary>
@@ -84,7 +81,7 @@ namespace autocli.Interface
         /// <param name="defaultvalue">Default value of the argument (none if null).</param>
         /// <param name="description"></param>
         /// <returns>Corresponding Argument.</returns>
-        public static Argument<T> MakeArgument<T>(
+        public static Argument<T> BuildArgument<T>(
             Command command,
             string alias,
             string? defaultvalue,
@@ -106,26 +103,6 @@ namespace autocli.Interface
         }
 
         /// <summary>
-        /// Retrieves the argument from the list of all arguments
-        /// </summary>
-        /// <param name="L">The list of all arguments.</param>
-        /// <param name="alias">The alias of the searched argument.</param>
-        public static Argument? GetArgument(List<Argument> L, string alias)
-        {
-            try
-            {
-                foreach (Argument arg in L)
-                    if (arg.Name == alias)
-                    {
-                        Log.Verbose("Accessing {A}.", $"{arg}");
-                        return arg;
-                    }
-            }
-            catch (Exception ex) { Log.Error(ex, ex.Message, ex.ToString); }
-            return null;
-        }
-
-        /// <summary>
         /// Constructs a new instance of the Option class.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -137,8 +114,9 @@ namespace autocli.Interface
         /// <param name="defaultvalue"></param>
         /// <param name="description"></param>
         /// <returns>Corresponding Option.</returns>
-        public static Option<T> MakeOption<T>(
+        public static Option<T> BuildOption<T>(
             Command command,
+            string name,
             string[] aliases,
             bool required,
             string? defaultvalue,
@@ -148,6 +126,7 @@ namespace autocli.Interface
             if (defaultvalue is not null) option.SetDefaultValue(defaultvalue);
             try
             {
+                option.Name = name;
                 option.IsRequired = required;
                 option.Description = description;
                 command.AddOption(option);
@@ -158,26 +137,6 @@ namespace autocli.Interface
                 Log.Error(ex, ex.Message, ex.ToString);
             }
             return option;
-        }
-
-        /// <summary>
-        /// Retrieves the option from the list of all arguments
-        /// </summary>
-        /// <param name="L">The list of all options.</param>
-        /// <param name="aliases">The alias of the searched option.</param>
-        public static Option? GetOption(List<Option> L, string[] aliases)
-        {
-            try
-            {
-                foreach (Option option in L)
-                    if (option.Aliases == aliases)
-                    {
-                        Log.Verbose("Accessing {O}.", $"{option}");
-                        return option;
-                    }
-            }
-            catch (Exception ex) { Log.Error(ex, ex.Message, ex.ToString); }
-            return null;
         }
     }
 }

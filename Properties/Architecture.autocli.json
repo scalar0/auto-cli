@@ -33,13 +33,11 @@
     {
       "Alias": "create",
       "Parent": "autocli",
-      "Verbosity": false,
       "Description": "Creates a template of a new .json configuration file with specified name."
     },
     {
       "Alias": "generate",
       "Parent": "autocli",
-      "Verbosity": true,
       "Description": "Generate the CLI project based on the input .json configuration file."
     }
   ],
@@ -53,7 +51,7 @@
     },
     {
       "Alias": "file",
-      "Type": "FileInfo",
+      "Type": "string",
       "Command": "generate",
       "Defaultvalue": null,
       "Description": "Path to .json configuration file."
@@ -61,8 +59,9 @@
   ],
   "Options": [
     {
+      "Name": "directory",
       "Aliases": [ "--directory", "-d" ],
-      "Type": "DirectoryInfo",
+      "Type": "string",
       "Command": "create",
       "Required": true,
       "Defaultvalue": null,

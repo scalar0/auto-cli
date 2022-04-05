@@ -81,6 +81,9 @@
     /// </summary>
     public class Options
     {
+        [JsonProperty("Name")]
+        public string Name { get; set; }
+
         [JsonProperty("Aliases")]
         public string[] Aliases { get; set; }
 
