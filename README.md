@@ -19,11 +19,11 @@ Properties Json Array
 ```json
 "Properties": [
     {
-      "Name": "autocli",
-      "Title": "AUTOCLI : Automated CLI creation tool",
-      "Description": "[autocli] aims to automate .NET CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.",
-      "OutputPath": "/autocli",
-      "Repo": "auto-CLI"
+      "Name": "name",
+      "Title": "Boxed title",
+      "Description": "project description",
+      "OutputPath": "/name",
+      "Repo": "repo-name"
     }
   ],
 ```
