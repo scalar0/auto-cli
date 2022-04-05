@@ -13,8 +13,7 @@ namespace autocli.Interface
         /// <summary>
         /// Constructs a new instance of the RootCommand class.
         /// </summary>
-        /// <param name="title">Describe the application title displayed in the console output.</param>
-        /// <param name="description">Description of the application purpose.</param>
+        /// <param name="AppProperties">The application properties.</param>
         /// <returns>Corresponding RootCommand.</returns>
         public static RootCommand BuildRoot(Properties AppProperties)
         {
@@ -48,9 +47,7 @@ namespace autocli.Interface
         /// Constructs a new instance of the SubCommand class.
         /// </summary>
         /// <param name="parent">Parent Command.</param>
-        /// <param name="alias">Command-let of the command.</param>
-        /// <param name="description"></param>
-        /// <param name="verbosity">Output verbosity for debugging.</param>
+        /// <param name="Interface">The SubCommand binder.</param>
         /// <returns>Corresponding SubCommand.</returns>
         public static Command BuildCommand(
             Command parent, Commands Interface)
@@ -74,9 +71,7 @@ namespace autocli.Interface
         /// </summary>
         /// <typeparam name="T">Type fo the argument.</typeparam>
         /// <param name="command">Parent command for the argument.</param>
-        /// <param name="alias">Argument's name.</param>
-        /// <param name="defaultvalue">Default value of the argument (none if null).</param>
-        /// <param name="description"></param>
+        /// <param name="Interface">The argument binder.</param>
         /// <returns>Corresponding Argument.</returns>
         public static Argument<T> BuildArgument<T>(
             Command command, Arguments Interface)
@@ -101,12 +96,7 @@ namespace autocli.Interface
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="command">Parent command.</param>
-        /// <param name="required">
-        /// Boolean to specify if the option must be required by the cli parser.
-        /// </param>
-        /// <param name="aliases">Aliases of the option.</param>
-        /// <param name="defaultvalue"></param>
-        /// <param name="description"></param>
+        /// <param name="Interface">The option binder.</param>
         /// <returns>Corresponding Option.</returns>
         public static Option<T> BuildOption<T>(
             Command command, Options Interface)
