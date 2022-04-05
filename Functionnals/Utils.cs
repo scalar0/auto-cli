@@ -1,4 +1,6 @@
-﻿namespace autocli.Functionnals
+﻿using System.Diagnostics;
+
+namespace autocli.Functionnals
 {
     public static class Utils
     {
@@ -20,22 +22,6 @@
                 $"Author : scalar-tns.\nHost name : {Environment.MachineName}\n" +
                 $"OS : {Environment.OSVersion}\n" +
                 $"Host version : .NET {Environment.Version}\n\n";
-        }
-
-        /// <summary>
-        /// Method to locate a file.
-        /// </summary>
-        /// <param name="input">User input of the name of the file to locate in the current directory.</param>
-        /// <param name="keyword">
-        /// If the input is null, based on a keyword like the extension of the file or a part of its
-        /// name, the method automatically locates it.
-        /// </param>
-        /// <returns>The corresponding file path.</returns>
-        public static string[] Locate(string input, string keyword)
-        {
-            string crit = string.IsNullOrEmpty(input) ? keyword : input;
-            string[] data_file = Directory.GetFiles(Directory.GetCurrentDirectory(), crit, SearchOption.AllDirectories);
-            return data_file;
         }
 
         public static void ExecuteCommandSync(string command)

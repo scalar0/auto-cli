@@ -53,10 +53,11 @@
         public static void CallHandlers(List<Command> Commands,
                                         List<Argument> Arguments,
                                         List<Option> Options,
-                                        Option verbose,
                                         Interface.Properties AppProperties,
                                         List<Interface.Packages> Packages)
         {
+            Option verbose = Options[^1];
+
             Interface.Constructors.Get(Commands, "create")!.SetHandler(
                 (string name, string directory, string verbosity) => Handlers.create(name, directory, verbosity),
                 Interface.Constructors.Get(Arguments, "name")!,
@@ -67,6 +68,8 @@
                 (string verbosity) => Handlers.generate(AppProperties, Packages, verbosity),
                 Interface.Constructors.Get(Arguments, "file")!,
                 verbose);
+
+            Log.Debug("Handlers implemented.");
         }
     }
 }

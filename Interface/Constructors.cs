@@ -1,4 +1,6 @@
-﻿using autocli.Functionnals;
+﻿/// <!Do Not Modify>
+using Serilog.Core;
+using Serilog.Events;
 
 namespace autocli.Interface
 {
@@ -14,13 +16,10 @@ namespace autocli.Interface
         /// <param name="title">Describe the application title displayed in the console output.</param>
         /// <param name="description">Description of the application purpose.</param>
         /// <returns>Corresponding RootCommand.</returns>
-        public static RootCommand BuildRoot(
-            string name,
-            string title,
-            string description)
+        public static RootCommand BuildRoot(Properties AppProperties)
         {
-            RootCommand rcom = new(Utils.Boxed(title) + description + "\n");
-            rcom.Name = name;
+            RootCommand rcom = new(Functionnals.Utils.Boxed(AppProperties.Title) + AppProperties.Description + "\n");
+            rcom.Name = AppProperties.Name;
             Log.Debug("RootCommand built.");
             return rcom;
         }
@@ -54,14 +53,12 @@ namespace autocli.Interface
         /// <param name="verbosity">Output verbosity for debugging.</param>
         /// <returns>Corresponding SubCommand.</returns>
         public static Command BuildCommand(
-            Command parent,
-            string alias,
-            string description)
+            Command parent, Commands Interface)
         {
-            Command cmd = new(alias);
+            Command cmd = new(Interface.Alias);
             try
             {
-                cmd.Description = description;
+                cmd.Description = Interface.Description;
                 parent.AddCommand(cmd);
                 Log.Verbose("{C} built and added to {U}.", $"{cmd}", $"{parent}");
             }
@@ -82,16 +79,13 @@ namespace autocli.Interface
         /// <param name="description"></param>
         /// <returns>Corresponding Argument.</returns>
         public static Argument<T> BuildArgument<T>(
-            Command command,
-            string alias,
-            string? defaultvalue,
-            string description)
+            Command command, Arguments Interface)
         {
-            Argument<T> argument = new(alias);
+            Argument<T> argument = new(Interface.Alias);
             try
             {
-                argument.Description = description;
-                if (defaultvalue is not null) argument.SetDefaultValue(defaultvalue);
+                argument.Description = Interface.Description;
+                if (Interface.DefaultValue is not null) argument.SetDefaultValue(Interface.DefaultValue);
                 command.AddArgument(argument);
                 Log.Verbose("{A} built and added to {U}.", $"{argument}", $"{command}");
             }
@@ -115,20 +109,15 @@ namespace autocli.Interface
         /// <param name="description"></param>
         /// <returns>Corresponding Option.</returns>
         public static Option<T> BuildOption<T>(
-            Command command,
-            string name,
-            string[] aliases,
-            bool required,
-            string? defaultvalue,
-            string description)
+            Command command, Options Interface)
         {
-            Option<T> option = new(aliases);
-            if (defaultvalue is not null) option.SetDefaultValue(defaultvalue);
+            Option<T> option = new(Interface.Aliases);
+            if (Interface.DefaultValue is not null) option.SetDefaultValue(Interface.DefaultValue);
             try
             {
-                option.Name = name;
-                option.IsRequired = required;
-                option.Description = description;
+                option.Name = Interface.Name;
+                option.IsRequired = Interface.Required;
+                option.Description = Interface.Description;
                 command.AddOption(option);
                 Log.Verbose("{O} built and added to {U}.", $"{option}", $"{command}");
             }
@@ -137,6 +126,29 @@ namespace autocli.Interface
                 Log.Error(ex, ex.Message, ex.ToString);
             }
             return option;
+        }
+
+        /// <summary>
+        /// Sets and returns a new configured instance of a logger
+        /// </summary>
+        /// <param name="verbose">Output verbosity of the application</param>
+        public static ILogger BuildLogger(string verbose = null!)
+        {
+            var levelSwitch = new LoggingLevelSwitch
+            {
+                MinimumLevel = verbose switch
+                {
+                    ("v") => Serilog.Events.LogEventLevel.Verbose,
+                    ("d") => Serilog.Events.LogEventLevel.Debug,
+                    _ => Serilog.Events.LogEventLevel.Information,
+                }
+            };
+            return new LoggerConfiguration()
+                .MinimumLevel.ControlledBy(levelSwitch)
+                .WriteTo.Console(outputTemplate:
+                        "[{Timestamp:HH:mm:ss:ff} {Level:u4}] {Message:1j}{NewLine}{Exception}")
+                .WriteTo.File("./logs/autocli.log.txt", rollingInterval: RollingInterval.Minute, restrictedToMinimumLevel: LogEventLevel.Verbose)
+                .CreateLogger();
         }
     }
 }
