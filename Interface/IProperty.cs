@@ -3,7 +3,7 @@
     /// <summary>
     /// Properties class to serialize the properties of the application.
     /// </summary>
-    public class Properties
+    public class IProperty
     {
         [JsonProperty("Name")]
         public string? Name { get; set; }
@@ -21,14 +21,14 @@
         public string Repo { get; set; }
     }
 
-    public static partial class Getter
+    public partial interface IRetrieve
     {
-        public static Properties GetProperties(Dictionary<string, dynamic> dict)
+        public static IProperty GetProperties(Dictionary<string, dynamic> dict)
         {
             const string name = "Properties";
             Log.Verbose("Extracting {entity}", name);
             Log.Debug("Properties built.");
-            return dict[name].ToObject<List<Properties>>()[0];
+            return dict[name].ToObject<List<IProperty>>()[0];
         }
     }
 }

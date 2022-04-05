@@ -3,7 +3,7 @@
     /// <summary>
     /// Options class to serialize the options of the application.
     /// </summary>
-    public class Options
+    public class IOption
     {
         [JsonProperty("Name")]
         public string Name { get; set; }
@@ -27,7 +27,7 @@
         public string Description { get; set; }
     }
 
-    public static partial class Getter
+    public partial interface IRetrieve
     {
         public static List<Option> GetListOptions(List<Command> Commands, Dictionary<string, dynamic> dict)
         {
@@ -35,17 +35,17 @@
 
             const string name = "Options";
             Log.Verbose("Extracting {entity}", name);
-            var ListOptions = dict[name].ToObject<List<Options>>();
+            var ListOptions = dict[name].ToObject<List<IOption>>();
 
             #endregion Extracting the Options' attributes from json
 
             #region Build loop for the Options
 
             var Options = new List<Option>();
-            foreach (Options option in ListOptions)
+            foreach (IOption option in ListOptions)
             {
-                Options.Add(Constructors.BuildOption<string>(
-                command: Constructors.Get(Commands, option.Command)!, option));
+                Options.Add(IConstructor.BuildOption<string>(
+                command: IConstructor.Get(Commands, option.Command)!, option));
             }
 
             /// <summary>

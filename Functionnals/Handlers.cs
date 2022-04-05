@@ -21,8 +21,8 @@
         /// Handler for the generate command.
         /// </summary>
         /// <param name="path"></param>
-        public static void generate(Interface.Properties AppProperties,
-                                    List<Interface.Packages> Packages,
+        public static void generate(Interface.IProperty AppProperties,
+                                    List<Interface.IPackage> Packages,
                                     string verbosity = null)
         {
             // TODO : Implement verbosity level of generate
@@ -30,7 +30,7 @@
             InstallPackages(Packages);
         }
 
-        public static void InstallProject(Interface.Properties AppProperties)
+        public static void InstallProject(Interface.IProperty AppProperties)
         {
             // Retrieve project name
             string project_name = AppProperties.Name!;
@@ -39,10 +39,10 @@
             Utils.ExecuteCommandSync("dotnet new console --name " + project_name + ".CLI --framework net6.0 --output " + AppProperties.OutputPath + @"\" + project_name + ".CLI");
         }
 
-        public static void InstallPackages(List<Interface.Packages> Packages)
+        public static void InstallPackages(List<Interface.IPackage> Packages)
         {
             // TODO : Implement installation of packages
-            foreach (Interface.Packages pack in Packages)
+            foreach (Interface.IPackage pack in Packages)
             {
                 Log.Information("Installing package: " + pack.Name);
                 Console.WriteLine("Installing package: " + pack.Name);
@@ -53,20 +53,20 @@
         public static void CallHandlers(List<Command> Commands,
                                         List<Argument> Arguments,
                                         List<Option> Options,
-                                        Interface.Properties AppProperties,
-                                        List<Interface.Packages> Packages)
+                                        Interface.IProperty AppProperties,
+                                        List<Interface.IPackage> Packages)
         {
             Option verbose = Options[^1];
 
-            Interface.Constructors.Get(Commands, "create")!.SetHandler(
+            Interface.IConstructor.Get(Commands, "create")!.SetHandler(
                 (string name, string directory, string verbosity) => Handlers.create(name, directory, verbosity),
-                Interface.Constructors.Get(Arguments, "name")!,
-                Interface.Constructors.Get(Options, "directory")!,
+                Interface.IConstructor.Get(Arguments, "name")!,
+                Interface.IConstructor.Get(Options, "directory")!,
                 verbose);
 
-            Interface.Constructors.Get(Commands, "generate")!.SetHandler(
+            Interface.IConstructor.Get(Commands, "generate")!.SetHandler(
                 (string verbosity) => Handlers.generate(AppProperties, Packages, verbosity),
-                Interface.Constructors.Get(Arguments, "file")!,
+                Interface.IConstructor.Get(Arguments, "file")!,
                 verbose);
 
             Log.Debug("Handlers implemented.");

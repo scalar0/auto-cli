@@ -1,9 +1,9 @@
 ﻿namespace autocli.Interface
 {
     /// <summary>
-    /// Commands class to serialize the commands of the interface.
+    /// ICommand class to serialize the commands of the interface.
     /// </summary>
-    public class Commands
+    public class ICommand
     {
         [JsonProperty("Alias")]
         public string Alias { get; set; }
@@ -15,21 +15,21 @@
         public string Description { get; set; }
     }
 
-    public static partial class Getter
+    public partial interface IRetrieve
     {
-        public static List<Command> GetListCommands(Dictionary<string, dynamic> dict, Properties AppProperties)
+        public static List<Command> GetListCommands(Dictionary<string, dynamic> dict, IProperty AppProperties)
         {
             #region Extracting Commands' attributes from json
 
             const string name = "Commands";
             Log.Verbose("Extracting {entity}", name);
-            var ListCommands = dict[name].ToObject<List<Commands>>();
+            var ListCommands = dict[name].ToObject<List<ICommand>>();
 
             #endregion Extracting Commands' attributes from json
 
             #region Building the RootCommand
 
-            RootCommand root = Constructors.BuildRoot(AppProperties);
+            RootCommand root = IConstructor.BuildRoot(AppProperties);
 
             #endregion Building the RootCommand
 
@@ -39,10 +39,10 @@
             {
                 root
             };
-            foreach (Commands cmd in ListCommands)
+            foreach (ICommand cmd in ListCommands)
             {
-                Commands.Add(Constructors.BuildCommand(
-                parent: Constructors.Get(Commands, cmd.Parent)!, cmd));
+                Commands.Add(IConstructor.BuildCommand(
+                parent: IConstructor.Get(Commands, cmd.Parent)!, cmd));
             }
             Log.Debug("Commands built.");
 

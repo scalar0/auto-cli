@@ -5,17 +5,17 @@ using Serilog.Events;
 namespace autocli.Interface
 {
     /// <summary>
-    /// The Constructors class creates each entity needed for the application interface on the CLI.
-    /// For each method the arguments must be parsed from .json configuration file.
+    /// The IConstructor interface creates each entity needed for the application interface on the
+    /// CLI. For each method the arguments must be parsed from .json configuration file.
     /// </summary>
-    public static class Constructors
+    public interface IConstructor
     {
         /// <summary>
         /// Constructs a new instance of the RootCommand class.
         /// </summary>
         /// <param name="AppProperties">The application properties.</param>
         /// <returns>Corresponding RootCommand.</returns>
-        public static RootCommand BuildRoot(Properties AppProperties)
+        public static RootCommand BuildRoot(IProperty AppProperties)
         {
             RootCommand rcom = new(Functionnals.Utils.Boxed(AppProperties.Title) + AppProperties.Description + "\n");
             rcom.Name = AppProperties.Name;
@@ -50,7 +50,7 @@ namespace autocli.Interface
         /// <param name="Interface">The SubCommand binder.</param>
         /// <returns>Corresponding SubCommand.</returns>
         public static Command BuildCommand(
-            Command parent, Commands Interface)
+            Command parent, ICommand Interface)
         {
             Command cmd = new(Interface.Alias);
             try
@@ -74,7 +74,7 @@ namespace autocli.Interface
         /// <param name="Interface">The argument binder.</param>
         /// <returns>Corresponding Argument.</returns>
         public static Argument<T> BuildArgument<T>(
-            Command command, Arguments Interface)
+            Command command, IArgument Interface)
         {
             Argument<T> argument = new(Interface.Alias);
             try
@@ -99,7 +99,7 @@ namespace autocli.Interface
         /// <param name="Interface">The option binder.</param>
         /// <returns>Corresponding Option.</returns>
         public static Option<T> BuildOption<T>(
-            Command command, Options Interface)
+            Command command, IOption Interface)
         {
             Option<T> option = new(Interface.Aliases);
             if (Interface.DefaultValue is not null) option.SetDefaultValue(Interface.DefaultValue);
