@@ -1,9 +1,9 @@
 ﻿namespace autocli.Interface
 {
     /// <summary>
-    /// Arguments class to serialize the args of the interface.
+    /// Interface Argument class to deserialize the args of the interface.
     /// </summary>
-    public class Arguments
+    public class IArgument
     {
         [JsonProperty("Alias")]
         public string Alias { get; set; }
@@ -19,9 +19,26 @@
 
         [JsonProperty("Description")]
         public string Description { get; set; }
+
+        public Argument<Type> BuildArgument<Type>(Command command)
+        {
+            Argument<Type> argument = new(Alias);
+            argument.Description = Description;
+            if (DefaultValue is not null) argument.SetDefaultValue(DefaultValue);
+            try
+            {
+                command.AddArgument(argument);
+                Log.Verbose("{A} built and added to {U}.", $"{argument}", $"{command}");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, ex.Message, ex.ToString);
+            }
+            return argument;
+        }
     }
 
-    public static partial class Getter
+    public partial interface IRetrieve
     {
         public static List<Argument> GetListArguments(List<Command> Commands, Dictionary<string, dynamic> dict)
         {
@@ -29,17 +46,17 @@
 
             const string name = "Arguments";
             Log.Verbose("Extracting {entity}", name);
-            var ListArguments = dict[name].ToObject<List<Arguments>>();
+            var ListArguments = dict[name].ToObject<List<IArgument>>();
 
             #endregion Extracting Arguments' attributes from json
 
             #region Build loop for the Arguments
 
             var Arguments = new List<Argument>();
-            foreach (Arguments arg in ListArguments)
+            foreach (IArgument arg in ListArguments)
             {
-                Arguments.Add(Constructors.BuildArgument<string>(
-                command: Constructors.Get(Commands, arg.Command)!, arg));
+                Arguments.Add(arg.BuildArgument<string>(
+                command: IConstructor.Get(Commands, arg.Command)!));
             }
             Log.Debug("Arguments built.");
 

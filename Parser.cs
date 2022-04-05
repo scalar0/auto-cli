@@ -15,7 +15,7 @@ namespace autocli
         public static async Task Main(string[] args)
         {
             // Logger
-            Log.Logger = (args.Length is not 0) ? Interface.Constructors.BuildLogger(args[^1]) : Interface.Constructors.BuildLogger();
+            Log.Logger = (args.Length is not 0) ? Interface.IConstructor.BuildLogger(args[^1]) : Interface.IConstructor.BuildLogger();
 
             /// <summary>
             /// Deserializes the Json configuration file and parses it to a dictionnary.
@@ -23,20 +23,20 @@ namespace autocli
             Dictionary<string, dynamic> dict = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(File.ReadAllText(config))!;
 
             //Properties
-            Interface.Properties AppProperties = Interface.Getter.GetProperties(dict);
+            Interface.IProperty AppProperties = Interface.IRetrieve.GetProperties(dict);
 
             // Packages
-            List<Interface.Packages> Packages = Interface.Getter.GetPackages(dict);
+            List<Interface.IPackage> Packages = Interface.IRetrieve.GetPackages(dict);
 
             // Commands and RootCommand
-            List<Command> Commands = Interface.Getter.GetListCommands(dict, AppProperties);
+            List<Command> Commands = Interface.IRetrieve.GetListCommands(dict, AppProperties);
             RootCommand root = (RootCommand)Commands[0];
 
             // Options
-            List<Option> Options = Interface.Getter.GetListOptions(Commands, dict);
+            List<Option> Options = Interface.IRetrieve.GetListOptions(Commands, dict);
 
             // Arguments
-            List<Argument> Arguments = Interface.Getter.GetListArguments(Commands, dict);
+            List<Argument> Arguments = Interface.IRetrieve.GetListArguments(Commands, dict);
 
             // Handlers
             root.SetHandler(() => root.InvokeAsync("-h"));
