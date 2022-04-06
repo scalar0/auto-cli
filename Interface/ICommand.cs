@@ -38,7 +38,7 @@
 
     public partial interface IRetrieve
     {
-        public static List<Command> GetListCommands(Dictionary<string, dynamic> dict, IProperty AppProperties)
+        public static List<Command> GetCommands(Dictionary<string, dynamic> dict, IProperty AppProperties)
         {
             #region Extracting Commands' attributes from json
 
@@ -48,26 +48,19 @@
 
             #endregion Extracting Commands' attributes from json
 
-            #region Building the RootCommand
-
-            RootCommand root = AppProperties.BuildRoot();
-
-            #endregion Building the RootCommand
-
-            #region Build loop for the other Commands
+            #region Build loop for the Commands
 
             var Commands = new List<Command>()
             {
-                root
+                AppProperties.BuildRoot()
             };
             foreach (ICommand cmd in ListCommands)
             {
-                Commands.Add(cmd.BuildCommand(
-                parent: IConstructor.Get(Commands, cmd.Parent)!));
+                Commands.Add(cmd.BuildCommand(parent: IConstructor.Get(Commands, cmd.Parent)!));
             }
             Log.Debug("Commands built.");
 
-            #endregion Build loop for the other Commands
+            #endregion Build loop for the Commands
 
             return Commands;
         }

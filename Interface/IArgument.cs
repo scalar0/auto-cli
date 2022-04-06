@@ -20,9 +20,9 @@
         [JsonProperty("Description")]
         public string Description { get; set; }
 
-        public Argument<Type> BuildArgument<Type>(Command command)
+        public Argument BuildArgument(Command command)
         {
-            Argument<Type> argument = new(Alias);
+            Argument<string> argument = new(Alias);
             argument.Description = Description;
             if (DefaultValue is not null) argument.SetDefaultValue(DefaultValue);
             try
@@ -40,7 +40,7 @@
 
     public partial interface IRetrieve
     {
-        public static List<Argument> GetListArguments(List<Command> Commands, Dictionary<string, dynamic> dict)
+        public static List<Argument> GetArguments(List<Command> Commands, Dictionary<string, dynamic> dict)
         {
             #region Extracting Arguments' attributes from json
 
@@ -55,8 +55,7 @@
             var Arguments = new List<Argument>();
             foreach (IArgument arg in ListArguments)
             {
-                Arguments.Add(arg.BuildArgument<string>(
-                command: IConstructor.Get(Commands, arg.Command)!));
+                Arguments.Add(arg.BuildArgument(command: IConstructor.Get(Commands, arg.Command)!));
             }
             Log.Debug("Arguments built.");
 

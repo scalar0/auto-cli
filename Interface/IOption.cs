@@ -32,9 +32,9 @@
         /// <typeparam name="T">Type of the option.</typeparam>
         /// <param name="command">Parent command.</param>
         /// <returns>Corresponding Option.</returns>
-        public Option<T> BuildOption<T>(Command command)
+        public Option BuildOption(Command command)
         {
-            Option<T> option = new(Aliases);
+            Option<string> option = new(Aliases);
             option.Name = Name;
             option.IsRequired = Required;
             option.Description = Description;
@@ -54,7 +54,7 @@
 
     public partial interface IRetrieve
     {
-        public static List<Option> GetListOptions(List<Command> Commands, Dictionary<string, dynamic> dict)
+        public static List<Option> GetOptions(List<Command> Commands, Dictionary<string, dynamic> dict)
         {
             #region Extracting the Options' attributes from json
 
@@ -69,8 +69,7 @@
             var Options = new List<Option>();
             foreach (IOption option in ListOptions)
             {
-                Options.Add(option.BuildOption<string>(
-                command: IConstructor.Get(Commands, option.Command)!));
+                Options.Add(option.BuildOption(command: IConstructor.Get(Commands, option.Command)!));
             }
 
             /// <summary>
