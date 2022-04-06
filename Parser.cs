@@ -42,35 +42,16 @@ namespace autocli
             // Logger
             Log.Logger = (args.Length is not 0) ? BuildLogger(args[^1]) : BuildLogger();
 
-            /// <summary>
-            /// Deserializes the Json configuration file and parses it to a dictionnary.
-            /// </summary>
-            Dictionary<string, dynamic> dict = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(File.ReadAllText(config))!;
-
-            //Properties
-            Interface.IProperty AppProperties = Interface.IRetrieve.GetProperties(dict);
-
-            // Packages
-            List<Interface.IPackage> Packages = Interface.IRetrieve.GetPackages(dict);
-
-            // Commands and RootCommand
-            List<Command> Commands = Interface.IRetrieve.GetCommands(dict, AppProperties);
-            RootCommand root = (RootCommand)Commands[0];
-
-            // Options
-            List<Option> Options = Interface.IRetrieve.GetOptions(Commands, dict);
-
-            // Arguments
-            List<Argument> Arguments = Interface.IRetrieve.GetArguments(Commands, dict);
+            // App Interface
+            Interface.IJsonApp Interface = new(config);
+            RootCommand root = Interface.GetRootCommand();
 
             // Handlers
             root.SetHandler(() => root.InvokeAsync("-h"));
-            Functionnals.Handlers.CallHandlers(Commands, Arguments, Options, AppProperties, Packages);
+            Functionnals.Handlers.CallHandlers(Interface);
 
-            Log.Information("Automated CLI creation tool built.");
             Log.Verbose("Invoking args parser.");
             Log.CloseAndFlush();
-
             await root.InvokeAsync(args);
         }
     }

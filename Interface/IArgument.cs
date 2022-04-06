@@ -37,31 +37,4 @@
             return argument;
         }
     }
-
-    public partial interface IRetrieve
-    {
-        public static List<Argument> GetArguments(List<Command> Commands, Dictionary<string, dynamic> dict)
-        {
-            #region Extracting Arguments' attributes from json
-
-            const string name = "Arguments";
-            Log.Verbose("Extracting {entity}", name);
-            var ListArguments = dict[name].ToObject<List<IArgument>>();
-
-            #endregion Extracting Arguments' attributes from json
-
-            #region Build loop for the Arguments
-
-            var Arguments = new List<Argument>();
-            foreach (IArgument arg in ListArguments)
-            {
-                Arguments.Add(arg.BuildArgument(command: IConstructor.Get(Commands, arg.Command)!));
-            }
-            Log.Debug("Arguments built.");
-
-            #endregion Build loop for the Arguments
-
-            return Arguments;
-        }
-    }
 }

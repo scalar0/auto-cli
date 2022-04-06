@@ -32,15 +32,4 @@
             return rcom;
         }
     }
-
-    public partial interface IRetrieve
-    {
-        public static IProperty GetProperties(Dictionary<string, dynamic> dict)
-        {
-            const string name = "Properties";
-            Log.Verbose("Extracting {entity}", name);
-            Log.Debug("Properties built.");
-            return dict[name].ToObject<List<IProperty>>()[0];
-        }
-    }
 }

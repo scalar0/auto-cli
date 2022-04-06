@@ -11,15 +11,4 @@
         [JsonProperty("Version")]
         public string? Version { get; set; }
     }
-
-    public partial interface IRetrieve
-    {
-        public static List<IPackage> GetPackages(Dictionary<string, dynamic> dict)
-        {
-            const string name = "Packages";
-            Log.Verbose("Extracting {entity}", name);
-            Log.Debug("Packages built.");
-            return dict[name].ToObject<List<IPackage>>();
-        }
-    }
 }

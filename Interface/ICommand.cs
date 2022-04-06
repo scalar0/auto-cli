@@ -35,34 +35,4 @@
             return cmd;
         }
     }
-
-    public partial interface IRetrieve
-    {
-        public static List<Command> GetCommands(Dictionary<string, dynamic> dict, IProperty AppProperties)
-        {
-            #region Extracting Commands' attributes from json
-
-            const string name = "Commands";
-            Log.Verbose("Extracting {entity}", name);
-            var ListCommands = dict[name].ToObject<List<ICommand>>();
-
-            #endregion Extracting Commands' attributes from json
-
-            #region Build loop for the Commands
-
-            var Commands = new List<Command>()
-            {
-                AppProperties.BuildRoot()
-            };
-            foreach (ICommand cmd in ListCommands)
-            {
-                Commands.Add(cmd.BuildCommand(parent: IConstructor.Get(Commands, cmd.Parent)!));
-            }
-            Log.Debug("Commands built.");
-
-            #endregion Build loop for the Commands
-
-            return Commands;
-        }
-    }
 }

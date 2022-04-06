@@ -9,7 +9,7 @@
         /// <param name="directory"></param>
         public static void create(string name,
                                   string directory,
-                                  string verbosity = null)
+                                  string verbosity)
         {
             // TODO : Implement verbosity level of create
             string? configfile = Path.Combine(directory, "Arcitecture." + name) + ".json";
@@ -23,7 +23,7 @@
         /// <param name="path"></param>
         public static void generate(Interface.IProperty AppProperties,
                                     List<Interface.IPackage> Packages,
-                                    string verbosity = null)
+                                    string verbosity)
         {
             // TODO : Implement verbosity level of generate
             InstallProject(AppProperties);
@@ -50,23 +50,19 @@
             }
         }
 
-        public static void CallHandlers(List<Command> Commands,
-                                        List<Argument> Arguments,
-                                        List<Option> Options,
-                                        Interface.IProperty AppProperties,
-                                        List<Interface.IPackage> Packages)
+        public static void CallHandlers(Interface.IJsonApp self)
         {
-            Option verbose = Options[^1];
+            Option verbose = self.GetOptions()[^1];
 
-            Interface.IConstructor.Get(Commands, "create")!.SetHandler(
+            self.GetCommand("create")!.SetHandler(
                 (string name, string directory, string verbosity) => Handlers.create(name, directory, verbosity),
-                Interface.IConstructor.Get(Arguments, "name")!,
-                Interface.IConstructor.Get(Options, "directory")!,
+                self.GetArgument("name")!,
+                self.GetOption("directory")!,
                 verbose);
 
-            Interface.IConstructor.Get(Commands, "generate")!.SetHandler(
-                (string verbosity) => Handlers.generate(AppProperties, Packages, verbosity),
-                Interface.IConstructor.Get(Arguments, "file")!,
+            self.GetCommand("generate")!.SetHandler(
+                (string verbosity) => Handlers.generate(self.GetProperties(), self.GetPackages(), verbosity),
+                self.GetArgument("file")!,
                 verbose);
 
             Log.Debug("Handlers implemented.");
