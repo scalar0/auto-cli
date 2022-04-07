@@ -2,21 +2,23 @@
 
 namespace autocli.Functionnals
 {
-    public static class Utils
+    internal static class Utils
     {
         /// <summary>
         /// Method to box the title between 2 "___...___" lines.
         /// </summary>
         /// <param name="title">Title of the application to be boxed and displayed in the cli.</param>
         /// <example></example>
-        public static string Boxed(string title)
+        internal static string Boxed(string title)
         {
-            int l = title.Length;
             string box = "";
-            for (int c = 0; c < l; c++)
+            int c = 0;
+            do
             {
                 box += "_";
+                c++;
             }
+            while (c < title.Length);
             box += "\n\n";
             return box + title + "\n\n" + box +
                 $"Author : scalar-tns.\nHost name : {Environment.MachineName}\n" +
@@ -24,7 +26,7 @@ namespace autocli.Functionnals
                 $"Host version : .NET {Environment.Version}\n\n";
         }
 
-        public static void ExecuteCommandSync(string command)
+        internal static void ExecuteCommandSync(string command)
         {
             try
             {

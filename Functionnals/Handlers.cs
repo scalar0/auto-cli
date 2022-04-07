@@ -55,13 +55,13 @@
             Option verbose = self.GetOptions()[^1];
 
             self.GetCommand("create")!.SetHandler(
-                (string name, string directory, string verbosity) => Handlers.create(name, directory, verbosity),
+                (string name, string directory, string verbosity) => create(name, directory, verbosity),
                 self.GetArgument("name")!,
                 self.GetOption("directory")!,
                 verbose);
 
             self.GetCommand("generate")!.SetHandler(
-                (string verbosity) => Handlers.generate(self.GetProperties(), self.GetPackages(), verbosity),
+                (string verbosity) => generate(self.GetProperties(), self.GetPackages(), verbosity),
                 self.GetArgument("file")!,
                 verbose);
 
