@@ -6,9 +6,9 @@
     public class IPackage
     {
         [JsonProperty("Name")]
-        public string Name { get; set; }
+        internal string Name { get; set; }
 
         [JsonProperty("Version")]
-        public string? Version { get; set; }
+        internal string? Version { get; set; }
     }
 }

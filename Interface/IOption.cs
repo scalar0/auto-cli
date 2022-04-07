@@ -3,28 +3,28 @@
     /// <summary>
     /// Option Interface class to deserialize the options of the application.
     /// </summary>
-    public class IOption
+    internal class IOption
     {
         [JsonProperty("Name")]
-        public string Name { get; set; }
+        internal string Name { get; set; }
 
         [JsonProperty("Aliases")]
-        public string[] Aliases { get; set; }
+        internal string[] Aliases { get; set; }
 
         [JsonProperty("Type")]
-        public string Type { get; set; }
+        internal string Type { get; set; }
 
         [JsonProperty("Command")]
-        public string Command { get; set; }
+        internal string Command { get; set; }
 
         [JsonProperty("Required")]
-        public bool Required { get; set; }
+        internal bool Required { get; set; }
 
         [JsonProperty("DefautlValue")]
-        public string? DefaultValue { get; set; }
+        internal string? DefaultValue { get; set; }
 
         [JsonProperty("Description")]
-        public string Description { get; set; }
+        internal string Description { get; set; }
 
         /// <summary>
         /// Constructs a new instance of the IOption class.
@@ -32,7 +32,7 @@
         /// <typeparam name="T">Type of the option.</typeparam>
         /// <param name="command">Parent command.</param>
         /// <returns>Corresponding Option.</returns>
-        public Option BuildOption(Command command)
+        internal Option BuildOption(Command command)
         {
             Option<string> option = new(Aliases);
             option.Name = Name;

@@ -6,30 +6,31 @@
     public class IProperty
     {
         [JsonProperty("Name")]
-        public string? Name { get; set; }
+        internal string? Name { get; set; }
 
         [JsonProperty("Title")]
-        public string Title { get; set; }
+        internal string Title { get; set; }
 
         [JsonProperty("Description")]
-        public string Description { get; set; }
+        internal string Description { get; set; }
 
         [JsonProperty("OutputPath")]
-        public string OutputPath { get; set; }
+        internal string OutputPath { get; set; }
 
         [JsonProperty("Repo")]
-        public string Repo { get; set; }
+        internal string Repo { get; set; }
 
         /// <summary>
         /// Constructs a new instance of the RootCommand class.
         /// </summary>
         /// <returns>Corresponding RootCommand.</returns>
-        public RootCommand BuildRoot()
+        internal RootCommand BuildRoot()
         {
-            RootCommand rcom = new(Functionnals.Utils.Boxed(Title) + Description + "\n");
-            rcom.Name = Name;
+            RootCommand root = new(Functionnals.Utils.Boxed(Title) + Description + "\n");
+            root.Name = Name;
+            root.SetHandler(() => root.InvokeAsync("-h"));
             Log.Debug("RootCommand built.");
-            return rcom;
+            return root;
         }
     }
 }

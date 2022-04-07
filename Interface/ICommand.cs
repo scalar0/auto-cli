@@ -3,23 +3,23 @@
     /// <summary>
     /// Interface Command class to deserialize the commands of the interface.
     /// </summary>
-    public class ICommand
+    internal class ICommand
     {
         [JsonProperty("Alias")]
-        public string Alias { get; set; }
+        internal string Alias { get; set; }
 
         [JsonProperty("Parent")]
-        public string Parent { get; set; }
+        internal string Parent { get; set; }
 
         [JsonProperty("Description")]
-        public string Description { get; set; }
+        internal string Description { get; set; }
 
         /// <summary>
         /// Constructs a new instance of the Command class.
         /// </summary>
         /// <param name="parent">Parent Command.</param>
         /// <returns>Corresponding Command.</returns>
-        public Command BuildCommand(Command parent)
+        internal Command BuildCommand(Command parent)
         {
             Command cmd = new(Alias);
             cmd.Description = Description;

@@ -3,24 +3,24 @@
     /// <summary>
     /// Interface Argument class to deserialize the args of the interface.
     /// </summary>
-    public class IArgument
+    internal class IArgument
     {
         [JsonProperty("Alias")]
-        public string Alias { get; set; }
+        internal string Alias { get; set; }
 
         [JsonProperty("Type")]
-        public string Type { get; set; }
+        internal string Type { get; set; }
 
         [JsonProperty("Command")]
-        public string Command { get; set; }
+        internal string Command { get; set; }
 
         [JsonProperty("DefautlValue")]
-        public string? DefaultValue { get; set; }
+        internal string? DefaultValue { get; set; }
 
         [JsonProperty("Description")]
-        public string Description { get; set; }
+        internal string Description { get; set; }
 
-        public Argument BuildArgument(Command command)
+        internal Argument BuildArgument(Command command)
         {
             Argument<string> argument = new(Alias);
             argument.Description = Description;

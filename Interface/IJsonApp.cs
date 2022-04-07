@@ -4,11 +4,11 @@
     {
         #region Properties
 
-        private readonly IProperty properties;
+        internal readonly IProperty properties;
 
-        public IProperty GetProperties() => properties;
+        internal IProperty GetProperties() => properties;
 
-        public static IProperty ConstructProperties(Dictionary<string, dynamic> dict)
+        internal static IProperty ConstructProperties(Dictionary<string, dynamic> dict)
         {
             const string name = "Properties";
             Log.Verbose("Extracting {entity}", name);
@@ -20,11 +20,11 @@
 
         #region Packages
 
-        private readonly List<IPackage> packages;
+        internal readonly List<IPackage> packages;
 
-        public List<IPackage> GetPackages() => packages;
+        internal List<IPackage> GetPackages() => packages;
 
-        public static List<IPackage> ConstructPackages(Dictionary<string, dynamic> dict)
+        internal static List<IPackage> ConstructPackages(Dictionary<string, dynamic> dict)
         {
             const string name = "Packages";
             Log.Verbose("Extracting {entity}", name);
@@ -36,13 +36,13 @@
 
         #region Commands
 
-        private readonly List<Command> commands;
+        internal readonly List<Command> commands;
 
-        public List<Command> GetCommands() => commands;
+        internal List<Command> GetCommands() => commands;
 
-        public RootCommand GetRootCommand() => (RootCommand)this.GetCommands()[0];
+        internal RootCommand GetRootCommand() => (RootCommand)GetCommands()[0];
 
-        public Command GetCommand(string name)
+        internal Command GetCommand(string name)
         {
             foreach (Command item in GetCommands())
                 if (item!.Name == name)
@@ -54,7 +54,7 @@
             return default!;
         }
 
-        public List<Command> ConstructCommands(Dictionary<string, dynamic> dict)
+        internal List<Command> ConstructCommands(Dictionary<string, dynamic> dict)
         {
             #region Extracting Commands' attributes from json
 
@@ -68,7 +68,7 @@
 
             var Commands = new List<Command>()
             {
-                this.GetProperties().BuildRoot()
+                GetProperties().BuildRoot()
             };
             foreach (ICommand cmd in ListCommands)
             {
@@ -85,11 +85,11 @@
 
         #region Options
 
-        private readonly List<Option> options;
+        internal readonly List<Option> options;
 
-        public List<Option> GetOptions() => options;
+        internal List<Option> GetOptions() => options;
 
-        public Option GetOption(string name)
+        internal Option GetOption(string name)
         {
             foreach (Option item in GetOptions())
                 if (item!.Name == name)
@@ -101,7 +101,7 @@
             return default!;
         }
 
-        public List<Option> ConstructOptions(Dictionary<string, dynamic> dict)
+        internal List<Option> ConstructOptions(Dictionary<string, dynamic> dict)
         {
             #region Extracting the Options' attributes from json
 
@@ -126,7 +126,7 @@
                 new[] { "--verbose", "-v" }, "Verbosity level of the output : m[inimal]; d[ebug]; v[erbose].")
                 .FromAmong("m", "d", "v");
             verbose.SetDefaultValue("m");
-            this.GetCommands()[0].AddGlobalOption(verbose);
+            GetCommands()[0].AddGlobalOption(verbose);
 
             Log.Debug("Options built.");
 
@@ -139,11 +139,11 @@
 
         #region Arguments
 
-        private readonly List<Argument> arguments;
+        internal readonly List<Argument> arguments;
 
-        public List<Argument> GetArguments() => arguments;
+        internal List<Argument> GetArguments() => arguments;
 
-        public Argument GetArgument(string name)
+        internal Argument GetArgument(string name)
         {
             foreach (Argument item in GetArguments())
                 if (item!.Name == name)
@@ -155,7 +155,7 @@
             return default!;
         }
 
-        public List<Argument> ConstructArguments(Dictionary<string, dynamic> dict)
+        internal List<Argument> ConstructArguments(Dictionary<string, dynamic> dict)
         {
             #region Extracting Arguments' attributes from json
 
@@ -185,7 +185,7 @@
         /// Class Constructor.
         /// </summary>
         /// <param name="Configuration">Path to configuration file for deserialization.</param>
-        public IJsonApp(string Configuration)
+        internal IJsonApp(string Configuration)
         {
             Dictionary<string, dynamic> dict = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(File.ReadAllText(Configuration))!;
             properties = ConstructProperties(dict);
