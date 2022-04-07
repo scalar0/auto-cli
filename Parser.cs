@@ -31,7 +31,7 @@ namespace autocli
                 .CreateLogger();
         }
 
-        internal const string config = @"C:\Users\matte\source\repos\autoCLI\Properties\Architecture.json";
+        internal static string config = string.Format("C:\\Users\\matte\\source\\repos\\{0}\\Properties\\Architecture.json", typeof(Parser).Namespace);
 
         /// <summary>
         /// Async task to parse the array of args as strings

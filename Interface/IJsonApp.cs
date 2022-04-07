@@ -2,18 +2,26 @@
 {
     public class IJsonApp
     {
+        #region Configuration
+
+        internal readonly Dictionary<string, dynamic> configuration;
+
+        internal Dictionary<string, dynamic> GetConfiguration() => configuration;
+
+        #endregion Configuration
+
         #region Properties
 
         internal readonly IProperty properties;
 
         internal IProperty GetProperties() => properties;
 
-        internal static IProperty ConstructProperties(Dictionary<string, dynamic> dict)
+        internal IProperty ConstructProperties()
         {
             const string name = "Properties";
             Log.Verbose("Extracting {entity}", name);
             Log.Debug("Properties built.");
-            return dict[name].ToObject<List<IProperty>>()[0];
+            return GetConfiguration()[name].ToObject<List<IProperty>>()[0];
         }
 
         #endregion Properties
@@ -24,12 +32,12 @@
 
         internal List<IPackage> GetPackages() => packages;
 
-        internal static List<IPackage> ConstructPackages(Dictionary<string, dynamic> dict)
+        internal List<IPackage> ConstructPackages()
         {
             const string name = "Packages";
             Log.Verbose("Extracting {entity}", name);
             Log.Debug("Packages built.");
-            return dict[name].ToObject<List<IPackage>>();
+            return GetConfiguration()[name].ToObject<List<IPackage>>();
         }
 
         #endregion Packages
@@ -54,13 +62,13 @@
             return default!;
         }
 
-        internal List<Command> ConstructCommands(Dictionary<string, dynamic> dict)
+        internal List<Command> ConstructCommands()
         {
             #region Extracting Commands' attributes from json
 
             const string name = "Commands";
             Log.Verbose("Extracting {entity}", name);
-            var ListCommands = dict[name].ToObject<List<ICommand>>();
+            var ListCommands = GetConfiguration()[name].ToObject<List<ICommand>>();
 
             #endregion Extracting Commands' attributes from json
 
@@ -101,13 +109,13 @@
             return default!;
         }
 
-        internal List<Option> ConstructOptions(Dictionary<string, dynamic> dict)
+        internal List<Option> ConstructOptions()
         {
             #region Extracting the Options' attributes from json
 
             const string name = "Options";
             Log.Verbose("Extracting {entity}", name);
-            var ListOptions = dict[name].ToObject<List<IOption>>();
+            var ListOptions = GetConfiguration()[name].ToObject<List<IOption>>();
 
             #endregion Extracting the Options' attributes from json
 
@@ -155,13 +163,13 @@
             return default!;
         }
 
-        internal List<Argument> ConstructArguments(Dictionary<string, dynamic> dict)
+        internal List<Argument> ConstructArguments()
         {
             #region Extracting Arguments' attributes from json
 
             const string name = "Arguments";
             Log.Verbose("Extracting {entity}", name);
-            var ListArguments = dict[name].ToObject<List<IArgument>>();
+            var ListArguments = GetConfiguration()[name].ToObject<List<IArgument>>();
 
             #endregion Extracting Arguments' attributes from json
 
@@ -184,15 +192,15 @@
         /// <summary>
         /// Class Constructor.
         /// </summary>
-        /// <param name="Configuration">Path to configuration file for deserialization.</param>
-        internal IJsonApp(string Configuration)
+        /// <param name="file">Path to configuration file for deserialization.</param>
+        internal IJsonApp(string file)
         {
-            Dictionary<string, dynamic> dict = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(File.ReadAllText(Configuration))!;
-            properties = ConstructProperties(dict);
-            packages = ConstructPackages(dict);
-            commands = ConstructCommands(dict);
-            options = ConstructOptions(dict);
-            arguments = ConstructArguments(dict);
+            configuration = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(File.ReadAllText(file))!;
+            properties = ConstructProperties();
+            packages = ConstructPackages();
+            commands = ConstructCommands();
+            options = ConstructOptions();
+            arguments = ConstructArguments();
         }
     }
 }
