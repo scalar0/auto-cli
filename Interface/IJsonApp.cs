@@ -1,206 +1,218 @@
-﻿namespace autocli.Interface
+﻿namespace autocli.Interface;
+
+public class IJsonApp
 {
-    public class IJsonApp
+    #region Configuration
+
+    internal readonly Dictionary<string, dynamic> configuration;
+
+    internal Dictionary<string, dynamic> GetConfiguration() => configuration;
+
+    #endregion Configuration
+
+    #region Properties
+
+    internal readonly IProperty properties;
+
+    internal IProperty GetProperties() => properties;
+
+    internal IProperty ConstructProperties()
     {
-        #region Configuration
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+        Log.Verbose("Extracting {entity}", "Properties");
+        var s = GetConfiguration()["Properties"].ToObject<List<IProperty>>()[0];
+        watch.Stop();
+        Log.Debug("Properties built: {t} ms", watch.ElapsedMilliseconds);
+        return s;
+    }
 
-        internal readonly Dictionary<string, dynamic> configuration;
+    #endregion Properties
 
-        internal Dictionary<string, dynamic> GetConfiguration() => configuration;
+    #region Packages
 
-        #endregion Configuration
+    internal readonly List<IPackage> packages;
 
-        #region Properties
+    internal List<IPackage> GetPackages() => packages;
 
-        internal readonly IProperty properties;
+    internal List<IPackage> ConstructPackages()
+    {
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+        Log.Verbose("Extracting {entity}", "Packages");
+        var s = GetConfiguration()["Packages"].ToObject<List<IPackage>>();
+        watch.Stop();
+        Log.Debug("Packages built: {t} ms", watch.ElapsedMilliseconds);
+        return s;
+    }
 
-        internal IProperty GetProperties() => properties;
+    #endregion Packages
 
-        internal IProperty ConstructProperties()
-        {
-            const string name = "Properties";
-            Log.Verbose("Extracting {entity}", name);
-            Log.Debug("Properties built.");
-            return GetConfiguration()[name].ToObject<List<IProperty>>()[0];
-        }
+    #region Commands
 
-        #endregion Properties
+    internal readonly List<Command> commands;
 
-        #region Packages
+    internal List<Command> GetCommands() => commands;
 
-        internal readonly List<IPackage> packages;
+    internal RootCommand GetRootCommand() => (RootCommand)GetCommands()[0];
 
-        internal List<IPackage> GetPackages() => packages;
-
-        internal List<IPackage> ConstructPackages()
-        {
-            const string name = "Packages";
-            Log.Verbose("Extracting {entity}", name);
-            Log.Debug("Packages built.");
-            return GetConfiguration()[name].ToObject<List<IPackage>>();
-        }
-
-        #endregion Packages
-
-        #region Commands
-
-        internal readonly List<Command> commands;
-
-        internal List<Command> GetCommands() => commands;
-
-        internal RootCommand GetRootCommand() => (RootCommand)GetCommands()[0];
-
-        internal Command GetCommand(string name)
-        {
-            foreach (Command item in GetCommands())
-                if (item!.Name == name)
-                {
-                    Log.Verbose("Accessing {C}.", $"{item}");
-                    return item;
-                }
-            Log.Error("No command of name: {name} found.", name);
-            return default!;
-        }
-
-        internal List<Command> ConstructCommands()
-        {
-            #region Extracting Commands' attributes from json
-
-            const string name = "Commands";
-            Log.Verbose("Extracting {entity}", name);
-            var ListCommands = GetConfiguration()[name].ToObject<List<ICommand>>();
-
-            #endregion Extracting Commands' attributes from json
-
-            #region Build loop for the Commands
-
-            var Commands = new List<Command>()
+    internal Command GetCommand(string name)
+    {
+        foreach (Command item in GetCommands())
+            if (item!.Name == name)
             {
-                GetProperties().BuildRoot()
-            };
-            foreach (ICommand cmd in ListCommands)
-            {
-                Commands.Add(cmd.BuildCommand(Commands.Find(el => el.Name.Equals(cmd.Parent))!));
+                Log.Verbose("Accessing {C}.", $"{item}");
+                return item;
             }
-            Log.Debug("Commands built.");
+        Log.Error("No command of name: {name} found.", name);
+        return default!;
+    }
 
-            #endregion Build loop for the Commands
+    internal List<Command> ConstructCommands()
+    {
+        var watch = System.Diagnostics.Stopwatch.StartNew();
 
-            return Commands;
+        #region Extracting Commands' attributes from json
+
+        Log.Verbose("Extracting {entity}", "Commands");
+        var ListCommands = GetConfiguration()["Commands"].ToObject<List<ICommand>>();
+
+        #endregion Extracting Commands' attributes from json
+
+        #region Build loop for the Commands
+
+        var Commands = new List<Command>()
+        {
+            GetProperties().BuildRoot()
+        };
+        foreach (ICommand cmd in ListCommands)
+        {
+            Command com = (cmd.Parent == "root") ? Commands[0] : Commands.Find(el => el.Name.Equals(cmd.Parent))!;
+            Commands.Add(cmd.BuildCommand(com));
         }
 
-        #endregion Commands
+        #endregion Build loop for the Commands
 
-        #region Options
+        watch.Stop();
+        Log.Debug("Commands built: {t} ms", watch.ElapsedMilliseconds);
+        return Commands;
+    }
 
-        internal readonly List<Option> options;
+    #endregion Commands
 
-        internal List<Option> GetOptions() => options;
+    #region Options
 
-        internal Option GetOption(string name)
-        {
-            foreach (Option item in GetOptions())
-                if (item!.Name == name)
-                {
-                    Log.Verbose("Accessing {C}.", $"{item}");
-                    return item;
-                }
-            Log.Error("No option of name: {name} found.", name);
-            return default!;
-        }
+    internal readonly List<Option> options;
 
-        internal List<Option> ConstructOptions()
-        {
-            #region Extracting the Options' attributes from json
+    internal List<Option> GetOptions() => options;
 
-            const string name = "Options";
-            Log.Verbose("Extracting {entity}", name);
-            var ListOptions = GetConfiguration()[name].ToObject<List<IOption>>();
-
-            #endregion Extracting the Options' attributes from json
-
-            #region Build loop for the Options
-
-            var Options = new List<Option>();
-            foreach (IOption option in ListOptions)
+    internal Option GetOption(string name)
+    {
+        foreach (Option item in GetOptions())
+            if (item!.Name == name)
             {
-                Options.Add(option.BuildOption(GetCommands().Find(el => el.Name.Equals(option.Command))!));
+                Log.Verbose("Accessing {C}.", $"{item}");
+                return item;
             }
+        Log.Error("No option of name: {name} found.", name);
+        return default!;
+    }
 
-            /// <summary>
-            /// Add verbosity global option
-            /// </summary>
-            Option<string> verbose = new Option<string>(
-                new[] { "--verbose", "-v" }, "Verbosity level of the output : m[inimal]; d[ebug]; v[erbose].")
-                .FromAmong("m", "d", "v");
-            verbose.SetDefaultValue("m");
-            GetCommands()[0].AddGlobalOption(verbose);
+    internal List<Option> ConstructOptions()
+    {
+        var watch = System.Diagnostics.Stopwatch.StartNew();
 
-            Log.Debug("Options built.");
+        #region Extracting the Options' attributes from json
 
-            #endregion Build loop for the Options
+        Log.Verbose("Extracting {entity}", "Options");
+        var ListOptions = GetConfiguration()["Options"].ToObject<List<IOption>>();
 
-            return Options;
-        }
+        #endregion Extracting the Options' attributes from json
 
-        #endregion Options
+        #region Build loop for the Options
 
-        #region Arguments
-
-        internal readonly List<Argument> arguments;
-
-        internal List<Argument> GetArguments() => arguments;
-
-        internal Argument GetArgument(string name)
+        var Options = new List<Option>();
+        foreach (IOption option in ListOptions)
         {
-            foreach (Argument item in GetArguments())
-                if (item!.Name == name)
-                {
-                    Log.Verbose("Accessing {C}.", $"{item}");
-                    return item;
-                }
-            Log.Error("No argument of name: {name} found.", name);
-            return default!;
+            Options.Add(option.BuildOption(GetCommands().Find(el => el.Name.Equals(option.Command))!));
         }
-
-        internal List<Argument> ConstructArguments()
-        {
-            #region Extracting Arguments' attributes from json
-
-            const string name = "Arguments";
-            Log.Verbose("Extracting {entity}", name);
-            var ListArguments = GetConfiguration()[name].ToObject<List<IArgument>>();
-
-            #endregion Extracting Arguments' attributes from json
-
-            #region Build loop for the Arguments
-
-            var Arguments = new List<Argument>();
-            foreach (IArgument arg in ListArguments)
-            {
-                Arguments.Add(arg.BuildArgument(GetCommands().Find(el => el.Name.Equals(arg.Command))!));
-            }
-            Log.Debug("Arguments built.");
-
-            #endregion Build loop for the Arguments
-
-            return Arguments;
-        }
-
-        #endregion Arguments
 
         /// <summary>
-        /// Class Constructor.
+        /// Add verbosity global option
         /// </summary>
-        /// <param name="file">Path to configuration file for deserialization.</param>
-        internal IJsonApp(string file)
+        Option<string> verbose = new Option<string>(
+            new[] { "--verbose", "-v" }, "Verbosity level of the output : m[inimal]; d[ebug]; v[erbose].")
+            .FromAmong("m", "d", "v");
+        verbose.SetDefaultValue("m");
+        GetCommands()[0].AddGlobalOption(verbose);
+
+        #endregion Build loop for the Options
+
+        watch.Stop();
+        Log.Debug("Options built: {t} ms", watch.ElapsedMilliseconds);
+        return Options;
+    }
+
+    #endregion Options
+
+    #region Arguments
+
+    internal readonly List<Argument> arguments;
+
+    internal List<Argument> GetArguments() => arguments;
+
+    internal Argument GetArgument(string name)
+    {
+        foreach (Argument item in GetArguments())
+            if (item!.Name == name)
+            {
+                Log.Verbose("Accessing {C}.", $"{item}");
+                return item;
+            }
+        Log.Error("No argument of name: {name} found.", name);
+        return default!;
+    }
+
+    internal List<Argument> ConstructArguments()
+    {
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+
+        #region Extracting Arguments' attributes from json
+
+        Log.Verbose("Extracting {entity}", "Arguments");
+        var ListArguments = GetConfiguration()["Arguments"].ToObject<List<IArgument>>();
+
+        #endregion Extracting Arguments' attributes from json
+
+        #region Build loop for the Arguments
+
+        var Arguments = new List<Argument>();
+        foreach (IArgument arg in ListArguments)
         {
-            configuration = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(File.ReadAllText(file))!;
-            properties = ConstructProperties();
-            packages = ConstructPackages();
-            commands = ConstructCommands();
-            options = ConstructOptions();
-            arguments = ConstructArguments();
+            Arguments.Add(arg.BuildArgument(GetCommands().Find(el => el.Name.Equals(arg.Command))!));
         }
+
+        #endregion Build loop for the Arguments
+
+        watch.Stop();
+        Log.Debug("Arguments built: {t} ms", watch.ElapsedMilliseconds);
+        return Arguments;
+    }
+
+    #endregion Arguments
+
+    /// <summary>
+    /// Class Constructor.
+    /// </summary>
+    /// <param name="file">Path to configuration file for deserialization.</param>
+    internal IJsonApp(string file)
+    {
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+        configuration = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(File.ReadAllText(file))!;
+        watch.Stop();
+        Log.Debug("Architecture deserialized: {t} ms", watch.ElapsedMilliseconds);
+        properties = ConstructProperties();
+        packages = ConstructPackages();
+        commands = ConstructCommands();
+        options = ConstructOptions();
+        arguments = ConstructArguments();
     }
 }

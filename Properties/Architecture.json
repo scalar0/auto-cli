@@ -33,12 +33,12 @@
   "Commands": [
     {
       "Alias": "create",
-      "Parent": "autocli",
+      "Parent": "root",
       "Description": "Creates a template of a new .json configuration file with specified name."
     },
     {
       "Alias": "generate",
-      "Parent": "autocli",
+      "Parent": "root",
       "Description": "Generate the CLI project based on the input .json configuration file."
     }
   ],
@@ -67,6 +67,15 @@
       "Required": true,
       "Defaultvalue": null,
       "Description": "Specify the directory output."
+    },
+    {
+      "Name": "python-interfacing",
+      "Aliases": [ "--py-link" ],
+      "Type": "bool",
+      "Command": "generate",
+      "Required": false,
+      "Defaultvalue": false,
+      "Description": "Specify whether or not to generate additionnal source code to link the CLI with a backend python application."
     }
   ]
 }
