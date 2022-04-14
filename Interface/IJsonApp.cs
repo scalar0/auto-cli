@@ -1,7 +1,19 @@
-﻿namespace autocli.Interface;
+﻿using Newtonsoft.Json;
+
+namespace autocli.Interface;
 
 public class IJsonApp
 {
+    #region Source Code
+
+    internal string sourceCode;
+
+    internal string GetSourceCode() => sourceCode;
+
+    internal void SetSourceCode(string value) => sourceCode = value;
+
+    #endregion Source Code
+
     #region Configuration
 
     internal readonly Dictionary<string, dynamic> configuration;
@@ -18,11 +30,10 @@ public class IJsonApp
 
     internal IProperty ConstructProperties()
     {
-        var watch = System.Diagnostics.Stopwatch.StartNew();
         Log.Verbose("Extracting {entity}", "Properties");
         var s = GetConfiguration()["Properties"].ToObject<List<IProperty>>()[0];
-        watch.Stop();
-        Log.Debug("Properties built: {t} ms", watch.ElapsedMilliseconds);
+
+        Log.Debug("Properties built.");
         return s;
     }
 
@@ -36,11 +47,10 @@ public class IJsonApp
 
     internal List<IPackage> ConstructPackages()
     {
-        var watch = System.Diagnostics.Stopwatch.StartNew();
         Log.Verbose("Extracting {entity}", "Packages");
         var s = GetConfiguration()["Packages"].ToObject<List<IPackage>>();
-        watch.Stop();
-        Log.Debug("Packages built: {t} ms", watch.ElapsedMilliseconds);
+
+        Log.Debug("Packages built.");
         return s;
     }
 
@@ -68,8 +78,6 @@ public class IJsonApp
 
     internal List<Command> ConstructCommands()
     {
-        var watch = System.Diagnostics.Stopwatch.StartNew();
-
         #region Extracting Commands' attributes from json
 
         Log.Verbose("Extracting {entity}", "Commands");
@@ -83,16 +91,17 @@ public class IJsonApp
         {
             GetProperties().BuildRoot()
         };
+        SetSourceCode(GetProperties().TRootCommand());
         foreach (ICommand cmd in ListCommands)
         {
             Command com = (cmd.Parent == "root") ? Commands[0] : Commands.Find(el => el.Name.Equals(cmd.Parent))!;
             Commands.Add(cmd.BuildCommand(com));
+            SetSourceCode(GetSourceCode() + cmd.TCommand());
         }
 
         #endregion Build loop for the Commands
 
-        watch.Stop();
-        Log.Debug("Commands built: {t} ms", watch.ElapsedMilliseconds);
+        Log.Debug("Commands built.");
         return Commands;
     }
 
@@ -118,8 +127,6 @@ public class IJsonApp
 
     internal List<Option> ConstructOptions()
     {
-        var watch = System.Diagnostics.Stopwatch.StartNew();
-
         #region Extracting the Options' attributes from json
 
         Log.Verbose("Extracting {entity}", "Options");
@@ -133,6 +140,7 @@ public class IJsonApp
         foreach (IOption option in ListOptions)
         {
             Options.Add(option.BuildOption(GetCommands().Find(el => el.Name.Equals(option.Command))!));
+            SetSourceCode(GetSourceCode() + option.TOption());
         }
 
         /// <summary>
@@ -140,14 +148,13 @@ public class IJsonApp
         /// </summary>
         Option<string> verbose = new Option<string>(
             new[] { "--verbose", "-v" }, "Verbosity level of the output : m[inimal]; d[ebug]; v[erbose].")
-            .FromAmong("m", "d", "v");
+            .FromAmong(new string[] { "m", "d", "v" });
         verbose.SetDefaultValue("m");
         GetCommands()[0].AddGlobalOption(verbose);
 
         #endregion Build loop for the Options
 
-        watch.Stop();
-        Log.Debug("Options built: {t} ms", watch.ElapsedMilliseconds);
+        Log.Debug("Options built.");
         return Options;
     }
 
@@ -173,8 +180,6 @@ public class IJsonApp
 
     internal List<Argument> ConstructArguments()
     {
-        var watch = System.Diagnostics.Stopwatch.StartNew();
-
         #region Extracting Arguments' attributes from json
 
         Log.Verbose("Extracting {entity}", "Arguments");
@@ -188,12 +193,12 @@ public class IJsonApp
         foreach (IArgument arg in ListArguments)
         {
             Arguments.Add(arg.BuildArgument(GetCommands().Find(el => el.Name.Equals(arg.Command))!));
+            SetSourceCode(GetSourceCode() + arg.TArgument());
         }
 
         #endregion Build loop for the Arguments
 
-        watch.Stop();
-        Log.Debug("Arguments built: {t} ms", watch.ElapsedMilliseconds);
+        Log.Debug("Arguments built.");
         return Arguments;
     }
 
@@ -205,10 +210,12 @@ public class IJsonApp
     /// <param name="file">Path to configuration file for deserialization.</param>
     internal IJsonApp(string file)
     {
-        var watch = System.Diagnostics.Stopwatch.StartNew();
-        configuration = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(File.ReadAllText(file))!;
-        watch.Stop();
-        Log.Debug("Architecture deserialized: {t} ms", watch.ElapsedMilliseconds);
+        try
+        {
+            configuration = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(File.ReadAllText(file))!;
+            Log.Debug("Architecture deserialized.");
+        }
+        catch (Exception ex) { Log.Error(ex, ex.Message, ex.ToString()); }
         properties = ConstructProperties();
         packages = ConstructPackages();
         commands = ConstructCommands();

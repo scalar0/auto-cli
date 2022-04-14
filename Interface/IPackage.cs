@@ -1,4 +1,6 @@
-﻿namespace autocli.Interface;
+﻿using Newtonsoft.Json;
+
+namespace autocli.Interface;
 
 /// <summary>
 /// Interface Package class to deserialize the NuGet packages that must be added to the project.
@@ -6,7 +8,7 @@
 public class IPackage
 {
     [JsonProperty("Name")]
-    internal string Name { get; set; }
+    internal string Name { get; set; } = null!;
 
     [JsonProperty("Version")]
     internal string? Version { get; set; }

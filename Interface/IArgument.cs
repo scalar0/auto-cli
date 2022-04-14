@@ -1,24 +1,30 @@
-﻿namespace autocli.Interface;
+﻿using Newtonsoft.Json;
+
+namespace autocli.Interface;
 
 /// <summary>
 /// Interface Argument class to deserialize the args of the interface.
 /// </summary>
 internal class IArgument
 {
+    #region Properties
+
     [JsonProperty("Alias")]
-    internal string Alias { get; set; }
+    internal string Alias { get; set; } = null!;
 
     [JsonProperty("Type")]
-    internal string Type { get; set; }
+    internal string Type { get; set; } = null!;
 
     [JsonProperty("Command")]
-    internal string Command { get; set; }
+    internal string Command { get; set; } = null!;
 
     [JsonProperty("DefautlValue")]
     internal string? DefaultValue { get; set; }
 
     [JsonProperty("Description")]
-    internal string Description { get; set; }
+    internal string Description { get; set; } = null!;
+
+    #endregion Properties
 
     internal Argument BuildArgument(Command command)
     {
@@ -39,10 +45,15 @@ internal class IArgument
 
     internal string TArgument()
     {
-        string source = $"Argument<{Type}> {Alias} = new Argument<{Type}>({Alias});\n";
-        source += $"{Alias}.Description = {Description};\n";
-        source += $"{Alias}.SetDefaultValue(({Type}){DefaultValue})\n";
-        source += $"{Command}.AddArgument({Alias});\n";
+        string alias = Alias.Replace("-", "_");
+        string source = "\n" + @$"Argument<{Type}> {alias} = new(""{alias}"");" +
+            "\n";
+        source += @$"{alias}.Description = ""{Description}"";" +
+            "\n";
+        if (DefaultValue is not null)
+            source += @$"{alias}.SetDefaultValue(({Type})""{DefaultValue}"")" +
+            "\n";
+        source += $"{Command}.AddArgument({alias});\n";
         return source;
     }
 }

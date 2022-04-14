@@ -119,6 +119,7 @@ Arguments Json Array
 ### _Options_
 
 The options array stores in a json array the alias, description, the type of the option and the parent of each option of the interface. The name of the option is used to uniquely bind it instead of relying on the aliases string array. The description is the text displayed in the help menu of the CLI application. The type is the type of the option (e.g. : string, int, bool, etc.). The parent is the parent of the option (e.g. : the command). The defaultvalue property is used to set the value of the option if no value is provided. The requiered property is used to set the option as required or not.
+The values array stores the accepted values of the option to be parsed.
 
 <details>
 <summary><b><u>
@@ -134,7 +135,8 @@ Options Json Array
       "Command": "command-alias",
       "Required": "bool",
       "Defaultvalue": "string",
-      "Description": "description"
+      "Description": "description",
+      "Values": ["value1", "value2"]
     }
   ]
 ```

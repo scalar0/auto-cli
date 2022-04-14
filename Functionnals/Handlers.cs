@@ -23,6 +23,7 @@ public static class Handlers
     /// <param name="path"></param>
     public static void generate(Interface.IProperty AppProperties,
                                 List<Interface.IPackage> Packages,
+                                string SourceCode,
                                 string verbosity)
     {
         // TODO : Implement verbosity level of generate
@@ -46,7 +47,7 @@ public static class Handlers
         {
             Log.Information("Installing package: " + pack.Name);
             Console.WriteLine("Installing package: " + pack.Name);
-            Utils.ExecuteCommandSync("dotnet [parse] add package " + pack.Name + " --prerelease");
+            Utils.ExecuteCommandSync("dotnet [parse] add package " + pack.Name + pack.Version);
         }
     }
 
@@ -62,7 +63,7 @@ public static class Handlers
             verbose);
 
         self.GetCommand(nameof(generate))!.SetHandler(
-            (string verbosity) => generate(self.GetProperties(), self.GetPackages(), verbosity),
+            (string verbosity) => generate(self.GetProperties(), self.GetPackages(), self.GetSourceCode(), verbosity),
             self.GetArgument("file")!,
             verbose);
         Log.Debug("Handlers implemented.");

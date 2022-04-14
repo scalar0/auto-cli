@@ -1,24 +1,30 @@
-﻿namespace autocli.Interface;
+﻿using Newtonsoft.Json;
+
+namespace autocli.Interface;
 
 /// <summary>
 /// Properties class to serialize the properties of the application.
 /// </summary>
 public class IProperty
 {
+    #region Properties
+
     [JsonProperty("Name")]
     internal string? Name { get; set; }
 
     [JsonProperty("Title")]
-    internal string Title { get; set; }
+    internal string Title { get; set; } = null!;
 
     [JsonProperty("Description")]
-    internal string Description { get; set; }
+    internal string Description { get; set; } = null!;
 
     [JsonProperty("OutputPath")]
-    internal string OutputPath { get; set; }
+    internal string OutputPath { get; set; } = null!;
 
     [JsonProperty("Repo")]
-    internal string Repo { get; set; }
+    internal string Repo { get; set; } = null!;
+
+    #endregion Properties
 
     /// <summary>
     /// Constructs a new instance of the RootCommand class.
@@ -26,18 +32,16 @@ public class IProperty
     /// <returns>Corresponding RootCommand.</returns>
     internal RootCommand BuildRoot()
     {
-        var watch = System.Diagnostics.Stopwatch.StartNew();
         RootCommand root = new(Functionnals.Utils.Boxed(Title) + Description + "\n");
         root.SetHandler(() => root.InvokeAsync("-h"));
-        watch.Stop();
-        Log.Debug("RootCommand built: {t} ms", watch.ElapsedMilliseconds);
+        Log.Debug("RootCommand built.");
         return root;
     }
 
     internal string TRootCommand()
     {
-        string source = $@"RootCommand root = new RootCommand({Functionnals.Utils.Boxed(Title)} + {Description} + ""\n"");" + "\n";
-        source += @"root.SetHandler(() => root.InvokeAsync("" - h""));" + "\n";
+        string source = "\n" + $@"RootCommand root = new(@""{Functionnals.Utils.Boxed(Title)}"" + @""{Description}"" + ""\n"");";
+        source += "\n" + @"root.SetHandler(() => root.InvokeAsync("" -h""));" + "\n";
         return source;
     }
 }

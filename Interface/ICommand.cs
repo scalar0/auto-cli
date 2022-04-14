@@ -1,18 +1,24 @@
-﻿namespace autocli.Interface;
+﻿using Newtonsoft.Json;
+
+namespace autocli.Interface;
 
 /// <summary>
 /// Interface Command class to deserialize the commands of the interface.
 /// </summary>
 internal class ICommand
 {
+    #region Properties
+
     [JsonProperty("Alias")]
-    internal string Alias { get; set; }
+    internal string Alias { get; set; } = null!;
 
     [JsonProperty("Parent")]
-    internal string Parent { get; set; }
+    internal string Parent { get; set; } = null!;
 
     [JsonProperty("Description")]
-    internal string Description { get; set; }
+    internal string Description { get; set; } = null!;
+
+    #endregion Properties
 
     /// <summary>
     /// Constructs a new instance of the Command class.
@@ -37,9 +43,9 @@ internal class ICommand
 
     internal string TCommand()
     {
-        string source = $"Command {Alias} = new Command({Alias});\n";
-        source += $"{Alias}.Description = {Description};\n";
-        source += $"{Parent}.AddCommand({Alias});\n";
+        string source = "\n" + @$"Command {Alias} = new(""{Alias}"");";
+        source += "\n" + @$"{Alias}.Description = ""{Description}"";";
+        source += $"\n{Parent}.AddCommand({Alias});\n";
         return source;
     }
 }

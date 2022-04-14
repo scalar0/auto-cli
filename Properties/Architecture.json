@@ -11,23 +11,23 @@
   "Packages": [
     {
       "Name": "System.CommandLine",
-      "Version": null
+      "Version": "--prerelease"
     },
     {
       "Name": "Newtonsoft.Json",
-      "Version": null
+      "Version": "--prerelease"
     },
     {
       "Name": "Serilog",
-      "Version": null
+      "Version": "--prerelease"
     },
     {
       "Name": "Serilog.Sinks.Console",
-      "Version": null
+      "Version": "--prerelease"
     },
     {
       "Name": "Serilog.Sinks.File",
-      "Version": null
+      "Version": "--prerelease"
     }
   ],
   "Commands": [
@@ -47,14 +47,12 @@
       "Alias": "name",
       "Type": "string",
       "Command": "create",
-      "Defaultvalue": null,
       "Description": "Name of .json configuration file."
     },
     {
       "Alias": "file",
       "Type": "string",
       "Command": "generate",
-      "Defaultvalue": null,
       "Description": "Path to .json configuration file."
     }
   ],
@@ -65,7 +63,6 @@
       "Type": "string",
       "Command": "create",
       "Required": true,
-      "Defaultvalue": null,
       "Description": "Specify the directory output."
     },
     {
@@ -75,7 +72,8 @@
       "Command": "generate",
       "Required": false,
       "Defaultvalue": false,
-      "Description": "Specify whether or not to generate additionnal source code to link the CLI with a backend python application."
+      "Description": "Specify whether or not to generate additionnal source code to link the CLI with a backend python application.",
+      "Values": [ "y", "n" ]
     }
   ]
 }

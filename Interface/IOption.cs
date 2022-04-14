@@ -1,21 +1,25 @@
-﻿namespace autocli.Interface;
+﻿using Newtonsoft.Json;
+
+namespace autocli.Interface;
 
 /// <summary>
 /// Option Interface class to deserialize the options of the application.
 /// </summary>
 internal class IOption
 {
+    #region Properties
+
     [JsonProperty("Name")]
-    internal string Name { get; set; }
+    internal string Name { get; set; } = null!;
 
     [JsonProperty("Aliases")]
-    internal string[] Aliases { get; set; }
+    internal string[] Aliases { get; set; } = null!;
 
     [JsonProperty("Type")]
-    internal string Type { get; set; }
+    internal string Type { get; set; } = null!;
 
     [JsonProperty("Command")]
-    internal string Command { get; set; }
+    internal string Command { get; set; } = null!;
 
     [JsonProperty("Required")]
     internal bool Required { get; set; }
@@ -24,12 +28,16 @@ internal class IOption
     internal string? DefaultValue { get; set; }
 
     [JsonProperty("Description")]
-    internal string Description { get; set; }
+    internal string Description { get; set; } = null!;
+
+    [JsonProperty("Values")]
+    internal string[] Values { get; set; } = null!;
+
+    #endregion Properties
 
     /// <summary>
     /// Constructs a new instance of the IOption class.
     /// </summary>
-    /// <typeparam name="T">Type of the option.</typeparam>
     /// <param name="command">Parent command.</param>
     /// <returns>Corresponding Option.</returns>
     internal Option BuildOption(Command command)
@@ -39,6 +47,7 @@ internal class IOption
         option.IsRequired = Required;
         option.Description = Description;
         if (DefaultValue is not null) option.SetDefaultValue(DefaultValue);
+        if (Values is not null) option.FromAmong(Values);
         try
         {
             command.AddOption(option);
@@ -53,13 +62,24 @@ internal class IOption
 
     internal string TOption()
     {
-        string source = $"Option<{Type}> {Name} = new({Aliases[0]});\n";
-        source += $"{Name}.AddAlias({Aliases[1]});\n";
-        source += $"{Name}.Description = {Description};\n";
-        source += $"{Name}.IsRequired = {Required};\n";
+        string name = Name.Replace("-", "_");
+        string source = "\n" + @$"Option<{Type}> {name.Replace("-", "_")} = new(""{Aliases[0]}"");" +
+            "\n";
+        if (Aliases.Length > 1)
+        {
+            source += @$"{name}.AddAlias(""{Aliases[^1]}"");" + "\n";
+        }
+
+        source += @$"{name}.Description = ""{Description}"";" +
+            "\n";
+        source += $"{name}.IsRequired = {Required.ToString().ToLower()};\n";
         if (DefaultValue is not null)
-            source += $"{Name}.SetDefaultValue(({Type}){DefaultValue});\n";
-        source += $"{Command}.AddOption({Name});\n";
+        {
+            source += @$"{name}.SetDefaultValue(({Type})""{DefaultValue}"");" +
+            "\n";
+        }
+
+        source += $"{Command}.AddOption({name});\n";
         return source;
     }
 }

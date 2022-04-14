@@ -1,5 +1,4 @@
-﻿global using Newtonsoft.Json;
-global using Serilog;
+﻿global using Serilog;
 global using System.CommandLine;
 using Serilog.Core;
 using Serilog.Events;
@@ -39,16 +38,12 @@ internal static class Parser
     /// <param name="args">Type : string[]</param>
     internal static async Task Main(string[] args)
     {
-        var watch = System.Diagnostics.Stopwatch.StartNew();
-        // Logger
         Log.Logger = (args.Length is not 0) ? BuildLogger(args[^1]) : BuildLogger();
 
         Interface.IJsonApp Interface = new(config);
         Functionnals.Handlers.CallHandlers(Interface);
 
         Log.Verbose("Invoking args parser.");
-        watch.Stop();
-        Log.Debug("AutoCli has been generated: {t} ms", watch.ElapsedMilliseconds);
         Log.CloseAndFlush();
         await Interface.GetRootCommand().InvokeAsync(args);
     }
