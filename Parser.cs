@@ -1,5 +1,6 @@
 ﻿global using Serilog;
 global using System.CommandLine;
+using Sentry;
 using Serilog.Core;
 using Serilog.Events;
 
@@ -30,7 +31,7 @@ internal static class Parser
             .CreateLogger();
     }
 
-    internal static string config = string.Format("C:\\Users\\matte\\source\\repos\\{0}\\Properties\\Architecture.json", typeof(Parser).Namespace);
+    internal static string config = string.Format("C:\\Users\\matte\\src\\repos\\{0}\\Properties\\Architecture.json", typeof(Parser).Namespace);
 
     /// <summary>
     /// Async task to parse the array of args as strings
@@ -39,12 +40,23 @@ internal static class Parser
     internal static async Task Main(string[] args)
     {
         Log.Logger = (args.Length is not 0) ? BuildLogger(args[^1]) : BuildLogger();
+        using (SentrySdk.Init(Sentry =>
+    {
+        Sentry.Dsn = "https://5befa8f2131e4d55b57193308225770e@o1213812.ingest.sentry.io/6353266";
+        // Set Sentry logger verbosity
+        Sentry.Debug = false;
+        // Percentage of captured transactions for performance monitoring.
+        Sentry.TracesSampleRate = 1.0;
+    }))
+        {
+            Interface.IJsonApp Interface = new(config);
+            Functionnals.Handlers.CallHandlers(Interface);
 
-        Interface.IJsonApp Interface = new(config);
-        Functionnals.Handlers.CallHandlers(Interface);
+            SentrySdk.CaptureMessage("Issue testing.");
 
-        Log.Verbose("Invoking args parser.");
-        Log.CloseAndFlush();
-        await Interface.GetRootCommand().InvokeAsync(args);
+            Log.Verbose("Invoking args parser.");
+            Log.CloseAndFlush();
+            await Interface.GetRootCommand().InvokeAsync(args);
+        }
     }
 }

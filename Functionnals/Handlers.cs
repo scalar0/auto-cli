@@ -51,7 +51,7 @@ public static class Handlers
         }
     }
 
-    // To be source generated
+    // To be source-generated
     public static void CallHandlers(Interface.IJsonApp self)
     {
         Option verbose = self.GetOptions()[^1];
