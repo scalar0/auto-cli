@@ -53,10 +53,9 @@ internal static class Parser
             Interface.IJsonApp Interface = new(config);
             Interface.CallHandlers();
 
-            SentrySdk.CaptureMessage("Issue testing.");
-
             Log.Verbose("Invoking args parser.");
             Log.CloseAndFlush();
+            
             await Interface.GetRootCommand().InvokeAsync(args);
         }
     }
