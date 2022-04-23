@@ -72,7 +72,7 @@ internal class IOption
 
         source += @$"{name}.Description = ""{Description}"";" +
             "\n";
-        source += $"{name}.IsRequired = {Required.ToString().ToLower()};\n";
+        source += $"{name}.IsRequired = {Required.ToString().ToLower(new System.Globalization.CultureInfo("en-US", false))};\n";
         if (DefaultValue is not null)
         {
             source += @$"{name}.SetDefaultValue(({Type})""{DefaultValue}"");" +
