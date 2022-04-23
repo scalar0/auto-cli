@@ -31,7 +31,7 @@ internal static class Parser
             .CreateLogger();
     }
 
-    internal static string config = string.Format("C:\\Users\\matte\\src\\repos\\{0}\\Properties\\Architecture.json", typeof(Parser).Namespace);
+    internal static string config = "Properties\\Architecture.json";
 
     /// <summary>
     /// Async task to parse the array of args as strings
@@ -40,6 +40,7 @@ internal static class Parser
     internal static async Task Main(string[] args)
     {
         Log.Logger = (args.Length is not 0) ? BuildLogger(args[^1]) : BuildLogger();
+        // Sentry
         using (SentrySdk.Init(Sentry =>
     {
         Sentry.Dsn = "https://5befa8f2131e4d55b57193308225770e@o1213812.ingest.sentry.io/6353266";
@@ -50,7 +51,7 @@ internal static class Parser
     }))
         {
             Interface.IJsonApp Interface = new(config);
-            Functionnals.Handlers.CallHandlers(Interface);
+            Interface.CallHandlers();
 
             SentrySdk.CaptureMessage("Issue testing.");
 
