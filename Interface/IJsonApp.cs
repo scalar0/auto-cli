@@ -2,7 +2,7 @@
 
 namespace autocli.Interface;
 
-public class IJsonApp
+public class ConsoleApp
 {
     #region Source Code
 
@@ -40,11 +40,11 @@ public class IJsonApp
     internal void InstallProject()
     {
         // Retrieve project name
-        string project_name = GetProperties().Name!;
-        Log.Information("Creating new console application. Target framework : net6.0.");
-        Console.WriteLine($"Project name : {project_name}");
-        Functionnals.Utils.ExecuteCommandSync("dotnet [parse] new console --name " + project_name + ".CLI --framework net6.0 --output " + GetProperties().OutputPath + @"\" + project_name + ".CLI");
-        // After the project is created, we need to copy the source code to the project main folder Program.cs after overwriting it.
+        var P = GetProperties();
+        string project_name = P.Name!;
+        Console.WriteLine($">> CREATING CONSOLE APPLICATION: {project_name} ({P.Framework}) <<");
+        Functionnals.Utils.ExecuteCommandSync($"dotnet [parse] new console --name {project_name} --framework {P.Framework} --output {P.OutputPath}{project_name}");
+        // After the project is created, copy the source code to the project main folder Program.cs after overwriting it, then create an Handlers class and define corresponding methods for each command.
     }
 
     #endregion Properties
@@ -66,11 +66,15 @@ public class IJsonApp
 
     internal void InstallPackages()
     {
+        int l = GetPackages().Count;
+        int i = 1;
+        var P = GetProperties();
         foreach (Interface.IPackage pack in GetPackages())
         {
-            Log.Information("Installing package: " + pack.Name);
-            Console.WriteLine("Installing package: " + pack.Name);
-            Functionnals.Utils.ExecuteCommandSync("dotnet [parse] add package " + pack.Name + pack.Version);
+            Log.Information("Installing package {i}/{l}: {package}", pack.Name, i, l);
+            Console.WriteLine($">> INSTALLING PACKAGE {i}/{l}: {pack.Name} <<");
+            Functionnals.Utils.ExecuteCommandSync("dotnet [parse] add " + P.OutputPath + P.Name + " package " + pack.Name + " " + pack.Version);
+            i += 1;
         }
     }
 
@@ -101,17 +105,18 @@ public class IJsonApp
         #region Extracting Commands' attributes from json
 
         Log.Verbose("Extracting {entity}", "Commands");
-        var ListCommands = GetConfiguration()["Commands"].ToObject<List<ICommand>>();
 
         #endregion Extracting Commands' attributes from json
 
         #region Build loop for the Commands
 
-        var Commands = new List<Command>()
+        List<Command> Commands = new()
         {
             GetProperties().BuildRoot()
         };
-        SetSourceCode(GetProperties().TRootCommand());
+
+        SetSourceCode("\n//Commands\n" + GetProperties().TRootCommand());
+        var ListCommands = GetConfiguration()["Commands"].ToObject<List<ICommand>>();
         foreach (ICommand cmd in ListCommands)
         {
             Command com = (cmd.Parent == "root") ? Commands[0] : Commands.Find(el => el.Name.Equals(cmd.Parent))!;
@@ -156,21 +161,30 @@ public class IJsonApp
 
         #region Build loop for the Options
 
+        /// <summary>
+        /// Add verbosity global option
+        /// </summary>
+        Option<string> verbose = new Option<string>(
+            new[] { "--verbose", "-v" }, "Verbosity level of the output : d[ebug]; m[inimal]; v[erbose]. Always parse this option as last on the CLI call.")
+            .FromAmong(new string[] { "m", "d", "v" });
+        verbose.SetDefaultValue("m");
+        GetCommands()[0].AddGlobalOption(verbose);
+
+        // Verbose option template
+        string Tverbose = "\n//Options\n\n" + @"Option<string> verbose = new Option<string>(new[] { ""--verbose"", ""-v"" });" + "\n";
+        Tverbose += @"verbose.Description = ""Verbosity level of the output : d[ebug]; m[inimal]; v[erbose]. Always parse this option as last on the CLI call."";" + "\n";
+        Tverbose += @"verbose.SetDefaultValue(""m"");" + "\n";
+        Tverbose += @"verbose.FromAmong(new string[] { ""m"", ""d"", ""v"" });" + "\n";
+        Tverbose += @"root.AddGlobalOption(verbose);" + "\n";
+
+        SetSourceCode(GetSourceCode() + Tverbose);
+
         var Options = new List<Option>();
         foreach (IOption option in ListOptions)
         {
             Options.Add(option.BuildOption(GetCommands().Find(el => el.Name.Equals(option.Command))!));
             SetSourceCode(GetSourceCode() + option.TOption());
         }
-
-        /// <summary>
-        /// Add verbosity global option
-        /// </summary>
-        Option<string> verbose = new Option<string>(
-            new[] { "--verbose", "-v" }, "Verbosity level of the output : m[inimal]; d[ebug]; v[erbose]. Always parse this option as last on the CLI call.")
-            .FromAmong(new string[] { "m", "d", "v" });
-        verbose.SetDefaultValue("m");
-        GetCommands()[0].AddGlobalOption(verbose);
 
         #endregion Build loop for the Options
 
@@ -209,6 +223,7 @@ public class IJsonApp
 
         #region Build loop for the Arguments
 
+        SetSourceCode(GetSourceCode() + "\n//Arguments\n");
         var Arguments = new List<Argument>();
         foreach (IArgument arg in ListArguments)
         {
@@ -224,9 +239,49 @@ public class IJsonApp
 
     #endregion Arguments
 
+    #region Handlers
+    internal void Constructhandlers()
+    {
+        // Root command handler
+        List<string> handlers = new()
+        {
+            @"root.SetHandler(() => root.InvokeAsync(""-h""));" + "\n"
+        };
+        foreach (Command cmd in GetCommands())
+        {
+            string name = cmd.Name;
+            string args = "";
+            string param = "";
+            foreach (var child in cmd.Children)
+            {
+                // Exclude child-commands from arguments
+                if (child is not Command)
+                {
+                    args += "string,";
+                    param += $"{child.Name.Replace("-", "_")},";
+                }
+            }
+            // Remove commas
+            args = args.Remove(args.Length - 1, 1);
+            param = param.Remove(param.Length - 1, 1);
+
+            handlers.Add($@"{name}.SetHandler<{args}>(
+                    Handlers.{name},
+                    {param});" + "\n");
+        }
+        // Removing second root command handler
+        handlers.Remove(handlers[1]);
+        // Adding handlers templates to the source code
+        SetSourceCode(GetSourceCode() + "\n//Handlers\n");
+        foreach (string template in handlers)
+            SetSourceCode(GetSourceCode() + "\n" + template);
+        Log.Debug("Handlers implemented.");
+    }
+
     // <auto-generated>
+    // Global handler for autocli.
     // Maybe try generating a property for the IJsonApp class that will command it to generate the CallHandlers method, or either write it as a loop on the commands.
-    internal void CallHandlers()
+    internal void SetHandlers()
     {
         GetCommand("create")!.SetHandler<string, string>(
             Functionnals.Handlers.create,
@@ -240,11 +295,13 @@ public class IJsonApp
         Log.Debug("Handlers implemented.");
     }
 
+    #endregion
+
     /// <summary>
     /// Class Constructor.
     /// </summary>
     /// <param name="file">Path to configuration file for deserialization.</param>
-    internal IJsonApp(string file)
+    internal ConsoleApp(string file)
     {
         try
         {
@@ -257,5 +314,7 @@ public class IJsonApp
         commands = ConstructCommands();
         options = ConstructOptions();
         arguments = ConstructArguments();
+        Constructhandlers();
+        SetHandlers();
     }
 }

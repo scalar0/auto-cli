@@ -4,7 +4,8 @@
       "Name": "autocli",
       "Title": "AUTOCLI : Automated CLI creation tool",
       "Description": "AutoCLI aims to automate .NET CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.",
-      "OutputPath": "/autocli",
+      "OutputPath": "C:/Users/matte/src/repos/",
+      "Framework": "net6.0",
       "Repo": "auto-CLI"
     }
   ],
@@ -28,6 +29,10 @@
     {
       "Name": "Serilog.Sinks.File",
       "Version": "--prerelease"
+    },
+    {
+      "Name": "Sentry",
+      "Version": null
     }
   ],
   "Commands": [

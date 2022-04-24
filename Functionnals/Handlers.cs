@@ -18,11 +18,12 @@ public static class Handlers
     /// <summary>
     /// Handler for the generate command.
     /// </summary>
-    /// <param name="path"></param>
+    /// <param name="file"></param>
     public static void generate(string file)
     {
-        Interface.IJsonApp self = new(file);
-        self.InstallProject();
-        self.InstallPackages();
+        Interface.ConsoleApp Interface = new(file);
+        Interface.InstallProject();
+        Interface.InstallPackages();
+        //Console.WriteLine(Interface.GetSourceCode());
     }
 }

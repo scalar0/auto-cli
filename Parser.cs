@@ -50,12 +50,11 @@ internal static class Parser
         Sentry.TracesSampleRate = 1.0;
     }))
         {
-            Interface.IJsonApp Interface = new(config);
-            Interface.CallHandlers();
+            Interface.ConsoleApp Interface = new(config);
 
             Log.Verbose("Invoking args parser.");
             Log.CloseAndFlush();
-            
+
             await Interface.GetRootCommand().InvokeAsync(args);
         }
     }

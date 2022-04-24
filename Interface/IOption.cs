@@ -78,6 +78,11 @@ internal class IOption
             source += @$"{name}.SetDefaultValue(({Type})""{DefaultValue}"");" +
             "\n";
         }
+        if (Values is not null)
+        {
+            source += @$"{name}.FromAmong(new string[] {{{string.Join(", ", Values.Select(v => $"\"{v}\""))}}});" +
+            "\n";
+        }
 
         source += $"{Command}.AddOption({name});\n";
         return source;

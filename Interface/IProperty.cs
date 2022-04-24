@@ -21,6 +21,9 @@ public class IProperty
     [JsonProperty("OutputPath")]
     internal string OutputPath { get; set; } = null!;
 
+    [JsonProperty("Framework")]
+    internal string Framework { get; set; } = null!;
+
     [JsonProperty("Repo")]
     internal string Repo { get; set; } = null!;
 
