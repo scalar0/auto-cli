@@ -24,73 +24,99 @@ public class ConsoleApp
 
     #region Properties
 
-    internal readonly IProperty properties;
+    internal IProperty properties;
 
     internal IProperty GetProperties() => properties;
 
-    internal IProperty ConstructProperties()
+    internal void SetProperties()
     {
         Log.Verbose("Extracting {entity}", "Properties");
-        var s = GetConfiguration()["Properties"].ToObject<List<IProperty>>()[0];
-
+        properties = configuration["Properties"].ToObject<List<IProperty>>()[0];
         Log.Debug("Properties built.");
-        return s;
     }
 
-    internal void InstallProject()
+    public void InstallProject()
     {
         // Retrieve project name
-        var P = GetProperties();
-        string project_name = P.Name!;
-        Console.WriteLine($">> CREATING CONSOLE APPLICATION: {project_name} ({P.Framework}) <<");
-        Functionnals.Utils.ExecuteCommandSync($"dotnet [parse] new console --name {project_name} --framework {P.Framework} --output {P.OutputPath}{project_name}");
-        // After the project is created, copy the source code to the project main folder Program.cs after overwriting it, then create an Handlers class and define corresponding methods for each command.
+        string project_name = properties.Name!;
+        Console.WriteLine($">> CREATING CONSOLE APPLICATION: {project_name} ({properties.Framework}) <<");
+        Functionnals.Utils.ExecuteCommandSync($"dotnet new console --name {project_name} --framework {properties.Framework} --output {properties.OutputPath}{project_name}");
+        // Copy the source code to the project main method
+        string main = $"{properties.OutputPath}{project_name}";
+        File.WriteAllText(main + "\\Program.cs", SourceMain());
+        File.Move(main + "\\Program.cs", main + "\\Parser.cs");
+
+        // Create an Handlers class and define corresponding methods for each command
+        string Handlers = $"{properties.OutputPath}{project_name}\\Handlers.cs";
+        File.WriteAllText(Handlers, $"namespace {project_name}; \n\tpublic static class Handlers {{\n\t");
+
+        // Loop over the commands except for first element of GetCommands()
+
+        foreach (Command cmd in commands.Skip(1))
+        {
+            string param = "";
+            foreach (var child in cmd.Children)
+            {
+                // TODO: Implement different argument types Exclude child-commands from arguments
+                if (child is not Command)
+                {
+                    param += $"string {child.Name.Replace("-", "_")},";
+                }
+            }
+            // Remove commas
+            param = param.Remove(param.Length - 1, 1);
+
+            File.AppendAllText(Handlers, $@"
+    public static void {cmd.Name}({param})
+    {{
+    }}");
+        }
+        File.AppendAllText(Handlers, $"\n}}");
     }
 
     #endregion Properties
 
     #region Packages
 
-    internal readonly List<IPackage> packages;
+    internal List<IPackage> packages;
 
     internal List<IPackage> GetPackages() => packages;
 
-    internal List<IPackage> ConstructPackages()
+    internal void SetPackages()
     {
-        Log.Verbose("Extracting {entity}", "Packages");
-        var s = GetConfiguration()["Packages"].ToObject<List<IPackage>>();
-
+        packages = configuration["Packages"].ToObject<List<IPackage>>();
         Log.Debug("Packages built.");
-        return s;
     }
 
     internal void InstallPackages()
     {
-        int l = GetPackages().Count;
+        int l = packages.Count;
         int i = 1;
-        var P = GetProperties();
-        foreach (Interface.IPackage pack in GetPackages())
+
+        foreach (Interface.IPackage pack in packages)
         {
             Log.Information("Installing package {i}/{l}: {package}", pack.Name, i, l);
             Console.WriteLine($">> INSTALLING PACKAGE {i}/{l}: {pack.Name} <<");
-            Functionnals.Utils.ExecuteCommandSync("dotnet [parse] add " + P.OutputPath + P.Name + " package " + pack.Name + " " + pack.Version);
+            Functionnals.Utils.ExecuteCommandSync("dotnet add " + properties.OutputPath + properties.Name + " package " + pack.Name + " " + pack.Version);
             i += 1;
         }
+        Console.WriteLine($">> PACKAGES INSTALLED <<");
+        Functionnals.Utils.ExecuteCommandSync($"dotnet list {properties.OutputPath}{properties.Name} package");
     }
 
     #endregion Packages
 
     #region Commands
 
-    internal readonly List<Command> commands;
+    internal List<Command> commands;
 
     internal List<Command> GetCommands() => commands;
 
-    internal RootCommand GetRootCommand() => (RootCommand)GetCommands()[0];
+    internal RootCommand GetRootCommand() => (RootCommand)commands[0];
 
     internal Command GetCommand(string name)
     {
-        foreach (Command item in GetCommands())
+        foreach (Command item in commands)
             if (item!.Name == name)
             {
                 Log.Verbose("Accessing {C}.", $"{item}");
@@ -100,47 +126,33 @@ public class ConsoleApp
         return default!;
     }
 
-    internal List<Command> ConstructCommands()
+    internal void SetCommands()
     {
-        #region Extracting Commands' attributes from json
+        commands = new List<Command>() { properties.BuildRoot() };
 
-        Log.Verbose("Extracting {entity}", "Commands");
-
-        #endregion Extracting Commands' attributes from json
-
-        #region Build loop for the Commands
-
-        List<Command> Commands = new()
-        {
-            GetProperties().BuildRoot()
-        };
-
-        SetSourceCode("\n//Commands\n" + GetProperties().TRootCommand());
-        var ListCommands = GetConfiguration()["Commands"].ToObject<List<ICommand>>();
+        SetSourceCode("\n//Commands\n" + properties.TRootCommand());
+        var ListCommands = configuration["Commands"].ToObject<List<ICommand>>();
         foreach (ICommand cmd in ListCommands)
         {
-            Command com = (cmd.Parent == "root") ? Commands[0] : Commands.Find(el => el.Name.Equals(cmd.Parent))!;
-            Commands.Add(cmd.BuildCommand(com));
-            SetSourceCode(GetSourceCode() + cmd.TCommand());
+            Command parent = (cmd.Parent == "root") ? commands[0] : commands.Find(el => el.Name.Equals(cmd.Parent))!;
+            commands.Add(cmd.BuildCommand(parent));
+            SetSourceCode(sourceCode + cmd.TCommand());
         }
 
-        #endregion Build loop for the Commands
-
         Log.Debug("Commands built.");
-        return Commands;
     }
 
     #endregion Commands
 
     #region Options
 
-    internal readonly List<Option> options;
+    internal List<Option> options;
 
     internal List<Option> GetOptions() => options;
 
     internal Option GetOption(string name)
     {
-        foreach (Option item in GetOptions())
+        foreach (Option item in options)
             if (item!.Name == name)
             {
                 Log.Verbose("Accessing {C}.", $"{item}");
@@ -150,17 +162,8 @@ public class ConsoleApp
         return default!;
     }
 
-    internal List<Option> ConstructOptions()
+    internal void SetOptions()
     {
-        #region Extracting the Options' attributes from json
-
-        Log.Verbose("Extracting {entity}", "Options");
-        var ListOptions = GetConfiguration()["Options"].ToObject<List<IOption>>();
-
-        #endregion Extracting the Options' attributes from json
-
-        #region Build loop for the Options
-
         /// <summary>
         /// Add verbosity global option
         /// </summary>
@@ -168,41 +171,42 @@ public class ConsoleApp
             new[] { "--verbose", "-v" }, "Verbosity level of the output : d[ebug]; m[inimal]; v[erbose]. Always parse this option as last on the CLI call.")
             .FromAmong(new string[] { "m", "d", "v" });
         verbose.SetDefaultValue("m");
-        GetCommands()[0].AddGlobalOption(verbose);
+        commands[0].AddGlobalOption(verbose);
 
-        // Verbose option template
+        #region Verbose option template
+
         string Tverbose = "\n//Options\n\n" + @"Option<string> verbose = new Option<string>(new[] { ""--verbose"", ""-v"" });" + "\n";
         Tverbose += @"verbose.Description = ""Verbosity level of the output : d[ebug]; m[inimal]; v[erbose]. Always parse this option as last on the CLI call."";" + "\n";
         Tverbose += @"verbose.SetDefaultValue(""m"");" + "\n";
         Tverbose += @"verbose.FromAmong(new string[] { ""m"", ""d"", ""v"" });" + "\n";
         Tverbose += @"root.AddGlobalOption(verbose);" + "\n";
 
-        SetSourceCode(GetSourceCode() + Tverbose);
+        SetSourceCode(sourceCode + Tverbose);
 
-        var Options = new List<Option>();
+        #endregion Verbose option template
+
+        options = new List<Option>();
+        var ListOptions = configuration["Options"].ToObject<List<IOption>>();
         foreach (IOption option in ListOptions)
         {
-            Options.Add(option.BuildOption(GetCommands().Find(el => el.Name.Equals(option.Command))!));
-            SetSourceCode(GetSourceCode() + option.TOption());
+            options.Add(option.BuildOption(commands.Find(el => el.Name.Equals(option.Command))!));
+            SetSourceCode(sourceCode + option.TOption());
         }
 
-        #endregion Build loop for the Options
-
         Log.Debug("Options built.");
-        return Options;
     }
 
     #endregion Options
 
     #region Arguments
 
-    internal readonly List<Argument> arguments;
+    internal List<Argument> arguments;
 
     internal List<Argument> GetArguments() => arguments;
 
     internal Argument GetArgument(string name)
     {
-        foreach (Argument item in GetArguments())
+        foreach (Argument item in arguments)
             if (item!.Name == name)
             {
                 Log.Verbose("Accessing {C}.", $"{item}");
@@ -212,46 +216,35 @@ public class ConsoleApp
         return default!;
     }
 
-    internal List<Argument> ConstructArguments()
+    internal void SetArguments()
     {
-        #region Extracting Arguments' attributes from json
+        SetSourceCode(sourceCode + "\n//Arguments\n");
+        arguments = new List<Argument>();
 
-        Log.Verbose("Extracting {entity}", "Arguments");
-        var ListArguments = GetConfiguration()["Arguments"].ToObject<List<IArgument>>();
-
-        #endregion Extracting Arguments' attributes from json
-
-        #region Build loop for the Arguments
-
-        SetSourceCode(GetSourceCode() + "\n//Arguments\n");
-        var Arguments = new List<Argument>();
+        var ListArguments = configuration["Arguments"].ToObject<List<IArgument>>();
         foreach (IArgument arg in ListArguments)
         {
-            Arguments.Add(arg.BuildArgument(GetCommands().Find(el => el.Name.Equals(arg.Command))!));
-            SetSourceCode(GetSourceCode() + arg.TArgument());
+            arguments.Add(arg.BuildArgument(commands.Find(el => el.Name.Equals(arg.Command))!));
+            SetSourceCode(sourceCode + arg.TArgument());
         }
 
-        #endregion Build loop for the Arguments
-
         Log.Debug("Arguments built.");
-        return Arguments;
     }
 
     #endregion Arguments
 
     #region Handlers
-    internal void Constructhandlers()
+
+    internal void SourceHandlers()
     {
         // Root command handler
-        List<string> handlers = new()
-        {
-            @"root.SetHandler(() => root.InvokeAsync(""-h""));" + "\n"
-        };
-        foreach (Command cmd in GetCommands())
+        SetSourceCode(sourceCode + "\n//Handlers\n\n" + @"root.SetHandler(() => root.InvokeAsync(""-h""));" + "\n");
+
+        foreach (Command cmd in commands.Skip(1))
         {
             string name = cmd.Name;
-            string args = "";
-            string param = "";
+            string args = string.Empty;
+            string param = string.Empty;
             foreach (var child in cmd.Children)
             {
                 // Exclude child-commands from arguments
@@ -265,22 +258,89 @@ public class ConsoleApp
             args = args.Remove(args.Length - 1, 1);
             param = param.Remove(param.Length - 1, 1);
 
-            handlers.Add($@"{name}.SetHandler<{args}>(
+            string template = $@"{name}.SetHandler<{args}>(
                     Handlers.{name},
-                    {param});" + "\n");
+                    {param});" + "\n";
+            SetSourceCode(sourceCode + "\n" + template);
         }
-        // Removing second root command handler
-        handlers.Remove(handlers[1]);
-        // Adding handlers templates to the source code
-        SetSourceCode(GetSourceCode() + "\n//Handlers\n");
-        foreach (string template in handlers)
-            SetSourceCode(GetSourceCode() + "\n" + template);
         Log.Debug("Handlers implemented.");
     }
 
-    // <auto-generated>
-    // Global handler for autocli.
-    // Maybe try generating a property for the IJsonApp class that will command it to generate the CallHandlers method, or either write it as a loop on the commands.
+    internal string SourceMain()
+    {
+        SourceHandlers();
+        string main = string.Empty;
+
+        // using statements for packages
+        foreach (var pkg in packages)
+        {
+            main += $"using {pkg.Name};\n";
+        }
+
+        // Sentry logging
+        var list = packages.Select(el => el.Name).ToList();
+        string open_sentry = (list.Contains("Sentry")) ? @"// Sentry
+        using (SentrySdk.Init(Sentry =>
+        {
+            Sentry.Dsn = ""https://5befa8f2131e4d55b57193308225770e@o1213812.ingest.sentry.io/6353266"";
+                                 // Set Sentry logger verbosity
+            Sentry.Debug = false;
+            // Percentage of captured transactions for performance monitoring.
+            Sentry.TracesSampleRate = 1.0;
+        }))
+            {
+                " : "";
+
+        string close_sentry = (list.Contains("Sentry")) ? @"
+            }
+        }" : "";
+
+        // namespace
+        main += $"\nnamespace {GetProperties().Name};\n";
+
+        // Parser class and logger
+        main += @$"
+internal static class Parser
+{{
+    /// <summary> Sets and returns a new configured instance of a logger </summary> <param
+    /// name=""verbose"">Output verbosity of the application</param>
+    internal static ILogger BuildLogger(string verbose = null!)
+        {{
+            var levelSwitch = new LoggingLevelSwitch
+            {{
+                MinimumLevel = verbose switch
+                {{
+                    (""v"") => LogEventLevel.Verbose,
+                    (""d"") => LogEventLevel.Debug,
+                    _ => LogEventLevel.Information,
+                }}
+            }};
+            return new LoggerConfiguration()
+                .MinimumLevel.ControlledBy(levelSwitch)
+                .WriteTo.Console(outputTemplate:
+                        ""[{{Timestamp:HH:mm:ss:ff}} {{Level:u4}}] {{Message:1j}}{{NewLine}}{{Exception}}"")
+                .WriteTo.File(""./logs/{GetProperties().Name}.log.txt"", rollingInterval: RollingInterval.Minute, restrictedToMinimumLevel: LogEventLevel.Verbose)
+                .CreateLogger();
+        }}
+
+    /// <summary> Async task to parse the array of args as strings </summary> <param
+    /// name=""args"">Type : string[]</param>
+    internal static async Task Main(string[] args)
+    {{
+        Log.Logger = (args.Length is not 0) ? BuildLogger(args[^1]) : BuildLogger();
+        {open_sentry}
+            {GetSourceCode()}
+
+            Log.Verbose(""Invoking args parser."");
+            Log.CloseAndFlush();
+
+            await root.InvokeAsync(args);
+        {close_sentry}
+    }}
+}}";
+        return main;
+    }
+
     internal void SetHandlers()
     {
         GetCommand("create")!.SetHandler<string, string>(
@@ -295,7 +355,7 @@ public class ConsoleApp
         Log.Debug("Handlers implemented.");
     }
 
-    #endregion
+    #endregion Handlers
 
     /// <summary>
     /// Class Constructor.
@@ -308,13 +368,14 @@ public class ConsoleApp
             configuration = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(File.ReadAllText(file))!;
             Log.Debug("Architecture deserialized.");
         }
-        catch (Exception ex) { Log.Error(ex, ex.Message, ex.ToString()); }
-        properties = ConstructProperties();
-        packages = ConstructPackages();
-        commands = ConstructCommands();
-        options = ConstructOptions();
-        arguments = ConstructArguments();
-        Constructhandlers();
-        SetHandlers();
+        catch (Exception ex)
+        {
+            Log.Error(ex, ex.Message, ex.ToString());
+        }
+        SetProperties();
+        SetPackages();
+        SetCommands();
+        SetOptions();
+        SetArguments();
     }
 }
