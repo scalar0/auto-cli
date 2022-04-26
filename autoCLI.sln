@@ -10,10 +10,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generator", "Generator", "{98C612BF-783F-4B97-BC40-B1130353D3EA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "autocli.SourceGenerators", "..\autocli.SourceGenerators\autocli.SourceGenerators.csproj", "{5FC19072-FC98-4A88-AD1A-FB0F76329616}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,16 +20,9 @@ Global
 		{9C77A4A5-5621-4796-87B1-FE144CB9BE50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C77A4A5-5621-4796-87B1-FE144CB9BE50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C77A4A5-5621-4796-87B1-FE144CB9BE50}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5FC19072-FC98-4A88-AD1A-FB0F76329616}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5FC19072-FC98-4A88-AD1A-FB0F76329616}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5FC19072-FC98-4A88-AD1A-FB0F76329616}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5FC19072-FC98-4A88-AD1A-FB0F76329616}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{5FC19072-FC98-4A88-AD1A-FB0F76329616} = {98C612BF-783F-4B97-BC40-B1130353D3EA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F19B7D0A-57FB-4FB1-B396-124C6E8B25B3}

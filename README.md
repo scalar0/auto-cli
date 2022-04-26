@@ -9,7 +9,7 @@ The configuration file stores the architecture for the project's commands, subco
 
 ### _Properties_
 
-The properties array, stores in a json array the name of the project, the title and the description of the project that will be displayed in the CLI. The output path property is the path to the project repository. The repo property is the name of the git repository.
+The properties array, stores in a json array the name of the project, the title and the description of the project that will be displayed in the CLI. The output path property is the path to the project repository. The framework property is the target framework for the project. The repo property is the name of the git repository.
 
 <details>
 <summary><b><u>
@@ -20,9 +20,10 @@ Properties Json Array
 "Properties": [
     {
       "Name": "name",
-      "Title": "Boxed title",
+      "Title": "boxed title",
       "Description": "project description",
-      "OutputPath": "/name",
+      "OutputPath": "/repos/name/",
+      "Framework": "net6.0",
       "Repo": "repo-name"
     }
   ],
@@ -60,6 +61,10 @@ Packages Json Array
     {
       "Name": "Serilog.Sinks.File",
       "Version": "--prerelease"
+    },
+    {
+      "Name": "Sentry",
+      "Version": null
     },
     {
       "Name": "Package.Name",

@@ -40,7 +40,7 @@ internal static class Parser
     internal static async Task Main(string[] args)
     {
         Log.Logger = (args.Length is not 0) ? BuildLogger(args[^1]) : BuildLogger();
-        // Sentry
+        // Sentry logger
         using (SentrySdk.Init(Sentry =>
     {
         Sentry.Dsn = "https://5befa8f2131e4d55b57193308225770e@o1213812.ingest.sentry.io/6353266";
@@ -51,6 +51,7 @@ internal static class Parser
     }))
         {
             Interface.ConsoleApp Interface = new(config);
+            Interface.SetHandlers();
 
             Log.Verbose("Invoking args parser.");
             Log.CloseAndFlush();
