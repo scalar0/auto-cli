@@ -29,15 +29,8 @@ internal class ICommand
     {
         Command cmd = new(Alias);
         cmd.Description = Description;
-        try
-        {
-            parent.AddCommand(cmd);
-            Log.Verbose("{C} built and added to {U}.", $"{cmd}", $"{parent}");
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, ex.Message, ex.ToString);
-        }
+        parent.AddCommand(cmd);
+        Log.Verbose("{C} built and added to {U}.", $"{cmd}", $"{parent}");
         return cmd;
     }
 

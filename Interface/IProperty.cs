@@ -37,6 +37,7 @@ public class IProperty
     {
         RootCommand root = new(Functionnals.Utils.Boxed(Title) + Description + "\n");
         root.SetHandler(() => root.InvokeAsync("-h"));
+
         Log.Debug("RootCommand built.");
         return root;
     }

@@ -6,7 +6,13 @@
       "Description": "AutoCLI aims to automate .NET CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.",
       "OutputPath": "C:/Users/matte/src/repos/",
       "Framework": "net6.0",
-      "Repo": "auto-CLI"
+      "Repo": "auto-CLI",
+      "APIs": [
+        {
+          "Name": "Sentry",
+          "DsnToken": "https://5befa8f2131e4d55b57193308225770e@o1213812.ingest.sentry.io/6353266"
+        }
+      ]
     }
   ],
   "Packages": [
@@ -63,7 +69,26 @@
   ],
   "Options": [
     {
-      "Name": "directory",
+      "Aliases": [ "--verbose", "-v" ],
+      "Type": "string",
+      "Command": "root",
+      "Required": false,
+      "Defaultvalue": "m",
+      "Global": true,
+      "Description": "Logger verbosity level: d[ebug]; m[inimal]; v[erbose]. Always parse this option as last on the CLI call.",
+      "Values": [ "m", "d", "v" ]
+    },
+    {
+      "Aliases": [ "--sentry", "-s" ],
+      "Type": "string",
+      "Command": "root",
+      "Required": false,
+      "Defaultvalue": "m",
+      "Global": true,
+      "Description": "Sentry diagnostic logger verbosity level: d[ebug]; m[inimal].",
+      "Values": [ "m", "d" ]
+    },
+    {
       "Aliases": [ "--directory", "-d" ],
       "Type": "string",
       "Command": "create",
@@ -71,7 +96,6 @@
       "Description": "Specify the directory output."
     },
     {
-      "Name": "python-interfacing",
       "Aliases": [ "--py-link" ],
       "Type": "bool",
       "Command": "generate",

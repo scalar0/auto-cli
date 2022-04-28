@@ -9,9 +9,6 @@ internal class IOption
 {
     #region Properties
 
-    [JsonProperty("Name")]
-    internal string Name { get; set; } = null!;
-
     [JsonProperty("Aliases")]
     internal string[] Aliases { get; set; } = null!;
 
@@ -26,6 +23,9 @@ internal class IOption
 
     [JsonProperty("DefautlValue")]
     internal string? DefaultValue { get; set; }
+
+    [JsonProperty("Global")]
+    internal bool? Global { get; set; }
 
     [JsonProperty("Description")]
     internal string Description { get; set; } = null!;
@@ -43,27 +43,28 @@ internal class IOption
     internal Option BuildOption(Command command)
     {
         Option<string> option = new(Aliases);
-        option.Name = Name;
         option.IsRequired = Required;
         option.Description = Description;
         if (DefaultValue is not null) option.SetDefaultValue(DefaultValue);
         if (Values is not null) option.FromAmong(Values);
-        try
+        switch (Global)
         {
-            command.AddOption(option);
-            Log.Verbose("{O} built and added to {U}.", $"{option}", $"{command}");
+            case true:
+                command.AddGlobalOption(option);
+                break;
+
+            default:
+                command.AddOption(option);
+                break;
         }
-        catch (Exception ex)
-        {
-            Log.Error(ex, ex.Message, ex.ToString);
-        }
+        Log.Verbose("{O} built and added to {U}.", $"{option}", $"{command}");
         return option;
     }
 
     internal string TOption()
     {
-        string name = Name.Replace("-", "_");
-        string source = "\n" + @$"Option<{Type}> {name.Replace("-", "_")} = new(""{Aliases[0]}"");" +
+        string name = Aliases[0].Replace("-", "");
+        string source = "\n" + @$"Option<{Type}> {name} = new(""{Aliases[0]}"");" +
             "\n";
         if (Aliases.Length > 1)
         {
@@ -83,8 +84,16 @@ internal class IOption
             source += @$"{name}.FromAmong(new string[] {{{string.Join(", ", Values.Select(v => $"\"{v}\""))}}});" +
             "\n";
         }
+        switch (Global)
+        {
+            case true:
+                source += $"{Command}.AddGlobalOption({name});\n";
+                break;
 
-        source += $"{Command}.AddOption({name});\n";
+            default:
+                source += $"{Command}.AddOption({name});\n";
+                break;
+        }
         return source;
     }
 }

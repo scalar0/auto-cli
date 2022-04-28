@@ -71,7 +71,7 @@ public class ConsoleApp
     {{
     }}");
         }
-        File.AppendAllText(Handlers, $"\n}}");
+        File.AppendAllText(Handlers, "\n}}");
     }
 
     #endregion Properties
@@ -100,7 +100,7 @@ public class ConsoleApp
             Functionnals.Utils.ExecuteCommandSync("dotnet add " + properties.OutputPath + properties.Name + " package " + pack.Name + " " + pack.Version);
             i += 1;
         }
-        Console.WriteLine($">> PACKAGES INSTALLED <<");
+        Console.WriteLine(">> PACKAGES INSTALLED <<");
         Functionnals.Utils.ExecuteCommandSync($"dotnet list {properties.OutputPath}{properties.Name} package");
     }
 
@@ -153,43 +153,25 @@ public class ConsoleApp
     internal Option GetOption(string name)
     {
         foreach (Option item in options)
-            if (item!.Name == name)
+        {
+            if (item.Name == name)
             {
                 Log.Verbose("Accessing {C}.", $"{item}");
                 return item;
             }
-        Log.Error("No option of name: {name} found.", name);
+        }
+        Log.Error("No option of name: {alias} found.", name);
         return default!;
     }
 
     internal void SetOptions()
     {
-        /// <summary>
-        /// Add verbosity global option
-        /// </summary>
-        Option<string> verbose = new Option<string>(
-            new[] { "--verbose", "-v" }, "Verbosity level of the output : d[ebug]; m[inimal]; v[erbose]. Always parse this option as last on the CLI call.")
-            .FromAmong(new string[] { "m", "d", "v" });
-        verbose.SetDefaultValue("m");
-        commands[0].AddGlobalOption(verbose);
-
-        #region Verbose option template
-
-        string Tverbose = "\n//Options\n\n" + @"Option<string> verbose = new Option<string>(new[] { ""--verbose"", ""-v"" });" + "\n";
-        Tverbose += @"verbose.Description = ""Verbosity level of the output : d[ebug]; m[inimal]; v[erbose]. Always parse this option as last on the CLI call."";" + "\n";
-        Tverbose += @"verbose.SetDefaultValue(""m"");" + "\n";
-        Tverbose += @"verbose.FromAmong(new string[] { ""m"", ""d"", ""v"" });" + "\n";
-        Tverbose += @"root.AddGlobalOption(verbose);" + "\n";
-
-        SetSourceCode(sourceCode + Tverbose);
-
-        #endregion Verbose option template
-
         options = new List<Option>();
         var ListOptions = configuration["Options"].ToObject<List<IOption>>();
         foreach (IOption option in ListOptions)
         {
-            options.Add(option.BuildOption(commands.Find(el => el.Name.Equals(option.Command))!));
+            Command parent = (option.Command == "root") ? commands[0] : commands.Find(el => el.Name.Equals(option.Command))!;
+            options.Add(option.BuildOption(parent));
             SetSourceCode(sourceCode + option.TOption());
         }
 
@@ -224,7 +206,8 @@ public class ConsoleApp
         var ListArguments = configuration["Arguments"].ToObject<List<IArgument>>();
         foreach (IArgument arg in ListArguments)
         {
-            arguments.Add(arg.BuildArgument(commands.Find(el => el.Name.Equals(arg.Command))!));
+            Command parent = (arg.Command == "root") ? commands[0] : commands.Find(el => el.Name.Equals(arg.Command))!;
+            arguments.Add(arg.BuildArgument(parent));
             SetSourceCode(sourceCode + arg.TArgument());
         }
 
@@ -353,6 +336,7 @@ internal static class Parser
             GetArgument("file")!);
 
         Log.Debug("Handlers implemented.");
+        Log.CloseAndFlush();
     }
 
     #endregion Handlers
@@ -363,15 +347,8 @@ internal static class Parser
     /// <param name="file">Path to configuration file for deserialization.</param>
     internal ConsoleApp(string file)
     {
-        try
-        {
-            configuration = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(File.ReadAllText(file))!;
-            Log.Debug("Architecture deserialized.");
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, ex.Message, ex.ToString());
-        }
+        configuration = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(File.ReadAllText(file))!;
+        Log.Debug("Architecture deserialized.");
         SetProperties();
         SetPackages();
         SetCommands();

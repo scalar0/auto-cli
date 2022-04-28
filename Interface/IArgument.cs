@@ -31,15 +31,8 @@ internal class IArgument
         Argument<string> argument = new(Alias);
         argument.Description = Description;
         if (DefaultValue is not null) argument.SetDefaultValue(DefaultValue);
-        try
-        {
-            command.AddArgument(argument);
-            Log.Verbose("{A} built and added to {U}.", $"{argument}", $"{command}");
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, ex.Message, ex.ToString);
-        }
+        command.AddArgument(argument);
+        Log.Verbose("{A} built and added to {U}.", $"{argument}", $"{command}");
         return argument;
     }
 
