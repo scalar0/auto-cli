@@ -269,7 +269,7 @@ public class ConsoleApp
         main.AppendLine($"namespace {properties.Name};");
 
         // Parser class and logger
-        main.AppendLine(@$"
+        main.AppendLine(@"
 internal static class Parser
 {{
     #region Static strings");

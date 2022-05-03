@@ -57,7 +57,7 @@ public class IProperty
         box.AppendLine($"Repository: {Repo}");
         if (APIs is not null)
         {
-            box.AppendLine($"APIs dependencies:");
+            box.AppendLine("APIs dependencies:");
             foreach (var api in APIs)
             {
                 box.AppendLine($"\t{api["Name"]} v{api["Version"]}");
