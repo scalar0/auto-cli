@@ -6,11 +6,7 @@ public class ConsoleApp
 {
     #region Source Code
 
-    internal string sourceCode;
-
-    internal string GetSourceCode() => sourceCode;
-
-    internal void SetSourceCode(string value) => sourceCode = value;
+    internal StringBuilder sourceCode { get; set; } = new StringBuilder();
 
     #endregion Source Code
 
@@ -18,15 +14,11 @@ public class ConsoleApp
 
     internal readonly Dictionary<string, dynamic> configuration;
 
-    internal Dictionary<string, dynamic> GetConfiguration() => configuration;
-
     #endregion Configuration
 
     #region Properties
 
-    internal IProperty properties;
-
-    internal IProperty GetProperties() => properties;
+    internal IProperty properties { get; set; }
 
     internal void SetProperties()
     {
@@ -40,7 +32,7 @@ public class ConsoleApp
         // Retrieve project name
         string project_name = properties.Name!;
         Console.WriteLine($">> CREATING CONSOLE APPLICATION: {project_name} ({properties.Framework}) <<");
-        Functionnals.Utils.ExecuteCommandSync($"dotnet new console --name {project_name} --framework {properties.Framework} --output {properties.OutputPath}{project_name}");
+        Parser.ExecuteCommandSync($"dotnet new console --name {project_name} --framework {properties.Framework} --output {properties.OutputPath}{project_name}");
         // Copy the source code to the project main method
         string main = $"{properties.OutputPath}{project_name}";
         File.WriteAllText(main + "\\Program.cs", SourceMain());
@@ -54,20 +46,17 @@ public class ConsoleApp
 
         foreach (Command cmd in commands.Skip(1))
         {
-            string param = "";
+            StringBuilder param = new();
             foreach (var child in cmd.Children)
             {
                 // TODO: Implement different argument types Exclude child-commands from arguments
                 if (child is not Command)
                 {
-                    param += $"string {child.Name.Replace("-", "_")},";
+                    param.Append($"string {child.Name.Replace("-", "_")},");
                 }
             }
-            // Remove commas
-            param = param.Remove(param.Length - 1, 1);
-
             File.AppendAllText(Handlers, $@"
-    public static void {cmd.Name}({param})
+    public static void {cmd.Name}({param.ToString().Remove(param.Length - 1, 1)})
     {{
     }}");
         }
@@ -78,9 +67,7 @@ public class ConsoleApp
 
     #region Packages
 
-    internal List<IPackage> packages;
-
-    internal List<IPackage> GetPackages() => packages;
+    internal List<IPackage> packages { get; set; }
 
     internal void SetPackages()
     {
@@ -97,20 +84,18 @@ public class ConsoleApp
         {
             Log.Information("Installing package {i}/{l}: {package}", pack.Name, i, l);
             Console.WriteLine($">> INSTALLING PACKAGE {i}/{l}: {pack.Name} <<");
-            Functionnals.Utils.ExecuteCommandSync("dotnet add " + properties.OutputPath + properties.Name + " package " + pack.Name + " " + pack.Version);
+            Parser.ExecuteCommandSync("dotnet add " + properties.OutputPath + properties.Name + " package " + pack.Name + " " + pack.Version);
             i += 1;
         }
         Console.WriteLine(">> PACKAGES INSTALLED <<");
-        Functionnals.Utils.ExecuteCommandSync($"dotnet list {properties.OutputPath}{properties.Name} package");
+        Parser.ExecuteCommandSync($"dotnet list {properties.OutputPath}{properties.Name} package");
     }
 
     #endregion Packages
 
     #region Commands
 
-    internal List<Command> commands;
-
-    internal List<Command> GetCommands() => commands;
+    internal List<Command> commands { get; } = new List<Command>();
 
     internal RootCommand GetRootCommand() => (RootCommand)commands[0];
 
@@ -126,17 +111,22 @@ public class ConsoleApp
         return default!;
     }
 
-    internal void SetCommands()
+    internal void SetCommands(bool gen)
     {
-        commands = new List<Command>() { properties.BuildRoot() };
-
-        SetSourceCode("\n//Commands\n" + properties.TRootCommand());
+        commands.Add(properties.BuildRoot());
+        if (gen)
+        {
+            sourceCode.AppendLine("//Commands");
+            sourceCode.AppendLine();
+            sourceCode.AppendLine(properties.TRootCommand());
+            sourceCode.AppendLine();
+        }
         var ListCommands = configuration["Commands"].ToObject<List<ICommand>>();
         foreach (ICommand cmd in ListCommands)
         {
-            Command parent = (cmd.Parent == "root") ? commands[0] : commands.Find(el => el.Name.Equals(cmd.Parent))!;
+            Command parent = (cmd.Parent == "root") ? commands[0] : GetCommand(cmd.Parent);
             commands.Add(cmd.BuildCommand(parent));
-            SetSourceCode(sourceCode + cmd.TCommand());
+            if (gen) sourceCode.AppendLine(cmd.TCommand());
         }
 
         Log.Debug("Commands built.");
@@ -146,9 +136,7 @@ public class ConsoleApp
 
     #region Options
 
-    internal List<Option> options;
-
-    internal List<Option> GetOptions() => options;
+    internal List<Option> options { get; } = new List<Option>();
 
     internal Option GetOption(string name)
     {
@@ -164,15 +152,20 @@ public class ConsoleApp
         return default!;
     }
 
-    internal void SetOptions()
+    internal void SetOptions(bool gen)
     {
-        options = new List<Option>();
+        if (gen)
+        {
+            sourceCode.AppendLine("//Options");
+            sourceCode.AppendLine();
+        }
+
         var ListOptions = configuration["Options"].ToObject<List<IOption>>();
         foreach (IOption option in ListOptions)
         {
-            Command parent = (option.Command == "root") ? commands[0] : commands.Find(el => el.Name.Equals(option.Command))!;
+            Command parent = (option.Command == "root") ? commands[0] : GetCommand(option.Command);
             options.Add(option.BuildOption(parent));
-            SetSourceCode(sourceCode + option.TOption());
+            if (gen) sourceCode.AppendLine(option.TOption());
         }
 
         Log.Debug("Options built.");
@@ -182,9 +175,7 @@ public class ConsoleApp
 
     #region Arguments
 
-    internal List<Argument> arguments;
-
-    internal List<Argument> GetArguments() => arguments;
+    internal List<Argument> arguments { get; } = new List<Argument>();
 
     internal Argument GetArgument(string name)
     {
@@ -198,17 +189,20 @@ public class ConsoleApp
         return default!;
     }
 
-    internal void SetArguments()
+    internal void SetArguments(bool gen)
     {
-        SetSourceCode(sourceCode + "\n//Arguments\n");
-        arguments = new List<Argument>();
+        if (gen)
+        {
+            sourceCode.AppendLine("//Arguments");
+            sourceCode.AppendLine();
+        }
 
         var ListArguments = configuration["Arguments"].ToObject<List<IArgument>>();
         foreach (IArgument arg in ListArguments)
         {
-            Command parent = (arg.Command == "root") ? commands[0] : commands.Find(el => el.Name.Equals(arg.Command))!;
+            Command parent = (arg.Command == "root") ? commands[0] : GetCommand(arg.Command);
             arguments.Add(arg.BuildArgument(parent));
-            SetSourceCode(sourceCode + arg.TArgument());
+            if (gen) sourceCode.AppendLine(arg.TArgument());
         }
 
         Log.Debug("Arguments built.");
@@ -221,7 +215,10 @@ public class ConsoleApp
     internal void SourceHandlers()
     {
         // Root command handler
-        SetSourceCode(sourceCode + "\n//Handlers\n\n" + @"root.SetHandler(() => root.InvokeAsync(""-h""));" + "\n");
+        sourceCode.AppendLine("//Handlers");
+        sourceCode.AppendLine();
+        sourceCode.AppendLine(@"root.SetHandler(() => root.InvokeAsync(""-h""));");
+        sourceCode.AppendLine();
 
         foreach (Command cmd in commands.Skip(1))
         {
@@ -244,7 +241,8 @@ public class ConsoleApp
             string template = $@"{name}.SetHandler<{args}>(
                     Handlers.{name},
                     {param});" + "\n";
-            SetSourceCode(sourceCode + "\n" + template);
+            sourceCode.AppendLine();
+            sourceCode.AppendLine(template);
         }
         Log.Debug("Handlers implemented.");
     }
@@ -252,57 +250,82 @@ public class ConsoleApp
     internal string SourceMain()
     {
         SourceHandlers();
-        string main = string.Empty;
+        StringBuilder main = new();
 
         // using statements for packages
         foreach (var pkg in packages)
         {
-            main += $"using {pkg.Name};\n";
+            main.AppendLine($"using {pkg.Name};");
         }
 
         // Sentry logging
-        var list = packages.Select(el => el.Name).ToList();
-        string open_sentry = (list.Contains("Sentry")) ? @"// Sentry
-        using (SentrySdk.Init(Sentry =>
+        var list = new List<string>();
+        if (properties.APIs is not null)
         {
-            Sentry.Dsn = ""https://5befa8f2131e4d55b57193308225770e@o1213812.ingest.sentry.io/6353266"";
-                                 // Set Sentry logger verbosity
-            Sentry.Debug = false;
-            // Percentage of captured transactions for performance monitoring.
-            Sentry.TracesSampleRate = 1.0;
-        }))
-            {
-                " : "";
-
-        string close_sentry = (list.Contains("Sentry")) ? @"
-            }
-        }" : "";
+            list = properties.APIs.Select(el => el["Name"]).ToList();
+        }
 
         // namespace
-        main += $"\nnamespace {GetProperties().Name};\n";
+        main.AppendLine($"namespace {properties.Name};");
 
         // Parser class and logger
-        main += @$"
+        main.AppendLine(@$"
 internal static class Parser
 {{
-    /// <summary> Sets and returns a new configured instance of a logger </summary> <param
-    /// name=""verbose"">Output verbosity of the application</param>
-    internal static ILogger BuildLogger(string verbose = null!)
+    #region Static strings");
+        if (list.Count > 0)
+        {
+            main.Append("\t" + $@"internal static string DsnToken = ""{properties.APIs.Where(el => el["Name"] == "Sentry").ToList()[0]["DsnToken"]}"";");
+        }
+        main.AppendLine();
+        main.AppendLine("\t" +
+        @"internal static string LogFormat = ""{{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}} [{{Level:u4}}] {{Message:1j}}{{NewLine}}{{Exception}}"";
+    #endregion
+
+    /// <summary>
+    /// Sets and returns a new configured instance of a logger
+    /// </summary>
+    internal static ILogger BuildLogger(string[] args)
         {{
+            // Default values of args
+            char vv = 'm';
+            char vs = 'm';
+
+            // Custom parser for logger verbosity configuration 
+            foreach (var arg in args)
+            {{
+                if (arg.StartsWith(""-v"") || arg.StartsWith(""--verbose"")) vv = arg[^1];
+                else if (arg.StartsWith(""-s"") || arg.StartsWith(""--sentry"")) vs = arg[^1];
+            }}
+
             var levelSwitch = new LoggingLevelSwitch
             {{
                 MinimumLevel = verbose switch
                 {{
-                    (""v"") => LogEventLevel.Verbose,
-                    (""d"") => LogEventLevel.Debug,
+                    ('v') => LogEventLevel.Verbose,
+                    ('d') => LogEventLevel.Debug,
                     _ => LogEventLevel.Information,
                 }}
             }};
             return new LoggerConfiguration()
-                .MinimumLevel.ControlledBy(levelSwitch)
-                .WriteTo.Console(outputTemplate:
-                        ""[{{Timestamp:HH:mm:ss:ff}} {{Level:u4}}] {{Message:1j}}{{NewLine}}{{Exception}}"")
-                .WriteTo.File(""./logs/{GetProperties().Name}.log.txt"", rollingInterval: RollingInterval.Minute, restrictedToMinimumLevel: LogEventLevel.Verbose)
+                .MinimumLevel.ControlledBy(levelSwitch)");
+        if (list.Count > 0)
+        {
+            main.AppendLine("\t\t" +
+                    @".WriteTo.Sentry(o =>
+                {{o.MinimumBreadcrumbLevel = LogEventLevel.Debug;
+                    o.MinimumEventLevel = LogEventLevel.Error;
+                    o.StackTraceMode = StackTraceMode.Enhanced;
+                    o.AttachStacktrace = true;
+                    o.Dsn = DsnToken;
+                    o.Debug = ((vs == 'd') || (vs == 'd')) ? true : false;
+                }})");
+        }
+
+        main.AppendLine("\t\t");
+        main.Append(
+                @".WriteTo.Console(outputTemplate: LogFormat)
+                .WriteTo.File(""./logs/{properties.Name}.log"", rollingInterval: RollingInterval.Minute, restrictedToMinimumLevel: LogEventLevel.Verbose)
                 .CreateLogger();
         }}
 
@@ -310,18 +333,24 @@ internal static class Parser
     /// name=""args"">Type : string[]</param>
     internal static async Task Main(string[] args)
     {{
-        Log.Logger = (args.Length is not 0) ? BuildLogger(args[^1]) : BuildLogger();
-        {open_sentry}
-            {GetSourceCode()}
-
-            Log.Verbose(""Invoking args parser."");
+        Log.Logger = BuildLogger(args);
+        try
+        {{");
+        main.AppendLine(sourceCode.ToString());
+        main.AppendLine(
+            @"Log.Verbose(""Invoking args parser."");
             Log.CloseAndFlush();
 
             await root.InvokeAsync(args);
-        {close_sentry}
+        }}
+        catch (Exception ex)
+        {{
+            Log.Error(ex, ex.Message, ex.ToString());
+            Log.CloseAndFlush();
+        }}
     }}
-}}";
-        return main;
+}}");
+        return main.ToString();
     }
 
     internal void SetHandlers()
@@ -345,14 +374,14 @@ internal static class Parser
     /// Class Constructor.
     /// </summary>
     /// <param name="file">Path to configuration file for deserialization.</param>
-    internal ConsoleApp(string file)
+    internal ConsoleApp(string file, bool gen = false)
     {
         configuration = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(File.ReadAllText(file))!;
         Log.Debug("Architecture deserialized.");
         SetProperties();
         SetPackages();
-        SetCommands();
-        SetOptions();
-        SetArguments();
+        SetCommands(gen);
+        SetOptions(gen);
+        SetArguments(gen);
     }
 }

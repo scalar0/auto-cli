@@ -10,22 +10,6 @@
   ],
   "Packages": [
     {
-      "Name": "System.CommandLine",
-      "Version": "--prerelease"
-    },
-    {
-      "Name": "Serilog",
-      "Version": "--prerelease"
-    },
-    {
-      "Name": "Serilog.Sinks.Console",
-      "Version": "--prerelease"
-    },
-    {
-      "Name": "Serilog.Sinks.File",
-      "Version": "--prerelease"
-    },
-    {
       "Name": "Package.Name",
       "Version": "--version"
     }
@@ -49,13 +33,14 @@
   ],
   "Options": [
     {
-      "Name": "name",
       "Aliases": ["--option", "-o"],
       "Type": "Type",
       "Command": "command-alias",
       "Required": "bool",
       "Defaultvalue": "string",
-      "Description": "description"
+      "Global": "bool",
+      "Description": "description",
+      "Values": ["strings"]
     }
   ]
 }

@@ -36,9 +36,10 @@ internal class ICommand
 
     internal string TCommand()
     {
-        string source = "\n" + @$"Command {Alias} = new(""{Alias}"");";
-        source += "\n" + @$"{Alias}.Description = ""{Description}"";";
-        source += $"\n{Parent}.AddCommand({Alias});\n";
-        return source;
+        StringBuilder source = new();
+        source.AppendLine("\n" + @$"Command {Alias} = new(""{Alias}"");");
+        source.AppendLine(@$"{Alias}.Description = ""{Description}"";");
+        source.AppendLine($"{Parent}.AddCommand({Alias});");
+        return source.ToString();
     }
 }

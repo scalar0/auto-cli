@@ -2,15 +2,16 @@
   "Properties": [
     {
       "Name": "autocli",
-      "Title": "AUTOCLI : Automated CLI creation tool",
+      "Title": "Automated CLI creation tool",
       "Description": "AutoCLI aims to automate .NET CLI applications development based on an input architecture stored in a .json file.\nThe configuration file stores the architecture for the project's commands, subcommands, options, arguments and properties.",
       "OutputPath": "C:/Users/matte/src/repos/",
       "Framework": "net6.0",
-      "Repo": "auto-CLI",
+      "Repo": "https://github.com/scalar-tns/auto-cli.git",
       "APIs": [
         {
           "Name": "Sentry",
-          "DsnToken": "https://5befa8f2131e4d55b57193308225770e@o1213812.ingest.sentry.io/6353266"
+          "DsnToken": "https://5befa8f2131e4d55b57193308225770e@o1213812.ingest.sentry.io/6353266",
+          "Version": "3.16.0"
         }
       ]
     }
@@ -69,40 +70,40 @@
   ],
   "Options": [
     {
-      "Aliases": [ "--verbose", "-v" ],
+      "Aliases": ["--verbose", "-v"],
       "Type": "string",
       "Command": "root",
       "Required": false,
       "Defaultvalue": "m",
       "Global": true,
-      "Description": "Logger verbosity level: d[ebug]; m[inimal]; v[erbose]. Always parse this option as last on the CLI call.",
-      "Values": [ "m", "d", "v" ]
+      "Description": "Logger verbosity level: d[ebug]; m[inimal]; v[erbose].",
+      "Values": ["m", "d", "v"]
     },
     {
-      "Aliases": [ "--sentry", "-s" ],
+      "Aliases": ["--sentry", "-s"],
       "Type": "string",
       "Command": "root",
       "Required": false,
       "Defaultvalue": "m",
       "Global": true,
       "Description": "Sentry diagnostic logger verbosity level: d[ebug]; m[inimal].",
-      "Values": [ "m", "d" ]
+      "Values": ["m", "d"]
     },
     {
-      "Aliases": [ "--directory", "-d" ],
+      "Aliases": ["--directory", "-d"],
       "Type": "string",
       "Command": "create",
       "Required": true,
       "Description": "Specify the directory output."
     },
     {
-      "Aliases": [ "--py-link" ],
+      "Aliases": ["--py-link"],
       "Type": "bool",
       "Command": "generate",
       "Required": false,
       "Defaultvalue": false,
-      "Description": "Specify whether or not to generate additionnal source code to link the CLI with a backend python application.",
-      "Values": [ "y", "n" ]
+      "Description": "Specify whether to generate source code to link a python application to the backend.",
+      "Values": ["y", "n"]
     }
   ]
 }

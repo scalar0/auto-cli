@@ -39,14 +39,12 @@ internal class IArgument
     internal string TArgument()
     {
         string alias = Alias.Replace("-", "_");
-        string source = "\n" + @$"Argument<{Type}> {alias} = new(""{alias}"");" +
-            "\n";
-        source += @$"{alias}.Description = ""{Description}"";" +
-            "\n";
+        StringBuilder source = new();
+        source.AppendLine(@$"Argument<{Type}> {alias} = new(""{alias}"");");
+        source.AppendLine(@$"{alias}.Description = ""{Description}"";");
         if (DefaultValue is not null)
-            source += @$"{alias}.SetDefaultValue(({Type})""{DefaultValue}"")" +
-            "\n";
-        source += $"{Command}.AddArgument({alias});\n";
-        return source;
+            source.AppendLine(@$"{alias}.SetDefaultValue(({Type})""{DefaultValue}"")");
+        source.AppendLine($"{Command}.AddArgument({alias});");
+        return source.ToString();
     }
 }

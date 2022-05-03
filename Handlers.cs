@@ -10,8 +10,8 @@ public static class Handlers
     public static void create(string name,
                               string directory)
     {
-        string? configfile = Path.Combine(directory, "Arcitecture." + name) + ".json";
-        File.Copy(sourceFileName: @"C:\Users\matte\source\repos\autoCLI\input.json", destFileName: configfile, overwrite: true);
+        string? configfile = Path.Combine(directory, "Architecture." + name) + ".json";
+        File.Copy(sourceFileName: "\\input.json", destFileName: configfile, overwrite: true);
         Console.WriteLine($">> Configuration file for {name} project created at :\n>> {configfile}");
     }
 
@@ -21,7 +21,7 @@ public static class Handlers
     /// <param name="file"></param>
     public static void generate(string file)
     {
-        Interface.ConsoleApp Interface = new(file);
+        Interface.ConsoleApp Interface = new(file, gen: true);
         Interface.InstallProject();
         Interface.InstallPackages();
     }

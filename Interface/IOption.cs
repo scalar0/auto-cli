@@ -64,36 +64,33 @@ internal class IOption
     internal string TOption()
     {
         string name = Aliases[0].Replace("-", "");
-        string source = "\n" + @$"Option<{Type}> {name} = new(""{Aliases[0]}"");" +
-            "\n";
+        StringBuilder source = new();
+        source.AppendLine("\n" + @$"Option<{Type}> {name} = new(""{Aliases[0]}"");");
         if (Aliases.Length > 1)
         {
-            source += @$"{name}.AddAlias(""{Aliases[^1]}"");" + "\n";
+            source.AppendLine(@$"{name}.AddAlias(""{Aliases[^1]}"");");
         }
 
-        source += @$"{name}.Description = ""{Description}"";" +
-            "\n";
-        source += $"{name}.IsRequired = {Required.ToString().ToLower(new System.Globalization.CultureInfo("en-US", false))};\n";
+        source.AppendLine(@$"{name}.Description = ""{Description}"";");
+        source.AppendLine($"{name}.IsRequired = {Required.ToString().ToLower(new System.Globalization.CultureInfo("en-US", false))};");
         if (DefaultValue is not null)
         {
-            source += @$"{name}.SetDefaultValue(({Type})""{DefaultValue}"");" +
-            "\n";
+            source.AppendLine(@$"{name}.SetDefaultValue(({Type})""{DefaultValue}"");");
         }
         if (Values is not null)
         {
-            source += @$"{name}.FromAmong(new string[] {{{string.Join(", ", Values.Select(v => $"\"{v}\""))}}});" +
-            "\n";
+            source.AppendLine(@$"{name}.FromAmong(new string[] {{{string.Join(", ", Values.Select(v => $"\"{v}\""))}}});");
         }
         switch (Global)
         {
             case true:
-                source += $"{Command}.AddGlobalOption({name});\n";
+                source.AppendLine($"{Command}.AddGlobalOption({name});");
                 break;
 
             default:
-                source += $"{Command}.AddOption({name});\n";
+                source.AppendLine($"{Command}.AddOption({name});");
                 break;
         }
-        return source;
+        return source.ToString();
     }
 }
